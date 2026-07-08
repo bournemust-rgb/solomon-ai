@@ -1,76 +1,98 @@
-const { default: makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const express = require('express');
 const P = require('pino');
 
+// Load FAQ
 const faq = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
 
-async function start() {
+async function startSolomon() {
   const { state, saveCreds } = await useMultiFileAuthState('./session');
 
   const sock = makeWASocket({
     logger: P({ level: 'silent' }),
+    printQRInTerminal: false,
     auth: state,
-    browser: ['Solomon AI', 'Chrome', '1.0']
+    browser: ['Solomon AI', 'Chrome', '120.0']
   });
 
   sock.ev.on('creds.update', saveCreds);
 
-  sock.ev.on('connection.update', (update) => {
-    const { connection, qr } = update;
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update;
+
     if (qr) {
       console.log('\n');
+      console.log('========================================');
+      console.log('SCAN THIS QR CODE WITH WHATSAPP');
+      console.log('Phone: +27 60 507 4461');
+      console.log('========================================');
       qrcode.generate(qr, { small: true });
-      console.log('\n>>> SCAN WITH WHATSAPP +27 60 507 4461 <<<\n');
+      console.log('========================================\n');
     }
+
     if (connection === 'open') {
-      console.log('✅ Solomon AI CONNECTED');
+      console.log('✅ SUCCESS: Solomon AI is connected to WhatsApp');
     }
+
     if (connection === 'close') {
-      console.log('Reconnecting...');
-      start();
+      const reason = lastDisconnect?.error?.output?.statusCode;
+      console.log(`Connection closed. Reason: ${reason}`);
+      
+      if (reason !== DisconnectReason.loggedOut) {
+        console.log('Reconnecting in 5 seconds...');
+        setTimeout(startSolomon, 5000);
+      } else {
+        console.log('Logged out. Delete session folder and restart.');
+      }
     }
   });
 
   sock.ev.on('messages.upsert', async ({ messages }) => {
     const msg = messages[0];
     if (!msg.message || msg.key.fromMe) return;
-
-    const jid = msg.key.remoteJid;
-    if (jid.endsWith('@g.us')) return; // ignore groups
+    
+    const from = msg.key.remoteJid;
+    if (from.endsWith('@g.us')) return; // Skip groups
 
     const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').toLowerCase().trim();
     const name = msg.pushName || 'there';
 
     // Greeting
-    if (/^(hi|hello|hey|hola|sawubona|molo|menu)$/.test(text)) {
-      await sock.sendMessage(jid, {
-        text: `Hey ${name}! 👋 Welcome to *Solomon's Rice on a Colour*\n\n📋 *MENU:*\n• Rice on a Colour - R35\n• Extra meat - R15\n• Drink - R15\n\n⏰ Hours: Mon-Sat 9am-7pm\n📍 Location: Cape Town\n📞 Order: 060 507 4461\n\nReply: 1 for menu, 2 for hours, 3 to order`
+    if (/^(hi|hello|hey|hola|sawubona|molo|menu|start)$/i.test(text)) {
+      await sock.sendMessage(from, {
+        text: `Hey ${name}! 👋 *Solomon's Rice on a Colour*\n\n🍛 *MENU*\n• Rice on a Colour - R35\n• Extra Meat - R15\n• Cold Drink - R15\n\n⏰ *HOURS:* Mon-Sat 9AM-7PM\n📍 *LOCATION:* Cape Town\n📞 *ORDER:* 060 507 4461\n\nReply:\n1️⃣ Menu\n2️⃣ Hours\n3️⃣ Order\n4️⃣ Location`
       });
       return;
     }
 
     // Check FAQ
     for (const item of faq) {
-      if (item.keywords.some(k => text.includes(k))) {
-        await sock.sendMessage(jid, { text: item.answer });
+      if (item.keywords.some(keyword => text.includes(keyword.toLowerCase()))) {
+        await sock.sendMessage(from, { text: item.answer });
         return;
       }
     }
 
-    // Default
-    if (text.length > 1) {
-      await sock.sendMessage(jid, {
-        text: `Thanks ${name}! For menu type "menu", hours type "hours", or call 060 507 4461 to order.`
+    // Default response
+    if (text.length > 2 && !text.includes('reconnecting')) {
+      await sock.sendMessage(from, {
+        text: `Thanks ${name}! Type "menu" for our menu, or call 060 507 4461 to order directly.`
       });
     }
   });
 }
 
-start();
+startSolomon();
 
 // Keep Render alive
 const app = express();
-app.get('/', (req, res) => res.send('Solomon AI is running'));
-app.listen(process.env.PORT || 10000, () => console.log('Web server on port 10000'));
+app.get('/', (req, res) => {
+  res.send('Solomon AI WhatsApp Bot is Running ✅');
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Web server running on port ${PORT}`);
+});
