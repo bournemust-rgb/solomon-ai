@@ -1,14 +1,72 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
 const faq = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
+
+// Function to find Chrome executable
+function findChromePath() {
+  // 1. Check environment variable first
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    return process.env.PUPPETEER_EXECUTABLE_PATH;
+  }
+  
+  // 2. Check if puppeteer installed and get its path
+  try {
+    const puppeteer = require('puppeteer');
+    return puppeteer.executablePath();
+  } catch (e) {
+    console.log('Could not get puppeteer executable path');
+  }
+  
+  // 3. Try to find in common locations
+  const possiblePaths = [
+    '/opt/render/.cache/puppeteer/chrome/linux-*/chrome-linux64/chrome',
+    '/opt/render/.cache/puppeteer/chrome/linux-*/chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium-browser'
+  ];
+  
+  for (const pattern of possiblePaths) {
+    const matches = require('glob').sync(pattern);
+    if (matches.length > 0) {
+      return matches[0];
+    }
+  }
+  
+  return null;
+}
+
+const chromePath = findChromePath();
+console.log('🔍 Using Chrome at:', chromePath);
+
+if (!chromePath || !fs.existsSync(chromePath)) {
+  console.error('❌ Chrome not found at:', chromePath);
+  console.log('Available files in cache:');
+  try {
+    const cacheDir = '/opt/render/.cache/puppeteer/chrome/';
+    if (fs.existsSync(cacheDir)) {
+      console.log(fs.readdirSync(cacheDir));
+    }
+  } catch (e) {
+    console.log('Could not read cache directory');
+  }
+  process.exit(1);
+}
 
 const client = new Client({
   authStrategy: new LocalAuth({ dataPath: './session' }),
   puppeteer: { 
     headless: true, 
-    args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-gpu'],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
+    ],
+    executablePath: chromePath
   }
 });
 
