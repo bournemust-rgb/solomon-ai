@@ -1,5 +1,4 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
-const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const express = require('express');
 const P = require('pino');
@@ -24,32 +23,41 @@ async function startSolomon() {
   sock.ev.on('creds.update', saveCreds);
 
   sock.ev.on('connection.update', async (update) => {
-    const { connection, lastDisconnect, qr } = update;
-
-    if (qr) {
-      console.log('\n');
-      console.log('========================================');
-      console.log('SCAN THIS QR WITH WHATSAPP');
-      console.log('Business: +27 60 507 4461');
-      console.log('========================================');
-      qrcode.generate(qr, { small: true });
-      console.log('========================================\n');
-    }
-
-    if (connection === 'open') {
-      console.log('✅ SUCCESS: Solomon AI connected to WhatsApp');
-    }
+    const { connection, lastDisconnect } = update;
 
     if (connection === 'close') {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       console.log(`Connection closed. Status: ${statusCode}`);
 
-      if (statusCode!== DisconnectReason.loggedOut) {
+      if (statusCode !== DisconnectReason.loggedOut) {
         console.log('Reconnecting in 5 seconds...');
         setTimeout(startSolomon, 5000);
-      } else {
-        console.log('Logged out. Delete session folder.');
       }
+    }
+
+    if (connection === 'connecting') {
+      // Request pairing code when connecting for first time
+      if (!state.creds.registered) {
+        setTimeout(async () => {
+          try {
+            const code = await sock.requestPairingCode('27605074461');
+            console.log('\n========================================');
+            console.log('PAIRING CODE FOR WHATSAPP');
+            console.log('========================================');
+            console.log(`CODE: ${code}`);
+            console.log('Phone: +27 60 507 4461');
+            console.log('WhatsApp > Settings > Linked Devices');
+            console.log('> Link with phone number > Enter code');
+            console.log('========================================\n');
+          } catch (e) {
+            console.log('Could not get pairing code:', e.message);
+          }
+        }, 3000);
+      }
+    }
+
+    if (connection === 'open') {
+      console.log('✅ SUCCESS: Solomon AI is connected to WhatsApp');
     }
   });
 
