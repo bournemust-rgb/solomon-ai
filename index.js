@@ -40,7 +40,7 @@ const client = new Client({
   puppeteer: { 
     headless: true, 
     args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
-    executablePath: process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+   executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
   }
 });
 
