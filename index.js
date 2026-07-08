@@ -2,12 +2,16 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const express = require('express');
+const puppeteer = require('puppeteer');
 const faq = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
+
+console.log('🔍 Using Chrome at:', puppeteer.executablePath());
 
 const client = new Client({
   authStrategy: new LocalAuth({ dataPath: './session' }),
   puppeteer: { 
     headless: true,
+    executablePath: puppeteer.executablePath(),
     args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-zygote','--single-process']
   }
 });
