@@ -1,15 +1,12 @@
 {
-  "name": "solomon-whatsapp-ai",
+  "name": "solomon-ai",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "postinstall": "npx puppeteer browsers install chrome"
-  },
+  "scripts": { "start": "node index.js" },
   "dependencies": {
-    "whatsapp-web.js": "^1.26.0",
+    "@whiskeysockets/baileys": "^6.7.8",
     "qrcode-terminal": "^0.12.0",
     "express": "^4.19.2",
-    "puppeteer": "^22.15.0"
+    "pino": "^9.4.0"
   }
 }
