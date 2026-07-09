@@ -1,0 +1,22 @@
+[
+  {
+    "keywords": ["menu", "price", "cost", "how much", "1"],
+    "answer": "🍛 *SOLOMON'S MENU*\n\n• Rice on a Colour - R35\n• Extra Meat - R15\n• Cold Drink - R15\n• Combo (Rice + Meat + Drink) - R60\n\nAll meals freshly made daily!"
+  },
+  {
+    "keywords": ["hours", "open", "close", "time", "when", "2"],
+    "answer": "⏰ *HOURS*\n\nMonday - Saturday: 9:00 AM - 7:00 PM\nSunday: CLOSED\n\nLast orders at 6:30 PM"
+  },
+  {
+    "keywords": ["order", "buy", "want", "get", "3"],
+    "answer": "📞 *TO ORDER*\n\nCall or WhatsApp: 060 507 4461\n\nTell us:\n1. What you want\n2. Pickup time\n3. Your name\n\nWe prepare fresh in 10-15 mins!"
+  },
+  {
+    "keywords": ["location", "where", "address", "find", "4"],
+    "answer": "📍 *LOCATION*\n\nSolomon's Rice on a Colour\nCape Town, Western Cape\n\nCall 060 507 4461 for directions\nDelivery available in local area"
+  },
+  {
+    "keywords": ["halal", "hfa"],
+    "answer": "✅ Yes, all our meat is 100% HFA Halal certified."
+  }
+]
