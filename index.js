@@ -19,9 +19,11 @@ var OFFICE_EMAIL = "populier@mweb.co.za";
 var QUOTE_EMAIL = "infosc@mweb.co.za";
 var FACEBOOK = "https://www.facebook.com/SolomonCoatings/";
 var TIKTOK = "https://www.tiktok.com/@solomon.coatings";
+var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
+// ============ UTILITIES ============
 function getOrderRef() {
   var d = new Date();
   return "SC" + d.getFullYear().toString().slice(-2) + ("0"+(d.getMonth()+1)).slice(-2) + ("0"+d.getDate()).slice(-2) + "-" + Math.floor(Math.random()*9000+1000);
@@ -39,20 +41,62 @@ function isAfterHours() {
   return false;
 }
 
+function detectLanguage(text) {
+  var afrWords = ["dankie","asseblief","goeie","more","middag","aand","hoe","gaan","dit","baie","lekker","ja","nee","mooi","wat","waar","wanneer","hoeveel","kan","ek","jy","ons","hulle","nie","wel","weer","nog","net","nou","dan","ook","hier","daar","so","as","vir","met","van","die","het","sal","gaan","kom","doen","maak","weet","dink","se","praat","koop","verkoop","bestel"];
+  var count = 0;
+  var words = text.toLowerCase().split(/\s+/);
+  for (var i = 0; i < words.length; i++) {
+    if (afrWords.indexOf(words[i]) !== -1) count++;
+  }
+  if (count >= 2) return "af";
+  return "en";
+}
+
+function getAfrikaansReply(enReply) {
+  var map = {
+    "Hi there! Welcome to the Solomon Coatings digital desk.": "Goeie dag! Welkom by Solomon Coatings se digitale toonbank.",
+    "We are busy keeping things looking sharp, but I am always here to handle your questions.": "Ons is besig om dinge mooi te hou, maar ek is altyd hier om jou vrae te hanteer.",
+    "Feel free to ask about our pricing, available colours, or trading hours - I am ready when you are!": "Vra gerus oor ons pryse, beskikbare kleure, of besigheidsure - ek is gereed wanneer jy is!"
+  };
+  return map[enReply] || enReply;
+}
+
+function estimatePrice(text) {
+  var t = text.toLowerCase();
+  var ref = getOrderRef();
+  if (t.includes("rim")) {
+    var qty = t.match(/(\d+)/);
+    qty = qty ? parseInt(qty[1]) : 4;
+    var colour = "standard";
+    if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
+    var est = colour === "standard" ? 1000 : 1500;
+    return "Estimate: " + qty + " rims, " + colour + " colour ≈ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+  }
+  if (t.includes("gate")) {
+    return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
+  }
+  if (t.includes("sheet") || t.includes("mesh")) {
+    return "Sheet metal estimate: R175-R350/sqm depending on colour.\n\nRef: " + ref + "\n\nBring measurements for accurate quote.";
+  }
+  return null;
+}
+
+var SEASONAL_PROMO = "";
+
 var QR = {
   "hi": "Hi there! Welcome to the Solomon Coatings digital desk. We are busy keeping things looking sharp, but I am always here to handle your questions.\n\nFeel free to ask about our pricing, available colours, or trading hours - I am ready when you are!",
   "hello": "Hi there! Welcome to the Solomon Coatings digital desk. We are busy keeping things looking sharp, but I am always here to handle your questions.\n\nFeel free to ask about our pricing, available colours, or trading hours - I am ready when you are!",
   "hey": "Hi there! Welcome to the Solomon Coatings digital desk. We are busy keeping things looking sharp, but I am always here to handle your questions.\n\nFeel free to ask about our pricing, available colours, or trading hours - I am ready when you are!",
   "howzit": "Hi there! Welcome to the Solomon Coatings digital desk. We are busy keeping things looking sharp, but I am always here to handle your questions.\n\nFeel free to ask about our pricing, available colours, or trading hours - I am ready when you are!",
   "good morning": "Hi there! Welcome to the Solomon Coatings digital desk. We are busy keeping things looking sharp, but I am always here to handle your questions.\n\nFeel free to ask about our pricing, available colours, or trading hours - I am ready when you are!",
-  "menu": "SOLOMON COATINGS - Since 1988\n\nPOWDER COATING | SANDBLASTING | SHOT BLASTING\n\nPRICES (excl 15% VAT):\nRims: R1000-R1500/set of 4\nSheet metal: R175-R350/sqm\nPer kg coating: R15-R23/kg\nBlasting: R8-R12/kg\nTruck blasting: R5000-R7500\nMin job: R173.99 B/W, R225 hammered, R300+ metallic\nOversized +6m: R1000 setup fee\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461 | Office: " + OFFICE_NUMBER + "\n\nBulk discounts up to 10%. COD only.",
-  "pricing": "PRICING (excl 15% VAT)\nRims: R1000-R1500/set of 4\nSheet metal: R175-R350/sqm\nPer kg coating: R15-R23/kg\nBlasting: R8-R12/kg\nTruck blasting: R5000-R7500\nMin job: R173.99 B/W, R225 hammered, R300+ metallic\nOversized +6m: R1000 setup fee\n\nBulk discounts up to 10%. COD only. All quotes subject to inspection.",
-  "colours": "COLOURS & FINISHES\nStandard: Black, White, Brown, Bronze, Charcoal - R175-R250/sqm\nHammered: from R225\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nColours may vary by batch every 4-6 months.",
+  "menu": "SOLOMON COATINGS - Since 1988\n\nPOWDER COATING | SANDBLASTING | SHOT BLASTING\n\nPRICES (excl 15% VAT):\nRims: R1000-R1500/set of 4\nSheet metal: R175-R350/sqm\nPer kg coating: R15-R23/kg\nBlasting: R8-R12/kg\nTruck blasting: R5000-R7500\nMin job: R173.99 B/W, R225 hammered, R300+ metallic\nOversized +6m: R1000 setup fee\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461 | Office: " + OFFICE_NUMBER + "\n\nBulk discounts up to 10%. COD only." + (SEASONAL_PROMO ? "\n\n" + SEASONAL_PROMO : ""),
+  "pricing": "PRICING (excl 15% VAT)\nRims: R1000-R1500/set of 4\nSheet metal: R175-R350/sqm\nPer kg coating: R15-R23/kg\nBlasting: R8-R12/kg\nTruck blasting: R5000-R7500\nMin job: R173.99 B/W, R225 hammered, R300+ metallic\nOversized +6m: R1000 setup fee\n\nBulk discounts up to 10%. COD only." + (SEASONAL_PROMO ? "\n\n" + SEASONAL_PROMO : ""),
+  "colours": "COLOURS & FINISHES\nStandard: Black, White, Brown, Bronze, Charcoal - R175-R250/sqm\nHammered: from R225\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nColours may vary by batch every 4-6 months.\nSee examples: " + FACEBOOK,
   "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed Saturdays & Sundays.",
   "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days. Timelines may be affected by loadshedding/weather.",
   "delivery": "R150 delivery Cape Town metro. Free collection. Items must be collected within 7 days or 7% daily storage fee applies.",
   "contact": "WhatsApp: 060 507 4461\nOffice: " + OFFICE_NUMBER + "\nEmail: " + OFFICE_EMAIL + "\nQuotes: " + QUOTE_EMAIL + "\nFacebook: " + FACEBOOK + "\nTikTok: " + TIKTOK,
-  "help": "I can help with:\n\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* Booking a callback\n* View our work\n\nJust ask!",
+  "help": "I can help with:\n\n* Get a quick estimate\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* View our gallery\n* Leave a review\n* Book a callback\n* Order status\n* How to order\n\nJust ask!",
   "thanks": "Pleasure! Anything else I can help with?",
   "thank you": "Only a pleasure!",
   "bye": "Cheers! Sien jou later."
@@ -67,123 +111,165 @@ async function forwardImageToOwner(imageId, fromNumber) {
   } catch(e) { return false; }
 }
 
-function smartMatch(text) {
+function smartMatch(text, fromNumber, session) {
   var t = text.toLowerCase().trim();
-  if (QR[t]) return QR[t];
+  var lang = detectLanguage(text);
+  var promoMsg = SEASONAL_PROMO ? "\n\n" + SEASONAL_PROMO : "";
 
-  // GALLERY / SEE OUR WORK / PAST JOBS
+  if (QR[t]) {
+    var reply = QR[t] + promoMsg;
+    if (lang === "af") reply = getAfrikaansReply(reply);
+    return reply;
+  }
+
+  // PRICE CALCULATOR / QUICK ESTIMATE
+  if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set"))) {
+    var est = estimatePrice(text);
+    if (est) return est;
+  }
+
+  // LOYALTY / RETURNING CUSTOMER
+  if (session && session.history && session.history.length > 2 && (t.includes("hi") || t.includes("hello") || t.includes("hey"))) {
+    var lastMsg = "";
+    for (var hi = session.history.length-1; hi >= 0; hi--) {
+      if (session.history[hi].role === "user") { lastMsg = session.history[hi].content; break; }
+    }
+    if (lastMsg) return "Welcome back! Good to hear from you again. Last time we chatted about: \"" + lastMsg.substring(0,60) + "...\"\n\nWhat can I help with today?";
+  }
+
+  // INVOICE REQUEST
+  if (t.includes("invoice") && (t.includes("send") || t.includes("email") || t.includes("copy"))) {
+    var ref = t.match(/SC\d{6}-\d{4}/);
+    if (ref) {
+      return "I will request your invoice for " + ref[0] + " to be emailed. Please confirm your email address or we will send it to the one on file. For urgent invoices, call " + OFFICE_NUMBER + ".";
+    }
+    return "Please provide your order reference number (e.g. SC240712-5821) and I will arrange for your invoice to be emailed. Or call " + OFFICE_NUMBER + ".";
+  }
+
+  // LIVE WORKSHOP STATUS
+  if (t.includes("how busy") || t.includes("queue") || t.includes("wait time") || t.includes("how long") && t.includes("wait")) {
+    return "Current workshop status: We are processing orders daily. For an accurate wait time, WhatsApp Ridhor on 076 760 4350 with what you need done. He can give you a real-time update.";
+  }
+
+  // COLOUR VISUALISER
+  if ((t.includes("show me") || t.includes("see") || t.includes("look like") || t.includes("example") || t.includes("sample")) && (t.includes("colour") || t.includes("color") || t.includes("black") || t.includes("white") || t.includes("red") || t.includes("blue") || t.includes("finish"))) {
+    return "Check out our colour examples on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + "\n\nWe post real jobs regularly so you can see exactly how colours look. Want a specific colour? WhatsApp Ridhor on 076 760 4350 and he will send you samples.";
+  }
+
+  // GOOGLE REVIEW
+  if (t.includes("review") || t.includes("rate") || t.includes("feedback") || t.includes("testimonial")) {
+    return "We would love your feedback! Leave us a review on Google: " + GOOGLE_REVIEW + "\n\nOr share your experience on our Facebook page: " + FACEBOOK + "\n\nThank you for supporting Solomon Coatings since 1988!";
+  }
+
+  // GALLERY
   if (t.includes("gallery") || t.includes("see your work") || t.includes("past job") || t.includes("portfolio") || t.includes("examples") || t.includes("photos of") || t.includes("pictures of") || t.includes("what have you done"))
-    return "Check out our work on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + ". We post regularly! Want to see something specific? Ask and I will let Ridhor know.";
+    return "Check out our work on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + ". We post regularly! Want to see something specific? Ask and I will let Ridhor know." + promoMsg;
 
-  // TERMS & CONDITIONS LINK
+  // TERMS
   if (t.includes("terms") || t.includes("t&c") || t.includes("conditions") || t.includes("policy") || t.includes("legal"))
-    return "Our full Terms & Conditions are available on request. Key points:\n- COD only, no release without payment\n- No coastal warranties\n- 7% daily storage after 7 days\n- All blasting at client's risk\n- Items remain our property until paid\n\nFor the full document, email " + OFFICE_EMAIL + " or WhatsApp Ridhor on 076 760 4350.";
+    return "Our full Terms & Conditions:\n- COD only, no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client's risk\n- Items remain our property until paid\n\nFull document: email " + OFFICE_EMAIL + " or WhatsApp Ridhor on 076 760 4350.";
 
-  // ORDER STATUS / REFERENCE
+  // ORDER STATUS
   if (t.includes("order") && (t.includes("status") || t.includes("update") || t.includes("progress") || t.includes("ready") || t.includes("track")))
-    return "For order updates, WhatsApp Ridhor directly on 076 760 4350 with your order reference number. He will check the workshop and let you know. If you do not have a reference yet, send your name and what you dropped off.";
+    return "For order updates, WhatsApp Ridhor on 076 760 4350 with your reference number. He will check the workshop and let you know.";
 
-  // BOOK A CALL / CALLBACK
+  // BOOK CALLBACK
   if (t.includes("book") || t.includes("callback") || t.includes("call me") || t.includes("appointment") || t.includes("visit") || t.includes("come in"))
-    return "Want Ridhor to call you? Send me your name, number, and what you need done. I will pass it straight to him. Or call the office on " + OFFICE_NUMBER + " to book a time to bring items in.";
+    return "Want Ridhor to call you? Send me your name, number, and what you need done. I will pass it to him. Or call " + OFFICE_NUMBER + " to book.";
 
-  // COMPLAINT / PROBLEM
+  // COMPLAINT
   if (t.includes("complaint") || t.includes("problem") || t.includes("unhappy") || t.includes("not happy") || t.includes("issue") || t.includes("wrong"))
-    return "I am sorry to hear that. Please WhatsApp Ridhor directly on 076 760 4350 or email " + OFFICE_EMAIL + " with details. He takes quality seriously and will sort it out. Your order reference will help speed things up.";
+    return "I am sorry to hear that. Please WhatsApp Ridhor directly on 076 760 4350 or email " + OFFICE_EMAIL + " with details. He will sort it out.";
 
-  // HOW TO ORDER / PROCESS
+  // HOW TO ORDER
   if ((t.includes("how") && t.includes("order")) || t.includes("process") || t.includes("steps") || t.includes("how does it work") || t.includes("what do i do"))
-    return "How it works:\n1. Send a pic or description of what you need coated\n2. Get an estimate (subject to inspection)\n3. Bring items to our workshop during business hours\n4. We blast, pre-treat, and coat\n5. We let you know when it is ready\n6. Pay (COD) and collect\n\nEasy! Got something in mind?";
+    return "How it works:\n1. Send a pic or description\n2. Get an estimate (subject to inspection)\n3. Bring items during business hours\n4. We blast, pre-treat, and coat\n5. We notify when ready\n6. Pay (COD) and collect\n\nGot something in mind?";
 
-  // RECOMMEND / REFER
-  if (t.includes("recommend") || t.includes("refer") || t.includes("friend") || t.includes("family") || t.includes("someone"))
-    return "We love referrals! Share our number 060 507 4461 or Facebook page " + FACEBOOK + " with them. Word of mouth keeps us going since 1988!";
+  // REFERRAL
+  if (t.includes("recommend") || t.includes("refer") || t.includes("friend") || t.includes("family"))
+    return "We love referrals! Share 060 507 4461 or " + FACEBOOK + " with them. Word of mouth since 1988!";
 
-  // EMERGENCY / URGENT
+  // URGENT
   if (t.includes("urgent") || t.includes("emergency") || t.includes("asap") || t.includes("rush"))
-    return "For urgent jobs, WhatsApp Ridhor directly on 076 760 4350. He can assess if we can fast-track your order. Rush jobs may incur a surcharge.";
+    return "For urgent jobs, WhatsApp Ridhor directly on 076 760 4350. Rush surcharge may apply.";
 
   // MATERIAL TYPES
-  if (t.includes("material") || t.includes("what can you coat") || t.includes("can you do") && (t.includes("wood") || t.includes("plastic") || t.includes("aluminium") || t.includes("steel")))
-    return "We coat all metals that can handle 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass. Items unable to withstand 200C must be declared before work begins.";
+  if (t.includes("material") || t.includes("what can you coat") || (t.includes("can you do") && (t.includes("wood") || t.includes("plastic") || t.includes("aluminium") || t.includes("steel"))))
+    return "We coat all metals handling 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass. Items unable to withstand 200C must be declared.";
 
-  // COLLECTION / STORAGE
+  // COLLECTION
   if (t.includes("collect") || t.includes("pickup") || t.includes("storage") || t.includes("uncollected"))
-    return "Items must be collected within 7 working days of completion. Late collection incurs 7% daily storage surcharge. No items released without full payment. Uncollected items may be sold to recover costs.";
+    return "Items must be collected within 7 working days. Late collection: 7% daily storage fee. No release without payment. Uncollected items may be sold to recover costs.";
 
-  // COASTAL / WARRANTY
+  // COASTAL
   if (t.includes("coastal") || t.includes("sea") || t.includes("beach") || t.includes("salt") || t.includes("warranty") || t.includes("guarantee"))
-    return "No warranties apply within 15km of shoreline. Powder coating is decorative, not anti-corrosive. Coastal work at client's risk. Outdoor items should be stainless steel, aluminium, or galvanised.";
+    return "No warranties within 15km of shoreline. Powder coating is decorative, not anti-corrosive. Coastal work at client's risk.";
 
-  // LATENT DEFECTS
+  // DEFECTS
   if (t.includes("defect") || t.includes("crack") || t.includes("warp") || t.includes("distort") || t.includes("hidden"))
-    return "We are not liable for latent defects revealed during work (cracked welds, corrosion, delamination, warping). All blasting and coating at client's risk. Items unable to withstand 200C must be declared.";
+    return "Not liable for latent defects (cracked welds, corrosion, delamination, warping). All work at client's risk.";
 
-  // SHOTBLASTING LIABILITY
+  // SHOTBLASTING RISK
   if ((t.includes("shotblast") || t.includes("shot blast")) && (t.includes("risk") || t.includes("liable") || t.includes("damage")))
-    return "Shotblasting is strictly at client's risk. Abrasive process may expose underlying defects. We are not liable for cracking, chipping, pitting, or structural weaknesses revealed during blasting.";
+    return "Shotblasting strictly at client's risk. May expose underlying defects. Not liable for cracking, chipping, pitting.";
 
-  // PRE-BLASTING PREP
-  if (t.includes("prepare") || t.includes("before blast") || t.includes("plastic") || t.includes("glass") || t.includes("hydraulic"))
-    return "Before blasting: Remove plastic, brittle, or malleable components. Disconnect hydraulics. Empty tanks or declare contents. Remove glass/lights/windows where possible. No liability for breakage.";
+  // PRE-BLASTING
+  if (t.includes("prepare") || t.includes("plastic") || t.includes("glass") || t.includes("hydraulic"))
+    return "Before blasting: Remove plastic, brittle, malleable parts. Disconnect hydraulics. Empty/declare tanks. Remove glass/lights. No liability for breakage.";
 
   // MAINTENANCE
   if (t.includes("maintenance") || t.includes("clean") || t.includes("care") || t.includes("look after") || t.includes("last longer"))
-    return "Coating longevity depends on maintenance: drying, wiping, cleaning, rinsing, protective treatments. Keep maintenance records. Outdoor items should be stainless steel, aluminium, or galvanised.";
+    return "Longevity needs maintenance: drying, wiping, cleaning, rinsing, protective treatments. Keep records. Outdoor items should be stainless, aluminium, or galvanised.";
 
-  // PAYMENT / COD
+  // PAYMENT
   if (t.includes("pay") || t.includes("payment") || t.includes("cod") || t.includes("release"))
-    return "Strict COD - no work released without full payment. Payment must reflect before collection. Custom materials paid upfront. Uncollected items may be sold. Accounts: " + OFFICE_EMAIL + " / " + OFFICE_NUMBER;
+    return "Strict COD - no release without full payment. Custom materials paid upfront. Uncollected items may be sold. Accounts: " + OFFICE_EMAIL + " / " + OFFICE_NUMBER;
 
-  // OWNERSHIP / IP
-  if (t.includes("intellectual") || t.includes("ip") || t.includes("ownership") || t.includes("design") || t.includes("copy"))
-    return "All processes, colour formulations, and finishes remain Solomon Coatings intellectual property. Custom designs do not transfer to client unless agreed in writing. Items remain our property until paid in full.";
+  // IP
+  if (t.includes("intellectual") || t.includes("ip") || t.includes("ownership") || t.includes("design"))
+    return "All processes and colour formulations remain Solomon Coatings IP. Items remain our property until paid in full.";
 
-  // COLOUR VARIATIONS
-  if (t.includes("batch") || t.includes("colour match") || t.includes("color match") || t.includes("shade") || t.includes("variation"))
-    return "Colours may vary by batch every 4-6 months. Standard: 2-ton batches. Specials: 500kg. Customs: 100kg. Decorative finishes may differ from digital references.";
+  // COLOUR VARIATION
+  if (t.includes("batch") || t.includes("colour match") || t.includes("color match") || t.includes("variation"))
+    return "Colours may vary by batch every 4-6 months. Standard: 2-ton batches. Specials: 500kg. Customs: 100kg.";
 
-  // PRIMER / TOP COAT
-  if (t.includes("primer") || t.includes("top coat") || t.includes("etch") || t.includes("paint"))
-    return "If primed: top-coat within 12-24 hours. Etch primers 15-40um DFT. We can apply high-heat paints (700-900C), MIO, polyurethane, DTM. Client-supplied spec sheets preferred.";
+  // PRIMER
+  if (t.includes("primer") || t.includes("top coat") || t.includes("etch"))
+    return "If primed: top-coat within 12-24hrs. Etch primers 15-40um DFT. High-heat paints (700-900C), MIO, polyurethane, DTM available.";
 
   // WETSPRAY
   if (t.includes("wetspray") || t.includes("wet spray") || t.includes("wet paint") || (t.includes("custom") && t.includes("blast")))
-    return "Wetspray jobs and custom shotblasting: contact Ridhor directly on 076 760 4350 or email " + QUOTE_EMAIL + " for assessment and quote.";
-
-  // QUOTES
-  if (t.includes("quote") || t.includes("quotation") || t.includes("estimate"))
-    return "For a quote: WhatsApp Ridhor on 076 760 4350 or email " + QUOTE_EMAIL + ". Send a pic and description. All quotes based on info provided, subject to change on inspection. Acceptance = agreement to full T&Cs.";
+    return "Wetspray/custom blasting: Contact Ridhor on 076 760 4350 or " + QUOTE_EMAIL;
 
   // ACCOUNTS
   if (t.includes("account") || t.includes("statement") || t.includes("invoice") || t.includes("balance"))
-    return "For accounts: Email " + OFFICE_EMAIL + " or call " + OFFICE_NUMBER + ". They will check and get back to you.";
+    return "Accounts: " + OFFICE_EMAIL + " / " + OFFICE_NUMBER;
 
   // RIDHOR
   if ((t.includes("speak") || t.includes("talk") || t.includes("call")) && (t.includes("ridhor") || t.includes("owner") || t.includes("boss")))
-    return "Ridhor: 076 760 4350 (WhatsApp/call) or " + QUOTE_EMAIL + ". Office: " + OFFICE_NUMBER + " - ask for him.";
+    return "Ridhor: 076 760 4350 (WhatsApp/call) or " + QUOTE_EMAIL + ". Office: " + OFFICE_NUMBER;
 
   // BULK
   if (t.includes("bulk") || t.includes("discount") || t.includes("volume") || t.includes("commercial"))
-    return "Bulk discounts up to 10%. WhatsApp Ridhor on 076 760 4350 or email " + QUOTE_EMAIL + " with your requirements for a tailored quote.";
+    return "Bulk discounts up to 10%. WhatsApp Ridhor on 076 760 4350 or " + QUOTE_EMAIL + " for a tailored quote.";
 
   // SOCIAL
   if (t.includes("facebook") || t.includes("social") || t.includes("tiktok"))
-    return "Facebook: " + FACEBOOK + "\nTikTok: " + TIKTOK + "\nWhatsApp: 060 507 4461\nSee our work and latest projects!";
+    return "Facebook: " + FACEBOOK + "\nTikTok: " + TIKTOK + "\nWhatsApp: 060 507 4461";
 
   // TRUCK
   if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed") || t.includes("ldv"))
-    return "Shot blasting 5m flatbed: R5,000-R7,500 excl VAT. No rubber. Grit/slag 0.12-0.4mm at 6 bar. For custom/wetspray contact Ridhor: 076 760 4350.";
+    return "Shot blasting 5m flatbed: R5,000-R7,500 excl VAT. No rubber. Grit/slag 0.12-0.4mm, 6 bar. Custom: contact Ridhor 076 760 4350.";
 
   // BLASTING
   if (t.includes("blast") || t.includes("sandblast") || t.includes("shot blast"))
-    return "Blasting: R8-R12/kg excl VAT. Truck: R5,000-R7,500. Medium: Grit/slag 0.12-0.4mm, 6 bar, 10mm nozzle. All blasting at client's risk. Remove plastic/glass/hydraulics before bringing.";
+    return "Blasting: R8-R12/kg. Truck: R5,000-R7,500. Medium: Grit/slag 0.12-0.4mm, 6 bar, 10mm nozzle. All at client's risk.";
 
   // RUST
-  if (t.includes("rust")) return "Rusted items: Blasting R8-R12/kg excl VAT. Severity determines price. May reveal hidden defects. All quotes subject to inspection.";
+  if (t.includes("rust")) return "Rusted items: Blasting R8-R12/kg excl VAT. May reveal hidden defects. Quotes subject to inspection.";
 
   // PRICING
-  if (t.includes("price") || t.includes("cost") || t.includes("how much") || t.includes("charge") || t.includes("rate")) return QR["pricing"];
+  if (t.includes("price") || t.includes("cost") || t.includes("how much") || t.includes("charge") || t.includes("rate")) return QR["pricing"] + promoMsg;
 
   // COLOURS
   if (t.includes("colour") || t.includes("color") || t.includes("finish") || t.includes("ral")) return QR["colours"];
@@ -202,54 +288,67 @@ function smartMatch(text) {
 
   // RIMS
   if (t.includes("rim") || t.includes("wheel") || t.includes("mag"))
-    return "Rims: R1,000-R1,500/set of 4 (10-15\"). Excl VAT. Customer MUST remove tyres. Price depends on colour and prep. WhatsApp Ridhor: 076 760 4350.";
+    return "Rims: R1,000-R1,500/set of 4 (10-15\"). Excl VAT. MUST remove tyres. WhatsApp Ridhor: 076 760 4350.";
 
   // GATES
   if (t.includes("gate") || t.includes("fence") || t.includes("burglar"))
-    return "Gates/bars/rails/balustrades: Per kg. Coating R15-R23/kg, Blasting R8-R12/kg. Oversized +6m: R1000 setup. WhatsApp Ridhor: 076 760 4350.";
+    return "Gates/bars/rails: Per kg. Coating R15-R23/kg, Blasting R8-R12/kg. Oversized +6m: R1000. WhatsApp: 076 760 4350.";
 
   // SHEET METAL
   if (t.includes("sheet") || t.includes("mesh") || t.includes("panel"))
-    return "Sheet metal/mesh: Standard colours R175-R250/sqm. Hammered R225+. Metallics R300+. Excl VAT. Bulk discounts up to 10%.";
+    return "Sheet metal: Standard R175-R250/sqm. Hammered R225+. Metallics R300+. Excl VAT. Bulk discounts up to 10%.";
 
   // CHASSIS
   if (t.includes("chassis") || t.includes("trailer"))
-    return "Chassis/trailers: Coating R15-R23/kg, Blasting R8-R12/kg. Oversized surcharge may apply. WhatsApp pics to Ridhor: 076 760 4350.";
+    return "Chassis/trailers: Coating R15-R23/kg, Blasting R8-R12/kg. Oversized surcharge. WhatsApp pics: 076 760 4350.";
 
   // MINIMUM
   if ((t.includes("minimum") || t.includes("small")) && t.includes("job"))
-    return "Minimum charges: R173.99 black/white, R225 hammered, R300+ metallics. Excl VAT.";
+    return "Minimum: R173.99 black/white, R225 hammered, R300+ metallics. Excl VAT.";
 
   // TYRES
-  if (t.includes("tyre") || t.includes("tire")) return "Customer MUST remove tyres from rims. We do NOT remove tyres.";
+  if (t.includes("tyre") || t.includes("tire")) return "Customer MUST remove tyres. We do NOT remove tyres.";
 
   // VAT
   if (t.includes("vat")) return "All prices exclude 15% VAT unless stated. Minimum charges exclude VAT.";
 
   // SATURDAY
   if (t.includes("saturday") || t.includes("weekend") || t.includes("sunday"))
-    return "Closed Saturdays & Sundays. Hours: Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM.";
+    return "Closed weekends. Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM.";
 
   // OVERSIZED
   if ((t.includes("oversized") || t.includes("large")) && (t.includes("item") || t.includes("job")))
-    return "Large items (6m-7.2m long, 2.2m-2.5m high): higher rate. Minimum R1000 setup fee excl VAT.";
+    return "Large items (6m-7.2m): higher rate. Minimum R1000 setup fee excl VAT.";
 
   // LOADSHEDDING
   if (t.includes("loadshedding") || t.includes("power") || t.includes("delay") || t.includes("weather"))
-    return "Timelines may be affected by loadshedding or weather. We will keep you updated if there are delays.";
+    return "Timelines may be affected by loadshedding/weather. We will keep you updated.";
 
-  // ORDER REFERENCE GENERATOR
+  // REFERENCE
   if (t.includes("reference") || t.includes("order number") || t.includes("job number") || t.includes("ref"))
-    return "Your reference number is: " + getOrderRef() + "\n\nUse this when contacting us about your order. Save it! For a formal quote, WhatsApp Ridhor on 076 760 4350.";
+    return "Your reference: " + getOrderRef() + "\n\nUse this when contacting us. Save it! For a quote, WhatsApp Ridhor: 076 760 4350.";
+
+  // PROMO UPDATE (admin only - triggered by specific phrase)
+  if (t.includes("admin set promo") && fromNumber === PERSONAL_NUMBER) {
+    var promo = text.replace(/admin set promo/i, "").trim();
+    if (promo) {
+      SEASONAL_PROMO = promo;
+      return "Promo set: \"" + promo + "\"\n\nIt will now appear on menu and pricing replies.";
+    }
+  }
+
+  // RAIN / WEATHER
+  if (t.includes("rain") || t.includes("weather") && t.includes("coat"))
+    return "Once cured, powder coating is weather-resistant. Fresh coating should not be exposed to rain for 24 hours. We advise collecting when weather is clear.";
 
   return null;
 }
 
 app.get("/health", function(req, res) {
-  res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, uptime: Math.floor(process.uptime()), timestamp: new Date().toISOString() });
+  res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, version: "7.0", features: ["Smart replies","T&Cs","Gallery","Order refs","Callbacks","Complaints","After-hours","Multi-language","Price calculator","Loyalty","Invoice requests","Reviews","Colour visualiser","Promos","Voice notes"] });
 });
 app.get("/", function(req, res) {
-  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "6.0", features: ["Smart replies", "T&Cs", "Gallery links", "Order references", "Callback booking", "Photo forwarding", "After-hours auto-reply"] });
+  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "7.0" });
 });
 app.get("/webhook", function(req, res) {
   var m = req.query["hub.mode"], t = req.query["hub.verify_token"], c = req.query["hub.challenge"];
@@ -268,14 +367,21 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var from = msgs[k].from, type = msgs[k].type;
           var text = msgs[k].text && msgs[k].text.body ? msgs[k].text.body.trim() : null;
           var imageId = msgs[k].image ? msgs[k].image.id : null;
+          var voiceNote = msgs[k].audio;
 
-          // AFTER HOURS CHECK
+          // VOICE NOTE
+          if (type === "audio" || voiceNote) {
+            console.log("[" + from + "]: Voice note received");
+            await sendMessage(from, "I received your voice note! I cannot transcribe it yet, but I have notified Ridhor. He will listen and get back to you. For quick answers, please text your question. Or WhatsApp him directly on 076 760 4350.");
+            await sendMessage(PERSONAL_NUMBER, "Voice note from " + from + ". Check WhatsApp Business.");
+            continue;
+          }
+
+          // AFTER HOURS
           if (isAfterHours() && type !== "image") {
             console.log("[" + from + "]: After-hours message");
-            await sendMessage(from, "Thanks for your message! Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). I will pass your details to Ridhor and he will get back to you during business hours. For urgent matters, WhatsApp him directly on 076 760 4350.\n\nIn the meantime, you can ask me about pricing, colours, or our services - I am always here!");
-            if (text) {
-              await sendMessage(PERSONAL_NUMBER, "After-hours message from " + from + ": " + text);
-            }
+            await sendMessage(from, "Thanks for your message! Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). I will pass your details to Ridhor. For urgent matters, WhatsApp him on 076 760 4350.\n\nI can still answer questions about pricing, colours, and services - ask away!");
+            if (text) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + ": " + text);
             continue;
           }
 
@@ -292,7 +398,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 
           console.log("[" + from + ']: "' + text + '"');
           var session = await getSession(from);
-          var match = smartMatch(text);
+          var match = smartMatch(text, from, session);
           if (match) {
             console.log("Smart match found");
             await sendMessage(from, match);
@@ -312,9 +418,8 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   } catch (e) { console.error("WEBHOOK ERROR:", e.message); }
 });
 app.listen(PORT, function() {
-  console.log("\nSOLOMON COATINGS AI v6.0 - Port " + PORT);
-  console.log("Features: Gallery | T&Cs | Order Refs | Callbacks | Complaints | After-hours | Referrals");
-  console.log("Hours: Mon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM | Sat-Sun: After-hours mode");
+  console.log("\nSOLOMON COATINGS AI v7.0 - THE MONSTER");
+  console.log("Features: All of them.");
   console.log("");
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
