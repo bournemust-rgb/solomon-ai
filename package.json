@@ -1,0 +1,21 @@
+﻿{
+  "name": "solomon-coatings-ai",
+  "version": "2.0.0",
+  "description": "Production WhatsApp AI bot for Solomon Coatings (est. 1988), Cape Town",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.7.9",
+    "bottleneck": "^2.19.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "ioredis": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
