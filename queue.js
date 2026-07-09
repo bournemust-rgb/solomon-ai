@@ -1,4 +1,4 @@
-﻿const Bottleneck = require('bottleneck');
+const Bottleneck = require('bottleneck');
 const axios = require('axios');
 const limiter = new Bottleneck({ maxConcurrent: 1, minTime: 67, reservoir: 50, reservoirRefreshAmount: 50, reservoirRefreshInterval: 1000 });
 limiter.on('failed', function(err, info) { console.warn('Queue fail (' + info.retryCount + '):', err.message); });
