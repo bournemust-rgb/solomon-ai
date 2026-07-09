@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -24,15 +24,15 @@ var QR = {
   "hey": "Howzit! What can I do for you?",
   "howzit": "Howzit! What can I do for you?",
   "good morning": "Morning! Solomon Coatings. What can I help with today?",
-  "menu": "SOLOMON COATINGS\n\nPowder Coating - all colours\nSandblasting\nPre-treatment\n\nPRICES:\nRims: R400-R600 each\nSmall parts: R100-R250\nGates: R1500-R3500\nChassis: R3000-R8000\nMin job: R250\n\nMon-Fri 8AM-5PM\n060 507 4461\n\nWhat are you looking to coat?",
-  "pricing": "PRICING\nRims: R400-R600/ea\nSmall parts: R100-R250\nGates: R1500-R3500\nChassis: R3000-R8000\nSandblasting: R300-R600/hr\nMinimum: R250\n\nNeed a custom quote? Just say 'quote'",
-  "price": "PRICING\nRims: R400-R600/ea\nSmall parts: R100-R250\nGates: R1500-R3500\nChassis: R3000-R8000\nMinimum: R250",
+  "menu": "SOLOMON COATINGS\n\nPowder Coating - all colours\nSandblasting\nPre-treatment\n\nPRICES:\nRims: R1000-R1500/set of 4 (10-15 inch). Tyres must be removed by customer.\nSheet metal: R175-R350/sqm. Min job: R200\nPer kg: R15-R23 coating, R8-R12 blasting\nOversized items (+3m): R1000 surcharge\nMin job: R250\n\nMon-Fri 8AM-5PM\n060 507 4461\n\nWhat are you looking to coat?",
+  "pricing": "PRICING\nRims: R400-R600/ea\nSheet metal: R175-R350/sqm. Min job: R200\nPer kg: R15-R23 coating, R8-R12 blasting\nOversized items (+3m): R1000 surcharge\nSandblasting: R300-R600/hr\nMinimum: R250\n\nNeed a custom quote? Just say 'quote'",
+  "price": "PRICING\nRims: R400-R600/ea\nSheet metal: R175-R350/sqm. Min job: R200\nPer kg: R15-R23 coating, R8-R12 blasting\nOversized items (+3m): R1000 surcharge\nMinimum: R250",
   "colours": "COLOURS & FINISHES\nStandard: Black, White, Silver, Grey, Charcoal, Red, Blue, Navy, Yellow, Green\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nWe match RAL codes. Most popular: Gloss Black & Satin Black.",
   "colors": "COLOURS & FINISHES\nStandard: Black, White, Silver, Grey, Charcoal, Red, Blue, Navy, Yellow, Green\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture",
   "hours": "Mon-Fri 8AM-5PM. Saturday by appointment.",
-  "turnaround": "Standard: 3-5 working days. Large: 1-2 weeks. Rush available.",
-  "time": "Standard: 3-5 working days. Large: 1-2 weeks. Rush available.",
-  "delivery": "R150 flat fee Cape Town metro. Free collection from workshop.",
+  "turnaround": "Under 1 ton: 3 days. Over 1 ton: 5-8 days. Rush available.",
+  "time": "Under 1 ton: 3 days. Over 1 ton: 5-8 days. Rush available.",
+  "delivery": "R150 delivery Cape Town metro. COD only.. Free collection from workshop.",
   "contact": "Call 060 507 4461 or WhatsApp us here.",
   "help": "I can help with pricing, colours, turnaround, delivery, or booking a callback from Ridhor. Just ask!",
   "thanks": "Pleasure! Anything else?",
@@ -101,10 +101,10 @@ function smartMatch(text) {
 
   // SPECIFIC ITEMS
   if (t.includes("rim") || t.includes("wheel") || t.includes("mag"))
-    return "Rims: R400-R600 each. Steel R400-R450, alloy R500-R600. Special finishes extra. Send a pic and we'll confirm! For custom quote, WhatsApp 076 760 4350.";
+    return "Rims: R1000-R1500/set of 4 (10-15 inch). Tyres must be removed by customer.. Steel R400-R450, alloy R500-R600. Special finishes extra. Send a pic and we'll confirm! For custom quote, WhatsApp 076 760 4350.";
 
   if (t.includes("gate") || t.includes("fence"))
-    return "Gates: R1500-R3500 depending on size. We sandblast, pre-treat, and coat. Send measurements or a pic for accurate quote. WhatsApp 076 760 4350.";
+    return "Per kg: R15-R23 coating, R8-R12 blasting depending on size. We sandblast, pre-treat, and coat. Send measurements or a pic for accurate quote. WhatsApp 076 760 4350.";
 
   if (t.includes("chassis") || t.includes("trailer") || t.includes("bakkie"))
     return "Chassis/trailers: R3000-R8000. Need to see condition. WhatsApp pics to Ridhor on 076 760 4350.";
