@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -70,7 +70,7 @@ function estimatePrice(text) {
     var colour = "standard";
     if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
     var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour ≈ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    return "Estimate: " + qty + " rims, " + colour + " colour � R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
   }
   if (t.includes("gate")) {
     return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
@@ -400,6 +400,11 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var session = await getSession(from);
           var match = smartMatch(text, from, session);
           if (match) {
+            if (afterHours && text) {
+              match = "Thanks for your message! Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). We will be back during business hours. But I can still help!\n\n" + match;
+              await sendMessage(PERSONAL_NUMBER, "After-hours query from " + from + ": " + text + "\nBot replied with after-hours notice + answer.");
+            }
+            
             console.log("Smart match found");
             await sendMessage(from, match);
             session.history.push({ role: "user", content: text }, { role: "model", content: match });
@@ -407,6 +412,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
             continue;
           }
           console.log("No match, using AI...");
+          if (afterHours && text) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (no match, using AI): " + text);
           sendAcknowledgment(from);
           var ai = await processMessage(text, session.history || []);
           await sendMessage(from, ai);
