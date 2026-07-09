@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿{
   "name": "solomon-coatings-ai",
   "version": "2.0.0",
@@ -18,17 +17,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-=======
-{
-  "name": "solomon-whatsapp-ai",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": { "start": "node index.js" },
-  "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.16",
-    "qrcode": "^1.5.3",
-    "express": "^4.19.2",
-    "pino": "^9.4.0"
->>>>>>> d35f73be567ca7e30e56780656174a7e816b7923
   }
 }
