@@ -5,6 +5,7 @@ var { getSession, saveSession } = require("./db");
 var { processMessage } = require("./brain");
 var { sendMessage, sendAcknowledgment } = require("./queue");
 var { KNOWLEDGE } = require("./knowledge");
+var axios = require("axios");
 
 var app = express();
 app.use(express.json({ verify: function(req, res, buf) { req.rawBody = buf.toString("utf8"); } }));
@@ -14,6 +15,8 @@ var PORT = process.env.PORT || 3000;
 var WORK_NUMBER = "0605074461";
 var PERSONAL_NUMBER = "27767604350";
 var OFFICE_EMAIL = "rshift21@yahoo.com";
+var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var QR = {
   "hi": "Goeie dag! Solomon Coatings - since 1988. What can I help with?",
@@ -37,11 +40,37 @@ var QR = {
   "bye": "Cheers! Sien jou later."
 };
 
+async function forwardImageToOwner(imageId, fromNumber) {
+  try {
+    await axios.post(
+      "https://graph.facebook.com/v21.0/" + PHONE_ID + "/messages",
+      {
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: PERSONAL_NUMBER,
+        type: "image",
+        image: { id: imageId },
+        context: { message_id: fromNumber }
+      },
+      { headers: { Authorization: "Bearer " + WA_TOKEN } }
+    );
+    console.log("Image forwarded to owner");
+    return true;
+  } catch(e) {
+    console.error("Image forward failed:", e.response ? e.response.data : e.message);
+    return false;
+  }
+}
+
 function smartMatch(text) {
   var t = text.toLowerCase().trim();
   if (QR[t]) return QR[t];
 
-  // QUOTES - route to personal
+  // Image follow-up questions
+  if ((t.includes("image") || t.includes("photo") || t.includes("pic") || t.includes("picture")) && (t.includes("where") || t.includes("sent") || t.includes("go") || t.includes("see") || t.includes("receive")))
+    return "Images are forwarded to Ridhor's personal WhatsApp (076 760 4350). He checks them directly. If you sent one, he'll see it there. If urgent, WhatsApp him directly!";
+
+  // QUOTES
   if (t.includes("quote") || t.includes("quotation") || t.includes("estimate") || t.includes("custom"))
     return "For a proper quote, WhatsApp Ridhor directly on 076 760 4350. He'll give you an exact price. Or send a pic of what needs coating and he'll get back to you.";
 
@@ -51,7 +80,7 @@ function smartMatch(text) {
 
   // SPEAK TO RIDHOR
   if ((t.includes("speak") || t.includes("talk") || t.includes("call")) && (t.includes("ridhor") || t.includes("owner") || t.includes("boss") || t.includes("person") || t.includes("manager")))
-    return "Ridhor's direct WhatsApp: 076 760 4350. Or I can have him call you — what's your name and number?";
+    return "Ridhor's direct WhatsApp: 076 760 4350. Or I can have him call you - what's your name and number?";
 
   // PRICING
   if (t.includes("price") || t.includes("cost") || t.includes("how much") || t.includes("charge") || t.includes("rate")) return QR["pricing"];
@@ -63,25 +92,27 @@ function smartMatch(text) {
   if (t.includes("hour") || t.includes("open") || t.includes("close") || t.includes("what time") || t.includes("when are you")) return QR["hours"];
 
   // TURNAROUND
-  if (t.includes("how long") || t.includes("turnaround") || t.includes("ready") || t.includes("days") || t.includes("week")) return QR["turnaround"];
+  if (t.includes("how long") || t.includes("turnaround") || t.includes("ready") || (t.includes("how") && t.includes("day")) || t.includes("week")) return QR["turnaround"];
 
-  // DELIVERY
-  if (t.includes("deliver") || t.includes("collect") || t.includes("where") || t.includes("address") || t.includes("location") || t.includes("direction")) return QR["delivery"];
+  // DELIVERY - only if NOT asking about images
+  if (!t.includes("image") && !t.includes("photo") && !t.includes("pic")) {
+    if (t.includes("deliver") || t.includes("collect") || (t.includes("where") && !t.includes("image")) || t.includes("address") || t.includes("location") || t.includes("direction")) return QR["delivery"];
+  }
 
   // SPECIFIC ITEMS
   if (t.includes("rim") || t.includes("wheel") || t.includes("mag"))
-    return "Rims: R400-R600 each. Steel R400-R450, alloy R500-R600. Special finishes extra. Send a pic and we'll confirm! For a custom quote, WhatsApp 076 760 4350.";
+    return "Rims: R400-R600 each. Steel R400-R450, alloy R500-R600. Special finishes extra. Send a pic and we'll confirm! For custom quote, WhatsApp 076 760 4350.";
 
   if (t.includes("gate") || t.includes("fence"))
     return "Gates: R1500-R3500 depending on size. We sandblast, pre-treat, and coat. Send measurements or a pic for accurate quote. WhatsApp 076 760 4350.";
 
   if (t.includes("chassis") || t.includes("trailer") || t.includes("bakkie"))
-    return "Chassis/trailers: R3000-R8000. Need to see condition. WhatsApp pics to this number or directly to Ridhor on 076 760 4350.";
+    return "Chassis/trailers: R3000-R8000. Need to see condition. WhatsApp pics to Ridhor on 076 760 4350.";
 
   if (t.includes("sandblast"))
     return "Sandblasting is R300-R600/hr depending on the item. We can blast and coat, or blast only. What do you need done?";
 
-  if (t.includes("minimum") || t.includes("small") && t.includes("job"))
+  if ((t.includes("minimum") || t.includes("small")) && t.includes("job"))
     return "Our minimum job charge is R250. Even for small brackets or hinges. Bring it in and we'll sort you out.";
 
   return null;
@@ -91,7 +122,7 @@ app.get("/health", function(req, res) {
   res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, uptime: Math.floor(process.uptime()), timestamp: new Date().toISOString() });
 });
 app.get("/", function(req, res) {
-  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "3.1" });
+  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "3.2" });
 });
 
 app.get("/webhook", function(req, res) {
@@ -117,14 +148,23 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var from = msgs[k].from;
           var type = msgs[k].type;
           var text = msgs[k].text && msgs[k].text.body ? msgs[k].text.body.trim() : null;
+          var imageId = msgs[k].image ? msgs[k].image.id : null;
 
-          // Handle photos/images
-          if (type === "image" || type === "video" || type === "document") {
-            console.log("[" + from + "]: Sent a " + type);
-            var caption = "";
-            if (msgs[k][type] && msgs[k][type].caption) caption = msgs[k][type].caption;
-            await sendMessage(PERSONAL_NUMBER, "Customer " + from + " sent a " + type + (caption ? ": " + caption : "") + ". Check WhatsApp Business.");
-            await sendMessage(from, "Thanks! I've sent your " + type + " through to Ridhor on 076 760 4350. He'll have a look and get back to you. If it's urgent, WhatsApp him directly.");
+          // Handle photos/images - FORWARD TO OWNER
+          if (type === "image" && imageId) {
+            console.log("[" + from + "]: Sent an image (ID: " + imageId + ")");
+            var caption = msgs[k].image.caption || "";
+            
+            // Forward actual image to owner's personal number
+            var forwarded = await forwardImageToOwner(imageId, from);
+            
+            if (forwarded) {
+              await sendMessage(PERSONAL_NUMBER, "New image from customer " + from + (caption ? " - Caption: " + caption : "") + ". Image forwarded above.");
+            } else {
+              await sendMessage(PERSONAL_NUMBER, "Customer " + from + " sent an image but forwarding failed. Check WhatsApp Business. Image ID: " + imageId);
+            }
+            
+            await sendMessage(from, "Thanks! I've forwarded your photo directly to Ridhor on 076 760 4350. He'll check it now. If urgent, WhatsApp him directly!");
             continue;
           }
 
@@ -157,9 +197,9 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() {
-  console.log("\nSOLOMON COATINGS AI v3.1 - Port " + PORT);
+  console.log("\nSOLOMON COATINGS AI v3.2 - Port " + PORT);
   console.log("Work: " + WORK_NUMBER + " | Personal: " + PERSONAL_NUMBER + " | Email: " + OFFICE_EMAIL);
-  console.log("Smart routing: Quotes -> Personal | Accounts -> Office | Photos -> Forwarded");
+  console.log("Smart routing: Quotes->Personal | Accounts->Office | Photos->Forwarded to Owner");
   console.log("HMAC: " + (process.env.WHATSAPP_APP_SECRET ? "ENABLED" : "DISABLED"));
   console.log("Redis: " + (process.env.UPSTASH_REDIS_URL ? "CONFIGURED" : "NOT SET"));
   console.log("");
