@@ -1,4 +1,4 @@
-require("dotenv").config();
+ï»¿require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -23,7 +23,6 @@ var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-// ============ UTILITIES ============
 function getOrderRef() {
   var d = new Date();
   return "SC" + d.getFullYear().toString().slice(-2) + ("0"+(d.getMonth()+1)).slice(-2) + ("0"+d.getDate()).slice(-2) + "-" + Math.floor(Math.random()*9000+1000);
@@ -48,17 +47,7 @@ function detectLanguage(text) {
   for (var i = 0; i < words.length; i++) {
     if (afrWords.indexOf(words[i]) !== -1) count++;
   }
-  if (count >= 2) return "af";
-  return "en";
-}
-
-function getAfrikaansReply(enReply) {
-  var map = {
-    "Hi there! Welcome to the Solomon Coatings digital desk.": "Goeie dag! Welkom by Solomon Coatings se digitale toonbank.",
-    "We are busy keeping things looking sharp, but I am always here to handle your questions.": "Ons is besig om dinge mooi te hou, maar ek is altyd hier om jou vrae te hanteer.",
-    "Feel free to ask about our pricing, available colours, or trading hours - I am ready when you are!": "Vra gerus oor ons pryse, beskikbare kleure, of besigheidsure - ek is gereed wanneer jy is!"
-  };
-  return map[enReply] || enReply;
+  return count >= 2 ? "af" : "en";
 }
 
 function estimatePrice(text) {
@@ -67,17 +56,15 @@ function estimatePrice(text) {
   if (t.includes("rim")) {
     var qty = t.match(/(\d+)/);
     qty = qty ? parseInt(qty[1]) : 4;
+    var sets = Math.ceil(qty / 4);
     var colour = "standard";
-    if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
-    var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour ˜ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    if (t.includes("metallic") || t.includes("gold") || t.includes("bronze") || t.includes("charcoal") || t.includes("silver")) colour = "metallic";
+    var perSet = colour === "standard" ? "R1,000-R1,200" : "R1,200-R1,500";
+    return "Estimate: " + qty + " rims (" + sets + " set(s)), " + colour + " colour = " + perSet + " per set excl VAT.\n\nRef: " + ref + "\n\nEstimate only. Final price depends on condition and prep. Customer MUST remove tyres. Bring them in for exact quote or WhatsApp Ridhor: 076 760 4350.";
   }
-  if (t.includes("gate")) {
-    return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
-  }
-  if (t.includes("sheet") || t.includes("mesh")) {
-    return "Sheet metal estimate: R175-R350/sqm depending on colour.\n\nRef: " + ref + "\n\nBring measurements for accurate quote.";
-  }
+  if (t.includes("gate")) return "Gate estimate: Coating R15-R23/kg + Blasting R8-R12/kg if rusted. Oversized +6m: R1,000 setup.\n\nRef: " + ref + "\n\nSend a pic for accurate estimate. WhatsApp Ridhor: 076 760 4350.";
+  if (t.includes("sheet") || t.includes("mesh")) return "Sheet metal: Standard R175-R250/sqm. Metallic R251-R350/sqm.\n\nRef: " + ref + "\n\nBring measurements for accurate quote.";
+  if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed")) return "Truck blasting: R5,000-R7,500 excl VAT (5m flatbed).\n\nRef: " + ref + "\n\nFinal price depends on condition. No rubber blasted.";
   return null;
 }
 
@@ -96,7 +83,7 @@ var QR = {
   "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days. Timelines may be affected by loadshedding/weather.",
   "delivery": "R150 delivery Cape Town metro. Free collection. Items must be collected within 7 days or 7% daily storage fee applies.",
   "contact": "WhatsApp: 060 507 4461\nOffice: " + OFFICE_NUMBER + "\nEmail: " + OFFICE_EMAIL + "\nQuotes: " + QUOTE_EMAIL + "\nFacebook: " + FACEBOOK + "\nTikTok: " + TIKTOK,
-  "help": "I can help with:\n\n* Get a quick estimate\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* View our gallery\n* Leave a review\n* Book a callback\n* Order status\n* How to order\n\nJust ask!",
+  "help": "I can help with:\n\n* Get a quick estimate\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* View our gallery\n* Leave a review\n* Book a callback\n* Order status\n\nJust ask!",
   "thanks": "Pleasure! Anything else I can help with?",
   "thank you": "Only a pleasure!",
   "bye": "Cheers! Sien jou later."
@@ -116,74 +103,65 @@ function smartMatch(text, fromNumber, session) {
   var lang = detectLanguage(text);
   var promoMsg = SEASONAL_PROMO ? "\n\n" + SEASONAL_PROMO : "";
 
-  if (QR[t]) {
-    var reply = QR[t] + promoMsg;
-    if (lang === "af") reply = getAfrikaansReply(reply);
-    return reply;
-  }
+  if (QR[t]) return QR[t] + promoMsg;
 
-  // PRICE CALCULATOR / QUICK ESTIMATE
+  // PRICE CALCULATOR
   if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set"))) {
     var est = estimatePrice(text);
     if (est) return est;
   }
 
-  // LOYALTY / RETURNING CUSTOMER
-  if (session && session.history && session.history.length > 2 && (t.includes("hi") || t.includes("hello") || t.includes("hey"))) {
+  // LOYALTY
+  if (session && session.history && session.history.length > 2 && (t === "hi" || t === "hello" || t === "hey")) {
     var lastMsg = "";
     for (var hi = session.history.length-1; hi >= 0; hi--) {
       if (session.history[hi].role === "user") { lastMsg = session.history[hi].content; break; }
     }
-    if (lastMsg) return "Welcome back! Good to hear from you again. Last time we chatted about: \"" + lastMsg.substring(0,60) + "...\"\n\nWhat can I help with today?";
+    if (lastMsg) return "Welcome back! Last time we chatted about: \"" + lastMsg.substring(0,60) + "...\"\n\nWhat can I help with today?";
   }
 
-  // INVOICE REQUEST
+  // INVOICE
   if (t.includes("invoice") && (t.includes("send") || t.includes("email") || t.includes("copy"))) {
     var ref = t.match(/SC\d{6}-\d{4}/);
-    if (ref) {
-      return "I will request your invoice for " + ref[0] + " to be emailed. Please confirm your email address or we will send it to the one on file. For urgent invoices, call " + OFFICE_NUMBER + ".";
-    }
-    return "Please provide your order reference number (e.g. SC240712-5821) and I will arrange for your invoice to be emailed. Or call " + OFFICE_NUMBER + ".";
+    if (ref) return "I will request invoice " + ref[0] + " to be emailed. Confirm your email or we will use the one on file. Urgent? Call " + OFFICE_NUMBER + ".";
+    return "Please provide your order reference (e.g. SC240712-5821) and I will arrange your invoice. Or call " + OFFICE_NUMBER + ".";
   }
 
-  // LIVE WORKSHOP STATUS
-  if (t.includes("how busy") || t.includes("queue") || t.includes("wait time") || t.includes("how long") && t.includes("wait")) {
-    return "Current workshop status: We are processing orders daily. For an accurate wait time, WhatsApp Ridhor on 076 760 4350 with what you need done. He can give you a real-time update.";
-  }
+  // WORKSHOP STATUS
+  if (t.includes("how busy") || t.includes("queue") || t.includes("wait time") || (t.includes("how long") && t.includes("wait")))
+    return "We process orders daily. For real-time wait time, WhatsApp Ridhor on 076 760 4350 with what you need done.";
 
   // COLOUR VISUALISER
-  if ((t.includes("show me") || t.includes("see") || t.includes("look like") || t.includes("example") || t.includes("sample")) && (t.includes("colour") || t.includes("color") || t.includes("black") || t.includes("white") || t.includes("red") || t.includes("blue") || t.includes("finish"))) {
-    return "Check out our colour examples on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + "\n\nWe post real jobs regularly so you can see exactly how colours look. Want a specific colour? WhatsApp Ridhor on 076 760 4350 and he will send you samples.";
-  }
+  if ((t.includes("show me") || t.includes("see") || t.includes("look like") || t.includes("example") || t.includes("sample")) && (t.includes("colour") || t.includes("color") || t.includes("black") || t.includes("white") || t.includes("red") || t.includes("blue") || t.includes("finish")))
+    return "Check our colour examples on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + "\n\nWe post real jobs regularly. Want a specific colour? WhatsApp Ridhor on 076 760 4350 for samples.";
 
   // GOOGLE REVIEW
-  if (t.includes("review") || t.includes("rate") || t.includes("feedback") || t.includes("testimonial")) {
-    return "We would love your feedback! Leave us a review on Google: " + GOOGLE_REVIEW + "\n\nOr share your experience on our Facebook page: " + FACEBOOK + "\n\nThank you for supporting Solomon Coatings since 1988!";
-  }
+  if (t.includes("review") || t.includes("rate") || t.includes("feedback") || t.includes("testimonial"))
+    return "We would love your feedback! Leave a review: " + GOOGLE_REVIEW + "\n\nOr share on Facebook: " + FACEBOOK + "\n\nThank you for supporting Solomon Coatings since 1988!";
 
   // GALLERY
-  if (t.includes("gallery") || t.includes("see your work") || t.includes("past job") || t.includes("portfolio") || t.includes("examples") || t.includes("photos of") || t.includes("pictures of") || t.includes("what have you done"))
-    return "Check out our work on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + ". We post regularly! Want to see something specific? Ask and I will let Ridhor know." + promoMsg;
+  if (t.includes("gallery") || t.includes("see your work") || t.includes("past job") || t.includes("portfolio") || t.includes("examples") || t.includes("what have you done"))
+    return "Check out our work on Facebook: " + FACEBOOK + " and TikTok: " + TIKTOK + ". We post regularly!" + promoMsg;
 
   // TERMS
   if (t.includes("terms") || t.includes("t&c") || t.includes("conditions") || t.includes("policy") || t.includes("legal"))
-    return "Our full Terms & Conditions:\n- COD only, no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client's risk\n- Items remain our property until paid\n\nFull document: email " + OFFICE_EMAIL + " or WhatsApp Ridhor on 076 760 4350.";
+    return "Full T&Cs:\n- COD only, no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client's risk\n- Items remain our property until paid\n\nFull document: email " + OFFICE_EMAIL + " or WhatsApp Ridhor on 076 760 4350.";
 
   // ORDER STATUS
   if (t.includes("order") && (t.includes("status") || t.includes("update") || t.includes("progress") || t.includes("ready") || t.includes("track")))
-    return "For order updates, WhatsApp Ridhor on 076 760 4350 with your reference number. He will check the workshop and let you know.";
+    return "For order updates, WhatsApp Ridhor on 076 760 4350 with your reference number.";
 
   // BOOK CALLBACK
   if (t.includes("book") || t.includes("callback") || t.includes("call me") || t.includes("appointment") || t.includes("visit") || t.includes("come in"))
-    return "Want Ridhor to call you? Send me your name, number, and what you need done. I will pass it to him. Or call " + OFFICE_NUMBER + " to book.";
+    return "Want Ridhor to call you? Send your name, number, and what you need. Or call " + OFFICE_NUMBER + " to book.";
 
   // COMPLAINT
   if (t.includes("complaint") || t.includes("problem") || t.includes("unhappy") || t.includes("not happy") || t.includes("issue") || t.includes("wrong"))
-    return "I am sorry to hear that. Please WhatsApp Ridhor directly on 076 760 4350 or email " + OFFICE_EMAIL + " with details. He will sort it out.";
+    return "Sorry to hear that. WhatsApp Ridhor on 076 760 4350 or email " + OFFICE_EMAIL + " with details. He will sort it out.";
 
   // HOW TO ORDER
-  if ((t.includes("how") && t.includes("order")) || t.includes("process") || t.includes("steps") || t.includes("how does it work") || t.includes("what do i do"))
-    return "How it works:\n1. Send a pic or description\n2. Get an estimate (subject to inspection)\n3. Bring items during business hours\n4. We blast, pre-treat, and coat\n5. We notify when ready\n6. Pay (COD) and collect\n\nGot something in mind?";
+  if ((t.includes("how") && t.includes("order")) || t.includes("process") || t.includes("steps") || t.includes("how does it work"))
+    return "How it works:\n1. Send pic/description\n2. Get estimate (subject to inspection)\n3. Bring items during business hours\n4. We blast, pre-treat, coat\n5. We notify when ready\n6. Pay (COD) and collect\n\nGot something in mind?";
 
   // REFERRAL
   if (t.includes("recommend") || t.includes("refer") || t.includes("friend") || t.includes("family"))
@@ -193,13 +171,13 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("urgent") || t.includes("emergency") || t.includes("asap") || t.includes("rush"))
     return "For urgent jobs, WhatsApp Ridhor directly on 076 760 4350. Rush surcharge may apply.";
 
-  // MATERIAL TYPES
+  // MATERIALS
   if (t.includes("material") || t.includes("what can you coat") || (t.includes("can you do") && (t.includes("wood") || t.includes("plastic") || t.includes("aluminium") || t.includes("steel"))))
-    return "We coat all metals handling 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass. Items unable to withstand 200C must be declared.";
+    return "We coat all metals handling 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass.";
 
   // COLLECTION
   if (t.includes("collect") || t.includes("pickup") || t.includes("storage") || t.includes("uncollected"))
-    return "Items must be collected within 7 working days. Late collection: 7% daily storage fee. No release without payment. Uncollected items may be sold to recover costs.";
+    return "Items must be collected within 7 working days. Late collection: 7% daily storage fee. No release without full payment.";
 
   // COASTAL
   if (t.includes("coastal") || t.includes("sea") || t.includes("beach") || t.includes("salt") || t.includes("warranty") || t.includes("guarantee"))
@@ -209,25 +187,25 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("defect") || t.includes("crack") || t.includes("warp") || t.includes("distort") || t.includes("hidden"))
     return "Not liable for latent defects (cracked welds, corrosion, delamination, warping). All work at client's risk.";
 
-  // SHOTBLASTING RISK
+  // SHOTBLAST RISK
   if ((t.includes("shotblast") || t.includes("shot blast")) && (t.includes("risk") || t.includes("liable") || t.includes("damage")))
     return "Shotblasting strictly at client's risk. May expose underlying defects. Not liable for cracking, chipping, pitting.";
 
-  // PRE-BLASTING
+  // PRE-BLAST
   if (t.includes("prepare") || t.includes("plastic") || t.includes("glass") || t.includes("hydraulic"))
     return "Before blasting: Remove plastic, brittle, malleable parts. Disconnect hydraulics. Empty/declare tanks. Remove glass/lights. No liability for breakage.";
 
   // MAINTENANCE
   if (t.includes("maintenance") || t.includes("clean") || t.includes("care") || t.includes("look after") || t.includes("last longer"))
-    return "Longevity needs maintenance: drying, wiping, cleaning, rinsing, protective treatments. Keep records. Outdoor items should be stainless, aluminium, or galvanised.";
+    return "Longevity needs maintenance: drying, wiping, cleaning, rinsing, protective treatments. Keep records.";
 
   // PAYMENT
   if (t.includes("pay") || t.includes("payment") || t.includes("cod") || t.includes("release"))
-    return "Strict COD - no release without full payment. Custom materials paid upfront. Uncollected items may be sold. Accounts: " + OFFICE_EMAIL + " / " + OFFICE_NUMBER;
+    return "Strict COD - no release without full payment. Custom materials paid upfront. Accounts: " + OFFICE_EMAIL + " / " + OFFICE_NUMBER;
 
   // IP
   if (t.includes("intellectual") || t.includes("ip") || t.includes("ownership") || t.includes("design"))
-    return "All processes and colour formulations remain Solomon Coatings IP. Items remain our property until paid in full.";
+    return "All processes/colour formulations remain Solomon Coatings IP. Items remain our property until paid in full.";
 
   // COLOUR VARIATION
   if (t.includes("batch") || t.includes("colour match") || t.includes("color match") || t.includes("variation"))
@@ -294,7 +272,7 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("gate") || t.includes("fence") || t.includes("burglar"))
     return "Gates/bars/rails: Per kg. Coating R15-R23/kg, Blasting R8-R12/kg. Oversized +6m: R1000. WhatsApp: 076 760 4350.";
 
-  // SHEET METAL
+  // SHEET
   if (t.includes("sheet") || t.includes("mesh") || t.includes("panel"))
     return "Sheet metal: Standard R175-R250/sqm. Hammered R225+. Metallics R300+. Excl VAT. Bulk discounts up to 10%.";
 
@@ -328,33 +306,31 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("reference") || t.includes("order number") || t.includes("job number") || t.includes("ref"))
     return "Your reference: " + getOrderRef() + "\n\nUse this when contacting us. Save it! For a quote, WhatsApp Ridhor: 076 760 4350.";
 
-  // PROMO UPDATE (admin only - triggered by specific phrase)
+  // PROMO SET
   if (t.includes("admin set promo") && fromNumber === PERSONAL_NUMBER) {
     var promo = text.replace(/admin set promo/i, "").trim();
-    if (promo) {
-      SEASONAL_PROMO = promo;
-      return "Promo set: \"" + promo + "\"\n\nIt will now appear on menu and pricing replies.";
-    }
+    if (promo) { SEASONAL_PROMO = promo; return "Promo set: \"" + promo + "\"\n\nIt will now appear on menu and pricing replies."; }
   }
 
-  // RAIN / WEATHER
-  if (t.includes("rain") || t.includes("weather") && t.includes("coat"))
+  // RAIN
+  if (t.includes("rain") || (t.includes("weather") && t.includes("coat")))
     return "Once cured, powder coating is weather-resistant. Fresh coating should not be exposed to rain for 24 hours. We advise collecting when weather is clear.";
 
   return null;
 }
 
 app.get("/health", function(req, res) {
-  res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, version: "7.0", features: ["Smart replies","T&Cs","Gallery","Order refs","Callbacks","Complaints","After-hours","Multi-language","Price calculator","Loyalty","Invoice requests","Reviews","Colour visualiser","Promos","Voice notes"] });
+  res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, version: "7.1" });
 });
 app.get("/", function(req, res) {
-  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "7.0" });
+  res.json({ service: "Solomon Coatings WhatsApp Bot", status: "running", version: "7.1" });
 });
 app.get("/webhook", function(req, res) {
   var m = req.query["hub.mode"], t = req.query["hub.verify_token"], c = req.query["hub.challenge"];
   if (m === "subscribe" && t === VT) { console.log("Webhook verified"); return res.status(200).send(c); }
   res.sendStatus(403);
 });
+
 app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   res.sendStatus(200);
   try {
@@ -368,23 +344,17 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var text = msgs[k].text && msgs[k].text.body ? msgs[k].text.body.trim() : null;
           var imageId = msgs[k].image ? msgs[k].image.id : null;
           var voiceNote = msgs[k].audio;
+          var afterHours = isAfterHours();
 
           // VOICE NOTE
           if (type === "audio" || voiceNote) {
-            console.log("[" + from + "]: Voice note received");
-            await sendMessage(from, "I received your voice note! I cannot transcribe it yet, but I have notified Ridhor. He will listen and get back to you. For quick answers, please text your question. Or WhatsApp him directly on 076 760 4350.");
+            console.log("[" + from + "]: Voice note");
+            await sendMessage(from, "I received your voice note! I cannot transcribe it yet, but I have notified Ridhor. He will listen and get back to you. For quick answers, please text. Or WhatsApp him directly on 076 760 4350.");
             await sendMessage(PERSONAL_NUMBER, "Voice note from " + from + ". Check WhatsApp Business.");
             continue;
           }
 
-          // AFTER HOURS
-          if (isAfterHours() && type !== "image") {
-            console.log("[" + from + "]: After-hours message");
-            await sendMessage(from, "Thanks for your message! Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). I will pass your details to Ridhor. For urgent matters, WhatsApp him on 076 760 4350.\n\nI can still answer questions about pricing, colours, and services - ask away!");
-            if (text) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + ": " + text);
-            continue;
-          }
-
+          // IMAGE
           if (type === "image" && imageId) {
             console.log("[" + from + "]: Image " + imageId);
             var cap = msgs[k].image.caption || "";
@@ -394,27 +364,32 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
             await sendMessage(from, "Thanks! Forwarded to Ridhor on 076 760 4350. He will check now. Urgent? WhatsApp him directly!");
             continue;
           }
+
           if (!text) continue;
 
-          console.log("[" + from + ']: "' + text + '"');
+          console.log("[" + from + ']: "' + text + '"' + (afterHours ? " [AFTER HOURS]" : ""));
           var session = await getSession(from);
           var match = smartMatch(text, from, session);
+
           if (match) {
-            if (afterHours && text) {
-              match = "Thanks for your message! Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). We will be back during business hours. But I can still help!\n\n" + match;
-              await sendMessage(PERSONAL_NUMBER, "After-hours query from " + from + ": " + text + "\nBot replied with after-hours notice + answer.");
+            // Add after-hours notice if applicable
+            if (afterHours) {
+              match = "Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + match;
+              await sendMessage(PERSONAL_NUMBER, "After-hours query from " + from + ": \"" + text + "\"\nBot replied with answer.");
             }
-            
             console.log("Smart match found");
             await sendMessage(from, match);
             session.history.push({ role: "user", content: text }, { role: "model", content: match });
             await saveSession(from, session);
             continue;
           }
+
+          // No match - use AI
+          if (afterHours) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (using AI): \"" + text + "\"");
           console.log("No match, using AI...");
-          if (afterHours && text) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (no match, using AI): " + text);
           sendAcknowledgment(from);
           var ai = await processMessage(text, session.history || []);
+          if (afterHours) ai = "Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + ai;
           await sendMessage(from, ai);
           session.history.push({ role: "user", content: text }, { role: "model", content: ai });
           await saveSession(from, session);
@@ -423,9 +398,10 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
     }
   } catch (e) { console.error("WEBHOOK ERROR:", e.message); }
 });
+
 app.listen(PORT, function() {
-  console.log("\nSOLOMON COATINGS AI v7.0 - THE MONSTER");
-  console.log("Features: All of them.");
+  console.log("\nSOLOMON COATINGS AI v7.1 - Port " + PORT);
+  console.log("After-hours: Answers queries + adds closed notice + notifies owner");
   console.log("");
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
