@@ -1,4 +1,4 @@
-ï»¿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -459,8 +459,8 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           if (afterHours) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (using AI): \"" + text + "\"");
           console.log("No match, using fallback...");
           // AI disabled - using fallback
-          await sendMessage(from, "I can help with pricing, colours, hours, quotes, and more. Try rephrasing or type *help* to see what I can do. For anything else, WhatsApp Ridhor on 076 760 4350.");
-          var ai = "I can help with pricing, colours, hours, quotes, and more. Try rephrasing or type *help* to see what I can do. For anything else, WhatsApp Ridhor on 076 760 4350.";
+          await sendMessage(from, "Ag sorry, I don't know about that one! I'm a powder coating oom, not Google. ??\n\nI CAN help with:\n- Pricing & quotes (try 'quote 20kg gate black')\n- Colours & finishes\n- Turnaround times\n- Blasting & coating info\n- T&Cs & warranties\n\nType *help* to see everything I can do. Or WhatsApp Ridhor directly on 076 760 4350 — he knows everything!");
+          var ai = "Ag sorry, I don't know about that one! I'm a powder coating oom, not Google. ??\n\nI CAN help with:\n- Pricing & quotes (try 'quote 20kg gate black')\n- Colours & finishes\n- Turnaround times\n- Blasting & coating info\n- T&Cs & warranties\n\nType *help* to see everything I can do. Or WhatsApp Ridhor directly on 076 760 4350 — he knows everything!";
           if (afterHours) ai = "Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + ai;
           await sendMessage(from, ai);
           session.history.push({ role: "user", content: text }, { role: "model", content: ai });
