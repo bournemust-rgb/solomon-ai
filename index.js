@@ -138,7 +138,7 @@ function smartMatch(text, fromNumber, session) {
   }
 
   // PRICE CALCULATOR / QUICK ESTIMATE
-  if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set"))) {
+  if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set") || t.includes("kg") || t.includes("truck") || t.includes("bakkie") || t.includes("flatbed"))) {
     var est = estimatePrice(text);
     if (est) return est;
   }
