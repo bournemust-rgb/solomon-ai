@@ -103,7 +103,7 @@ function smartMatch(text, fromNumber, session) {
   
   // PRICE CALCULATOR - RUNS FIRST BEFORE ALL OTHER CHECKS
   if (t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price") || t.includes("charge") || t.includes("rate")) {
-    var est = estimatePrice(t);
+    var est = estimatePrice(text);
     if (est) return est;
   }
 
