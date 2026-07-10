@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -70,7 +70,7 @@ function estimatePrice(text) {
     var colour = "standard";
     if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
     var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour ˜ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    return "Estimate: " + qty + " rims, " + colour + " colour � R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
   }
   if (t.includes("gate")) {
     return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
@@ -96,7 +96,7 @@ var QR = {
   "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days. Timelines may be affected by loadshedding/weather.",
   "delivery": "R150 delivery Cape Town metro. Free collection. Items must be collected within 7 days or 7% daily storage fee applies.",
   "contact": "WhatsApp: 060 507 4461\nOffice: " + OFFICE_NUMBER + "\nEmail: " + OFFICE_EMAIL + "\nQuotes: " + QUOTE_EMAIL + "\nFacebook: " + FACEBOOK + "\nTikTok: " + TIKTOK,
-  "help": "I can help with:\n\n* Get a quick estimate\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* View our gallery\n* Leave a review\n* Book a callback\n* Order status\n* How to order\n\nJust ask!",
+  "help": "Here is what I can do - reply with a number:\n\n1. Pricing & rates\n2. Colours & finishes\n3. Get a quote estimate (e.g. quote 20kg gate charcoal)\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just type your question!",
   "thanks": "Pleasure! Anything else I can help with?",
   "thank you": "Only a pleasure!",
   "bye": "Cheers! Sien jou later."
