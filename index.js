@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -162,6 +162,10 @@ function smartMatch(text, fromNumber, session) {
   // HOW TO ORDER
   if ((t.includes("how") && t.includes("order")) || t.includes("process") || t.includes("steps") || t.includes("how does it work"))
     return "How it works:\n1. Send pic/description\n2. Get estimate (subject to inspection)\n3. Bring items during business hours\n4. We blast, pre-treat, coat\n5. We notify when ready\n6. Pay (COD) and collect\n\nGot something in mind?";
+
+  // REFERENCE (must come before referral to avoid conflict)
+  if (t.includes("reference") || t.includes("order number") || t.includes("job number") || t.includes("ref"))
+    return "Your reference: " + getOrderRef() + "\n\nUse this when contacting us. Save it! For a quote, WhatsApp Ridhor: 076 760 4350.";
 
   // REFERRAL
   if (t.includes("recommend") || t.includes("refer") || t.includes("friend") || t.includes("family"))
