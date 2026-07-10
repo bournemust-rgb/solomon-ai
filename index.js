@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -70,7 +70,7 @@ function estimatePrice(text) {
     var colour = "standard";
     if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
     var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour ˜ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    return "Estimate: " + qty + " rims, " + colour + " colour � R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
   }
   if (t.includes("gate")) {
     return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
@@ -439,7 +439,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   } catch (e) { console.error("WEBHOOK ERROR:", e.message); }
 });
 app.listen(PORT, function() {
-  console.log("\nSOLOMON COATINGS AI v7.0 - THE MONSTER");
+  console.log("\nSOLOMON COATINGS AI v8.1 - NUMBERED MENU");
   console.log("Features: All of them.");
   console.log("");
 });
