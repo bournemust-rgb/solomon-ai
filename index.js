@@ -1,4 +1,4 @@
-require("dotenv").config();
+﻿require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -53,21 +53,51 @@ function detectLanguage(text) {
 function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
+  var vatRate = 0.15;
+
+  // RIMS
   if (t.includes("rim")) {
-    var qty = t.match(/(\d+)/);
-    qty = qty ? parseInt(qty[1]) : 4;
+    var qty = t.match(/(\d+)/); qty = qty ? parseInt(qty[1]) : 4;
     var sets = Math.ceil(qty / 4);
-    var colour = "standard";
-    if (t.includes("metallic") || t.includes("gold") || t.includes("bronze") || t.includes("charcoal") || t.includes("silver")) colour = "metallic";
-    var perSet = colour === "standard" ? "R1,000-R1,200" : "R1,200-R1,500";
-    return "Estimate: " + qty + " rims (" + sets + " set(s)), " + colour + " colour = " + perSet + " per set excl VAT.\n\nRef: " + ref + "\n\nEstimate only. Final price depends on condition and prep. Customer MUST remove tyres. Bring them in for exact quote or WhatsApp Ridhor: 076 760 4350.";
+    var rimColour = (t.includes("metallic") || t.includes("gold") || t.includes("bronze") || t.includes("charcoal") || t.includes("silver") || t.includes("color") || t.includes("colour")) ? "premium" : "standard";
+    var rimLow = rimColour === "standard" ? 1000 : 1200;
+    var rimHigh = rimColour === "standard" ? 1200 : 1500;
+    var rimTotalLow = rimLow * sets; var rimTotalHigh = rimHigh * sets;
+    return "RIMS ESTIMATE - Ref: " + ref + "\n\n" + qty + " rims = " + sets + " set(s)\nColour: " + (rimColour === "standard" ? "Standard (Black/White)" : "Premium (Metallic/Charcoal)") + "\n\nExcl VAT: R" + rimTotalLow.toLocaleString() + " - R" + rimTotalHigh.toLocaleString() + "\nVAT (15%): R" + Math.round(rimTotalLow*vatRate).toLocaleString() + " - R" + Math.round(rimTotalHigh*vatRate).toLocaleString() + "\nIncl VAT: R" + Math.round(rimTotalLow*1.15).toLocaleString() + " - R" + Math.round(rimTotalHigh*1.15).toLocaleString() + "\n\nBlasting included within reason. Customer MUST remove tyres. Estimate only. WhatsApp Ridhor: 076 760 4350.";
   }
-  if (t.includes("gate")) return "Gate estimate: Coating R15-R23/kg + Blasting R8-R12/kg if rusted. Oversized +6m: R1,000 setup.\n\nRef: " + ref + "\n\nSend a pic for accurate estimate. WhatsApp Ridhor: 076 760 4350.";
-  if (t.includes("sheet") || t.includes("mesh")) return "Sheet metal: Standard R175-R250/sqm. Metallic R251-R350/sqm.\n\nRef: " + ref + "\n\nBring measurements for accurate quote.";
-  if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed")) return "Truck blasting: R5,000-R7,500 excl VAT (5m flatbed).\n\nRef: " + ref + "\n\nFinal price depends on condition. No rubber blasted.";
+
+  // GATES / PER KG
+  if (t.includes("gate") || t.includes("kg")) {
+    var kg = t.match(/(\d+)\s*kg/); kg = kg ? parseInt(kg[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 10);
+    var isPremium = (t.includes("charcoal") || t.includes("metallic") || t.includes("bronze") || t.includes("gold") || t.includes("silver") || t.includes("blue") || t.includes("red") || t.includes("green") || t.includes("yellow") || t.includes("colour") || t.includes("color"));
+    var rateLow = isPremium ? 17 : 16; var rateHigh = isPremium ? 20 : 16;
+    var coatLow = kg * rateLow; var coatHigh = kg * rateHigh;
+    var vatLow = Math.round(coatLow * vatRate); var vatHigh = Math.round(coatHigh * vatRate);
+    var msg = "GATE/PER KG ESTIMATE - Ref: " + ref + "\n\nWeight: " + kg + " kg\nColour: " + (isPremium ? "Premium (R" + rateLow + "-R" + rateHigh + "/kg)" : "Standard Black/White (R16/kg)") + "\n\nCoating (blasting included within reason): R" + coatLow.toLocaleString() + " - R" + coatHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + (coatLow+vatLow).toLocaleString() + " - R" + (coatHigh+vatHigh).toLocaleString();
+    if (t.includes("blast only") || t.includes("blasting only")) {
+      var blastLow = kg * 8; var blastHigh = kg * 12;
+      msg = "BLASTING ONLY ESTIMATE - Ref: " + ref + "\n\nWeight: " + kg + " kg\n\nBlasting only: R" + blastLow.toLocaleString() + " - R" + blastHigh.toLocaleString() + "\nVAT (15%): R" + Math.round(blastLow*vatRate).toLocaleString() + " - R" + Math.round(blastHigh*vatRate).toLocaleString() + "\nIncl VAT: R" + Math.round(blastLow*1.15).toLocaleString() + " - R" + Math.round(blastHigh*1.15).toLocaleString();
+    }
+    if (kg > 100) msg += "\n\nBulk discount up to 10% may apply.";
+    msg += "\n\nEstimate only. Blasting included within reason. Final price subject to condition. WhatsApp Ridhor: 076 760 4350.";
+    return msg;
+  }
+
+  // SHEET METAL
+  if (t.includes("sheet") || t.includes("mesh")) {
+    var sqm = t.match(/(\d+)\s*sqm/); sqm = sqm ? parseInt(sqm[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 5);
+    var sp = (t.includes("charcoal") || t.includes("metallic") || t.includes("bronze") || t.includes("gold") || t.includes("colour") || t.includes("color"));
+    var sLow = sp ? 251 : 175; var sHigh = sp ? 350 : 250;
+    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\n" + sqm + " sqm\nColour: " + (sp ? "Premium (R251-R350/sqm)" : "Standard Black/White (R175-R250/sqm)") + "\n\nExcl VAT: R" + (sqm*sLow).toLocaleString() + " - R" + (sqm*sHigh).toLocaleString() + "\nVAT (15%): R" + Math.round(sqm*sLow*vatRate).toLocaleString() + " - R" + Math.round(sqm*sHigh*vatRate).toLocaleString() + "\nIncl VAT: R" + Math.round(sqm*sLow*1.15).toLocaleString() + " - R" + Math.round(sqm*sHigh*1.15).toLocaleString() + "\n\nBlasting included within reason. Estimate only.";
+  }
+
+  // TRUCK
+  if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed")) {
+    return "TRUCK BLASTING ESTIMATE - Ref: " + ref + "\n\n5m flatbed\nExcl VAT: R5,000 - R7,500\nVAT (15%): R750 - R1,125\nIncl VAT: R5,750 - R8,625\n\nNo rubber blasted. Estimate only.";
+  }
+
   return null;
 }
-
 var SEASONAL_PROMO = "";
 
 var QR = {
