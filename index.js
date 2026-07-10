@@ -96,7 +96,7 @@ var QR = {
   "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days. Timelines may be affected by loadshedding/weather.",
   "delivery": "R150 delivery Cape Town metro. Free collection. Items must be collected within 7 days or 7% daily storage fee applies.",
   "contact": "WhatsApp: 060 507 4461\nOffice: " + OFFICE_NUMBER + "\nEmail: " + OFFICE_EMAIL + "\nQuotes: " + QUOTE_EMAIL + "\nFacebook: " + FACEBOOK + "\nTikTok: " + TIKTOK,
-  "help": "Here is what I can do - reply with a number:\n\n1. Pricing & rates\n2. Colours & finishes\n3. Get a quote estimate (e.g. quote 20kg gate charcoal)\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. Daily inspiration from TPS\n\nOr just type your question!",
+  "help": "Here is what I can do - reply with a number:\n\n1. Pricing & rates\n2. Colours & finishes\n3. Get a quote estimate (e.g. quote 20kg gate charcoal)\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. Daily inspiration from Solomons family\n\nOr just type your question!",
   "thanks": "Pleasure! Anything else I can help with?",
   "thank you": "Only a pleasure!",
   "bye": "Cheers! Sien jou later."
@@ -143,21 +143,22 @@ function smartMatch(text, fromNumber, session) {
     if (est) return est;
   }
 
-    // DAILY INSPIRATION
-  if (t === "14" || t === "daily" || t === "inspiration" || t === "quote of the day" || t === "motivation" || t === "tps quote") {
+      // DAILY INSPIRATION
+  if (t === "14" || t === "daily" || t === "inspiration" || t === "quote of the day" || t === "motivation" || t === "tps quote" || t === "remember") {
     var quotes = [
-      "TPS said: \"Quality is not an act, it is a habit. Since 1988, we have made it ours.\"",
-      "TPS said: \"The coating is only as strong as the foundation. Build well, and it will last.\"",
-      "TPS said: \"Hard work beats talent when talent does not work hard. We have been working hard since 1988.\"",
-      "TPS said: \"Every scratch tells a story. We are here to give it a better ending.\"",
-      "TPS said: \"Patience and powder coating have one thing in common — both need time to cure properly.\"",
-      "TPS said: \"Success is not owned. It is rented. And the rent is due every day.\"",
-      "TPS said: \"In powder coating and in life — preparation is everything. Do the prep work.\"",
-      "TPS said: \"A smooth finish comes from rough beginnings. Do not fear the blasting — it reveals what is real.\"",
-      "TPS said: \"We do not just coat metal. We protect what you have built. That is a responsibility we have never taken lightly.\"",
-      "TPS said: \"The oven does not care about your excuses. It only cares about the right temperature. Be like the oven.\"",
-      "TPS said: \"Gratitude turns what we have into enough. Thank you for trusting us since 1988.\"",
-      "TPS said: \"Stay strong. Stay grateful. Stay coated.\""
+      "Remember: We never lose, we either Win or we Learn.",
+      "Remember: Quality is not an act, it is a habit. Since 1988, we have made it ours.",
+      "Remember: The coating is only as strong as the foundation. Build well, and it will last.",
+      "Remember: Hard work beats talent when talent does not work hard. We have been working hard since 1988.",
+      "Remember: Every scratch tells a story. We are here to give it a better ending.",
+      "Remember: Patience and powder coating have one thing in common — both need time to cure properly.",
+      "Remember: Success is not owned. It is rented. And the rent is due every day.",
+      "Remember: In powder coating and in life — preparation is everything. Do the prep work.",
+      "Remember: A smooth finish comes from rough beginnings. Do not fear the blasting — it reveals what is real.",
+      "Remember: We do not just coat metal. We protect what you have built. That is a responsibility we have never taken lightly.",
+      "Remember: The oven does not care about your excuses. It only cares about the right temperature. Be like the oven.",
+      "Remember: Gratitude turns what we have into enough. Thank you for trusting us since 1988.",
+      "Remember: Stay strong. Stay grateful. Stay coated."
     ];
     return quotes[Math.floor(Math.random() * quotes.length)];
   }
@@ -465,5 +466,6 @@ app.listen(PORT, function() {
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
 process.on("uncaughtException", function(e) { console.error("Uncaught:", e); });
+
 
 
