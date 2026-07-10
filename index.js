@@ -1,4 +1,4 @@
-ï»¿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -70,7 +70,7 @@ function estimatePrice(text) {
     var colour = "standard";
     if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
     var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour Ëœ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    return "Estimate: " + qty + " rims, " + colour + " colour ˜ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
   }
   if (t.includes("gate")) {
     return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
@@ -112,6 +112,9 @@ async function forwardImageToOwner(imageId, fromNumber) {
 }
 
 function smartMatch(text, fromNumber, session) {
+  // CALCULATOR CHECK FIRST
+  var calcResult = estimatePrice(text);
+  if (calcResult) return calcResult;
   var t = text.toLowerCase().trim();
   // NUMBERED OPTIONS - check first
   if (t === "1") return "PRICING (excl 15 percent VAT)\nRims: R1000-R1500/set of 4\nSheet metal: R175-R350/sqm\nPer kg coating: R16/kg B/W, R17-R20/kg premium\nBlasting only: R8-R12/kg\nTruck blasting: R5000-R7500\nMin job: R173.99 B/W, R225 hammered, R300+ metallic\n\nFor a maths estimate: quote 20kg gate charcoal";
@@ -137,7 +140,7 @@ function smartMatch(text, fromNumber, session) {
     return reply;
   }
 
-  // PRICE CALCULATOR / QUICK ESTIMATE
+  // CALCULATOR - MUST BE FIRST / QUICK ESTIMATE
   if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set") || t.includes("kg") || t.includes("truck") || t.includes("bakkie") || t.includes("flatbed"))) {
     var est = estimatePrice(text);
     if (est) return est;
@@ -151,10 +154,10 @@ function smartMatch(text, fromNumber, session) {
       "Remember: The coating is only as strong as the foundation. Build well, and it will last.",
       "Remember: Hard work beats talent when talent does not work hard. We have been working hard since 1988.",
       "Remember: Every scratch tells a story. We are here to give it a better ending.",
-      "Remember: Patience and powder coating have one thing in common â€” both need time to cure properly.",
+      "Remember: Patience and powder coating have one thing in common — both need time to cure properly.",
       "Remember: Success is not owned. It is rented. And the rent is due every day.",
-      "Remember: In powder coating and in life â€” preparation is everything. Do the prep work.",
-      "Remember: A smooth finish comes from rough beginnings. Do not fear the blasting â€” it reveals what is real.",
+      "Remember: In powder coating and in life — preparation is everything. Do the prep work.",
+      "Remember: A smooth finish comes from rough beginnings. Do not fear the blasting — it reveals what is real.",
       "Remember: We do not just coat metal. We protect what you have built. That is a responsibility we have never taken lightly.",
       "Remember: The oven does not care about your excuses. It only cares about the right temperature. Be like the oven.",
       "Remember: Gratitude turns what we have into enough. Thank you for trusting us since 1988.",
@@ -379,6 +382,8 @@ function smartMatch(text, fromNumber, session) {
   return null;
 }
 
+// PLACEHOLDER
+
 app.get("/health", function(req, res) {
   res.json({ status: "healthy", service: "Solomon Coatings AI", established: 1988, version: "7.0", features: ["Smart replies","T&Cs","Gallery","Order refs","Callbacks","Complaints","After-hours","Multi-language","Price calculator","Loyalty","Invoice requests","Reviews","Colour visualiser","Promos","Voice notes"] });
 });
@@ -466,6 +471,7 @@ app.listen(PORT, function() {
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
 process.on("uncaughtException", function(e) { console.error("Uncaught:", e); });
+
 
 
 
