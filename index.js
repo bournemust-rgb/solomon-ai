@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -99,6 +99,14 @@ async function forwardImageToOwner(imageId, fromNumber) {
 }
 
 function smartMatch(text, fromNumber, session) {
+  var t = text.toLowerCase().trim();
+  
+  // PRICE CALCULATOR - RUNS FIRST BEFORE ALL OTHER CHECKS
+  if (t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price") || t.includes("charge") || t.includes("rate")) {
+    var est = estimatePrice(t);
+    if (est) return est;
+  }
+
   var t = text.toLowerCase().trim();
   var lang = detectLanguage(text);
   var promoMsg = SEASONAL_PROMO ? "\n\n" + SEASONAL_PROMO : "";
@@ -415,4 +423,5 @@ app.listen(PORT, function() {
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
 process.on("uncaughtException", function(e) { console.error("Uncaught:", e); });
+
 
