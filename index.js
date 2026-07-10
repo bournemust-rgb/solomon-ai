@@ -2,7 +2,7 @@ require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
-var { processMessage } = require("./brain");
+// Gemini AI disabled - using smart replies only
 var { sendMessage, sendAcknowledgment } = require("./queue");
 var { KNOWLEDGE } = require("./knowledge");
 var axios = require("axios");
@@ -394,9 +394,10 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 
           // No match - use AI
           if (afterHours) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (using AI): \"" + text + "\"");
-          console.log("No match, using AI...");
-          sendAcknowledgment(from);
-          var ai = await processMessage(text, session.history || []);
+          console.log("No match, using fallback...");
+          // AI disabled - using fallback
+          await sendMessage(from, "I can help with pricing, colours, hours, quotes, and more. Try rephrasing or type *help* to see what I can do. For anything else, WhatsApp Ridhor on 076 760 4350.");
+          var ai = "I can help with pricing, colours, hours, quotes, and more. Try rephrasing or type *help* to see what I can do. For anything else, WhatsApp Ridhor on 076 760 4350.";
           if (afterHours) ai = "Our workshop is currently closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + ai;
           await sendMessage(from, ai);
           session.history.push({ role: "user", content: text }, { role: "model", content: ai });
