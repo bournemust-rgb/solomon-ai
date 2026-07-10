@@ -1,4 +1,4 @@
-require("dotenv").config();
+﻿require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -372,6 +372,17 @@ function smartMatch(text, fromNumber, session) {
     if (promo) { SEASONAL_PROMO = promo; return "Promo set: \"" + promo + "\"\n\nIt will now appear on menu and pricing replies."; }
   }
 
+
+  // JOKES / OFF-TOPIC
+  if (t.includes("pizza") || t.includes("burger") || t.includes("coffee") || (t.includes("food") && !t.includes("coat")))
+    return "Ha! No pizza here, just hot coats. We powder coat metal, not bake pizza. Although our oven does hit 200C... Want a quote on something worth coating? :)";
+  if (t.includes("joke") || t.includes("funny") || t.includes("laugh"))
+    return "I am more of a coating expert than a comedian. But here is one: What did the powder coater say to the rusty gate? You have got some serious issues, but I can fix you. Want a real quote?";
+  if (t.includes("marry") || t.includes("date") || t.includes("love") || t.includes("girlfriend") || t.includes("boyfriend"))
+    return "I am flattered, but I am married to my work. Since 1988. Loyal. Want to talk about coating instead?";
+  if (t.includes("weather") && !t.includes("coat"))
+    return "Hot enough to cure powder coat! Speaking of which, need something coated?";
+
   // RAIN
   if (t.includes("rain") || (t.includes("weather") && t.includes("coat")))
     return "Once cured, powder coating is weather-resistant. Fresh coating should not be exposed to rain for 24 hours. We advise collecting when weather is clear.";
@@ -467,5 +478,6 @@ app.listen(PORT, function() {
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
 process.on("uncaughtException", function(e) { console.error("Uncaught:", e); });
+
 
 
