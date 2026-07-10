@@ -113,7 +113,7 @@ var QR = {
   "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days. Timelines may be affected by loadshedding/weather.",
   "delivery": "R150 delivery Cape Town metro. Free collection. Items must be collected within 7 days or 7% daily storage fee applies.",
   "contact": "WhatsApp: 060 507 4461\nOffice: " + OFFICE_NUMBER + "\nEmail: " + OFFICE_EMAIL + "\nQuotes: " + QUOTE_EMAIL + "\nFacebook: " + FACEBOOK + "\nTikTok: " + TIKTOK,
-  "help": "I can help with:\n\n* Get a quick estimate\n* Pricing & quotes\n* Colours & finishes\n* Turnaround times\n* Delivery & collection\n* Blasting services\n* Account queries\n* T&Cs & warranties\n* View our gallery\n* Leave a review\n* Book a callback\n* Order status\n\nJust ask!",
+  "help": "Here is what I can do - reply with a number:\n\n1. Pricing & rates\n2. Colours & finishes\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just type your question!",
   "thanks": "Pleasure! Anything else I can help with?",
   "thank you": "Only a pleasure!",
   "bye": "Cheers! Sien jou later."
