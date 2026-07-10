@@ -175,7 +175,11 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("urgent") || t.includes("emergency") || t.includes("asap") || t.includes("rush"))
     return "For urgent jobs, WhatsApp Ridhor directly on 076 760 4350. Rush surcharge may apply.";
 
-  // MATERIALS
+  // MATERIALS (must be checked early)
+  if (t.includes("material") || t.includes("what can you coat") || t.includes("can you coat") || t.includes("can you do") || t.includes("do you coat"))
+    return "We coat all metals handling 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass. Items unable to withstand 200C must be declared before work begins.";
+
+  // OLD MATERIALS CHECK (remove duplicate)
   if (t.includes("material") || t.includes("what can you coat") || (t.includes("can you do") && (t.includes("wood") || t.includes("plastic") || t.includes("aluminium") || t.includes("steel"))))
     return "We coat all metals handling 200C+: steel, aluminium, cast iron, stainless steel. No plastic, wood, or fibreglass.";
 
