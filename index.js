@@ -449,7 +449,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           }
           console.log("No match, using AI...");
           if (afterHours && text) await sendMessage(PERSONAL_NUMBER, "After-hours from " + from + " (no match, using AI): " + text);
-          sendAcknowledgment(from);
+          // sendAcknowledgment disabled - no Gemini
           var ai = await processMessage(text, session.history || []);
           await sendMessage(from, ai);
           session.history.push({ role: "user", content: text }, { role: "model", content: ai });
