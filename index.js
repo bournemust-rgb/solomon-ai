@@ -64,20 +64,40 @@ function getAfrikaansReply(enReply) {
 function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
+  var vatRate = 0.15;
+
   if (t.includes("rim")) {
-    var qty = t.match(/(\d+)/);
-    qty = qty ? parseInt(qty[1]) : 4;
-    var colour = "standard";
-    if (t.includes("metallic") || t.includes("gold") || t.includes("bronze")) colour = "metallic";
-    var est = colour === "standard" ? 1000 : 1500;
-    return "Estimate: " + qty + " rims, " + colour + " colour ˜ R" + (est * Math.ceil(qty/4)) + " - R" + (est * Math.ceil(qty/4) + 500) + " excl VAT.\n\nRef: " + ref + "\n\nThis is an estimate. Final price depends on condition and prep. Bring them in for exact quote. Customer must remove tyres.";
+    var qty = t.match(/(\d+)/); qty = qty ? parseInt(qty[1]) : 4;
+    var sets = Math.ceil(qty / 4);
+    var rimColour = (t.includes("metallic")||t.includes("gold")||t.includes("bronze")||t.includes("charcoal")||t.includes("silver")||t.includes("color")||t.includes("colour")) ? "premium" : "standard";
+    var rimLow = rimColour === "standard" ? 1000 : 1200;
+    var rimHigh = rimColour === "standard" ? 1200 : 1500;
+    var rimTotalLow = rimLow * sets, rimTotalHigh = rimHigh * sets;
+    var rimVatLow = Math.round(rimTotalLow * vatRate), rimVatHigh = Math.round(rimTotalHigh * vatRate);
+    return "RIMS ESTIMATE - Ref: " + ref + "\n\n" + qty + " rims = " + sets + " set(s)\nColour: " + (rimColour === "standard" ? "Standard" : "Premium") + "\n\nExcl VAT: R" + rimTotalLow.toLocaleString() + " - R" + rimTotalHigh.toLocaleString() + "\nVAT (15%): R" + rimVatLow.toLocaleString() + " - R" + rimVatHigh.toLocaleString() + "\nIncl VAT: R" + (rimTotalLow+rimVatLow).toLocaleString() + " - R" + (rimTotalHigh+rimVatHigh).toLocaleString() + "\n\nCustomer MUST remove tyres. Estimate only. WhatsApp Ridhor: 076 760 4350.";
   }
-  if (t.includes("gate")) {
-    return "Gate estimate: R15-R23/kg coating + R8-R12/kg blasting if rusted. Oversized +6m: R1000 setup.\n\nRef: " + ref + "\n\nSend a pic for more accurate estimate. WhatsApp Ridhor: 076 760 4350.";
+
+  if (t.includes("gate") || t.includes("burglar") || t.includes("fence") || t.includes("kg")) {
+    var kg = t.match(/(\d+)\s*kg/); kg = kg ? parseInt(kg[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 10);
+    var isPremium = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("silver")||t.includes("blue")||t.includes("red")||t.includes("green")||t.includes("yellow")||t.includes("colour")||t.includes("color"));
+    var rateLow = isPremium ? 17 : 16, rateHigh = isPremium ? 20 : 16;
+    var coatingLow = kg * rateLow, coatingHigh = kg * rateHigh;
+    var vatLow = Math.round(coatingLow * vatRate), vatHigh = Math.round(coatingHigh * vatRate);
+    return "GATE/PER KG ESTIMATE - Ref: " + ref + "\n\nWeight: " + kg + " kg\nColour: " + (isPremium ? "Premium (R"+rateLow+"-R"+rateHigh+"/kg)" : "Standard Black/White (R16/kg)") + "\n\nCoating (blasting included): R" + coatingLow.toLocaleString() + " - R" + coatingHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + (coatingLow+vatLow).toLocaleString() + " - R" + (coatingHigh+vatHigh).toLocaleString() + "\n\nEstimate only. WhatsApp Ridhor: 076 760 4350.";
   }
+
   if (t.includes("sheet") || t.includes("mesh")) {
-    return "Sheet metal estimate: R175-R350/sqm depending on colour.\n\nRef: " + ref + "\n\nBring measurements for accurate quote.";
+    var sqm = t.match(/(\d+)\s*sqm/); sqm = sqm ? parseInt(sqm[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 5);
+    var sp = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("colour")||t.includes("color"));
+    var sl = sp?251:175, sh = sp?350:250;
+    var stl = sqm*sl, sth = sqm*sh;
+    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\n" + sqm + " sqm\nColour: " + (sp?"Premium":"Standard") + "\n\nExcl VAT: R" + stl.toLocaleString() + " - R" + sth.toLocaleString() + "\nVAT: R" + Math.round(stl*vatRate).toLocaleString() + " - R" + Math.round(sth*vatRate).toLocaleString() + "\nIncl VAT: R" + Math.round(stl*1.15).toLocaleString() + " - R" + Math.round(sth*1.15).toLocaleString();
   }
+
+  if (t.includes("truck")||t.includes("bakkie")||t.includes("flatbed")) {
+    return "TRUCK BLASTING ESTIMATE - Ref: " + ref + "\n\n5m flatbed\n\nExcl VAT: R5,000-R7,500\nVAT: R750-R1,125\nIncl VAT: R5,750-R8,625\n\nNo rubber blasted.";
+  }
+
   return null;
 }
 
@@ -466,6 +486,7 @@ app.listen(PORT, function() {
 });
 process.on("unhandledRejection", function(r) { console.error("Unhandled:", r); });
 process.on("uncaughtException", function(e) { console.error("Uncaught:", e); });
+
 
 
 
