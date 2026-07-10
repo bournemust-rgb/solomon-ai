@@ -143,6 +143,20 @@ function smartMatch(text, fromNumber, session) {
 
   if (QR[t]) return QR[t] + promoMsg;
 
+  // HELP MENU NUMBERS
+  if (t === '1' || t === 'one') return QR['pricing'] + promoMsg;
+  if (t === '2' || t === 'two') return QR['colours'];
+  if (t === '3' || t === 'three') return QR['turnaround'];
+  if (t === '4' || t === 'four') return QR['delivery'];
+  if (t === '5' || t === 'five') return 'Blasting services:\n- Sandblasting: R8-R12/kg\n- Shot blasting truck (5m): R5,000-R7,500\n- All blasting at clients risk\n- Remove plastic/glass/hydraulics before bringing\n- Wetspray/custom blasting: Contact Ridhor 076 760 4350\n\nAll prices excl VAT.';
+  if (t === '6' || t === 'six') return 'Accounts: Email ' + OFFICE_EMAIL + ' or call ' + OFFICE_NUMBER + '. They will check and get back to you.';
+  if (t === '7' || t === 'seven') return 'Full T&Cs:\n- COD only\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at clients risk\n- Items remain our property until paid\n\nFull document: email ' + OFFICE_EMAIL;
+  if (t === '8' || t === 'eight') return 'Check out our work on Facebook: ' + FACEBOOK + ' and TikTok: ' + TIKTOK + '. We post regularly!';
+  if (t === '9' || t === 'nine') return 'We would love your feedback! Leave a review: ' + GOOGLE_REVIEW + '\n\nOr share on Facebook: ' + FACEBOOK + '\n\nThank you for supporting Solomon Coatings since 1988!';
+  if (t === '10' || t === 'ten') return 'Want Ridhor to call you? Send your name, number, and what you need. Or call ' + OFFICE_NUMBER + ' to book.';
+  if (t === '11' || t === 'eleven') return 'For order updates, WhatsApp Ridhor on 076 760 4350 with your reference number.';
+  if (t === '12' || t === 'twelve') return 'Ridhor: 076 760 4350 (WhatsApp/call) or ' + QUOTE_EMAIL + '. Office: ' + OFFICE_NUMBER;
+
   // PRICE CALCULATOR
   if ((t.includes("quote") || t.includes("estimate") || t.includes("how much") || t.includes("cost") || t.includes("price")) && (t.includes("rim") || t.includes("gate") || t.includes("sheet") || t.includes("mesh") || t.includes("4") || t.includes("2") || t.includes("set"))) {
     var est = estimatePrice(text);
