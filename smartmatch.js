@@ -3,7 +3,7 @@
   if(t==="14" || t==="tps" || t==="wisdom") return randomTPS();
   var calc=estimatePrice(text, randomAffirmation);
   if(calc) return calc;
-  if(QR[t]) { if(QR[t] === 'USE_RANDOM') return randomGreeting() + '\n\nType *menu* to see our Secret List.\n\nOr tell me what you need priced.'; return QR[t]; }
+  if(QR[t]) { if(QR[t] === 'USE_RANDOM') return randomGreeting() + '\n\nTell me what you need priced - gates, rims, steel, shotblasting, trucks.\n\nType *menu* to see our Secret List.'; return QR[t]; }
   if(t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
   if(t.includes("reference")||t.includes("order number")) return "Your reference: "+getOrderRef();
   if(t.includes("how busy")||t.includes("queue")) return "For wait time, WhatsApp Ridhor 076 760 4350.";
@@ -44,3 +44,4 @@
   return randomFallback();
 }
 module.exports = { smartMatch };
+

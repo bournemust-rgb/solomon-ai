@@ -72,7 +72,7 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
           var match=await handleMessage(text, from, session, smartMatchFn, QR, delivery, getOrderRef, saveSession, randomGreeting);
           if(afterHours){
             var showClosed = Math.floor(Math.random() * 4) === 0;
-            if(showClosed) match="Howzit! SC here, lekker ready to help - what are we coating today?\n\n"+match;
+            if(showClosed) match="Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n"+match;
             try{await sendMessage(PERSONAL_NUMBER,"After-hours from "+from+": "+text);}catch(e){}
           }
           await sendMessage(from,match);
@@ -86,3 +86,4 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 });
 
 app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});
+
