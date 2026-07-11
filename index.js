@@ -121,7 +121,7 @@ var QR = {
   "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI will calculate it with VAT!",
   "4":"TURNAROUND\nUnder 1 ton: 3 working days.\nOver 1 ton: 5-8 working days.\nTimelines affected by loadshedding/weather.",
   "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed Saturdays and Sundays.",
-  "6":"FLOW_TRIGGER",
+  "6":"DELIVERY - For a delivery quote, just type *delivery* and I will ask where you are, size, and if you need help loading.\n\nR150 Cape Town metro delivery. Free collection. 7% daily storage after 7 days.\n\nType *menu* to go back.",
   "7":"BLASTING SERVICES\nSandblasting/Shot blasting: R8-R12/kg (blasting only)\nTruck blasting (5m): R5,000-R7,500\nMedium: Grit/slag 0.12-0.4mm, 6 bar\n\nAll blasting at client risk.\nRemove plastic/glass/hydraulics before bringing.",
   "8":"TERMS AND CONDITIONS\n- COD only - no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client risk\n- Items remain our property until paid\n\nFull document: email "+OFFICE_EMAIL,
   "9":"GALLERY\nCheck our work on Facebook: "+FACEBOOK+"\nTikTok: "+TIKTOK+"\n\nWe post real jobs regularly!",
@@ -129,7 +129,7 @@ var QR = {
   "11":"BOOK A CALLBACK\nWant Ridhor to call you?\nSend your name, number, and what you need.\nOr call the office: "+OFFICE_NUMBER,
   "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350\nEmail: "+QUOTE_EMAIL+"\nOffice: "+OFFICE_NUMBER,
   "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey will check your account and get back to you.",
-  "thanks":"Pleasure! Anything else?",
+  "14":"TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\nThe customer is always right... whatever the cost.\nWe never lose. We either win or we learn.\nAlways do your best to give the customer what they want.\nIf the coating is right, the rust stays away.\nQuality is remembered long after the price is forgotten.\nA mans work is his signature. Make yours worth reading.\nWe have been coating since 88. That is not luck. That is graft.\nPatience in the booth, perfection on the metal.\nYour name is on every job. Never forget that.\nDo not cut corners. Corners are where the rust starts.\nThe metal does not lie. If the prep is bad, the coat will show it.\nA happy customer is a customer for life. Since 1988, we have many.\nWe do not follow trends. We set the standard.\nEvery gate, every rim, every bracket - do it like it is your own.\nThe oven does not care who you are. The heat treats everyone the same.\nCoat it once, coat it right. Comebacks cost more than pride.\nIn this trade, your reputation is your best tool.\nFrom Tommy to Ridhor - the name changed but the pride stayed.\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
   "thank you":"Only a pleasure!",
   "bye":"Cheers! Sien jou later."
 };
