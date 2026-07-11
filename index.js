@@ -130,7 +130,7 @@ var QR = {
   "11":"BOOK A CALLBACK\nWant Ridhor to call you?\nSend your name, number, and what you need.\nOr call the office: "+OFFICE_NUMBER,
   "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350\nEmail: "+QUOTE_EMAIL+"\nOffice: "+OFFICE_NUMBER,
   "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey will check your account and get back to you.",
-  "14":"TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\nThe customer is always right... whatever the cost.\nWe never lose. We either win or we learn.\nAlways do your best to give the customer what they want.\nIf the coating is right, the rust stays away.\nQuality is remembered long after the price is forgotten.\nA mans work is his signature. Make yours worth reading.\nWe have been coating since 88. That is not luck. That is graft.\nPatience in the booth, perfection on the metal.\nYour name is on every job. Never forget that.\nDo not cut corners. Corners are where the rust starts.\nThe metal does not lie. If the prep is bad, the coat will show it.\nA happy customer is a customer for life. Since 1988, we have many.\nWe do not follow trends. We set the standard.\nEvery gate, every rim, every bracket - do it like it is your own.\nThe oven does not care who you are. The heat treats everyone the same.\nCoat it once, coat it right. Comebacks cost more than pride.\nIn this trade, your reputation is your best tool.\nFrom Tommy to Ridhor - the name changed but the pride stayed.\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
+  "14":"TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\n\" + randomTPS() + \"\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
   "thank you":"Only a pleasure!",
   "bye":"Cheers! Sien jou later."
 };
@@ -390,6 +390,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
