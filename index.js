@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -6,6 +6,8 @@ var { sendMessage } = require("./queue");
 var axios = require("axios");
 var p = require("./personality_engine");
 var delivery = require("./delivery");
+
+var { redis } = require('./db');
 
 var app = express();
 app.use(express.json({ verify: function(req, res, buf) { req.rawBody = buf.toString("utf8"); } }));
@@ -30,7 +32,7 @@ var WORKLOAD_MULTIPLIERS = { 1: 0.90, 2: 0.95, 3: 1.00, 4: 1.07, 5: 1.15 };
 var SHELF = [
   { file: "gate-charcoal-1.jpg", tags: ["gate", "charcoal"], line: "Ja, I have got that exact charcoal right here. Did one last week in Blackheath. Came out lekker." },
   { file: "rim-gloss-black-1.jpg", tags: ["rim", "black", "gloss"], line: "Ag this black gloss rim? Finished yesterday, still warm from the oven." },
-  { file: "gate-black-1.jpg", tags: ["gate", "black"], line: "Black gate — our bread and butter since 88. Look here." }
+  { file: "gate-black-1.jpg", tags: ["gate", "black"], line: "Black gate � our bread and butter since 88. Look here." }
 ];
 
 function findOnShelf(text) {
@@ -173,7 +175,7 @@ async function handleOwnerCommand(from, text) {
     var lvl = parseInt(t.match(/\d/)[0] || "3");
     if (lvl >= 1 && lvl <= 5) {
       WORKLOAD_LEVEL = lvl;
-      var desc = { 1: "10% discount — fill the shop", 2: "5% discount — steady", 3: "Normal pricing", 4: "7% premium — getting busy", 5: "15% premium — packed" };
+      var desc = { 1: "10% discount � fill the shop", 2: "5% discount � steady", 3: "Normal pricing", 4: "7% premium � getting busy", 5: "15% premium � packed" };
       await sendMessage(from, "Workload set to " + lvl + "/5: " + desc[lvl] + "\nMultiplier: " + (WORKLOAD_MULTIPLIERS[lvl] * 100).toFixed(0) + "%");
       return true;
     }
@@ -210,7 +212,7 @@ async function handleOwnerCommand(from, text) {
     var what = text.replace(/done/i, "").replace(cust || "", "").trim() || "job";
     if (cust) {
       await sendMessage(cust, "Your " + what + " is ready! Collection: Mon-Thurs 8-4:45, Fri 8-2:45. Ref: " + getOrderRef() + "\n\nPayment on collection (COD).");
-      await sendMessage(from, "Notified " + cust + " — their " + what + " is ready.");
+      await sendMessage(from, "Notified " + cust + " � their " + what + " is ready.");
     } else {
       await sendMessage(from, "Use: done 0721234567 gate charcoal");
     }
@@ -245,12 +247,12 @@ async function smartMatch(text, from, session) {
       for (var i = 0; i < bulk.items.length; i++) {
         lines.push(bulk.items[i].kg + "kg " + bulk.items[i].product + " " + bulk.items[i].colour + " = R" + bulk.items[i].inclLow.toLocaleString());
       }
-      var msg = lines.join("\n") + "\n──────────\nSubtotal: R" + bulk.totalIncl.toLocaleString();
+      var msg = lines.join("\n") + "\n----------\nSubtotal: R" + bulk.totalIncl.toLocaleString();
       if (bulk.discount > 0) msg += "\nBulk -10%: -R" + bulk.discount.toLocaleString() + "\nTOTAL: R" + bulk.finalTotal.toLocaleString() + " incl VAT";
       else msg += "\nTOTAL: R" + bulk.totalIncl.toLocaleString() + " incl VAT";
       if (p.CONTRACTOR_MODE) msg += "\n\nContractor rate applied (-8%)";
       msg += p.getLoadsheddingNotice();
-      msg += "\n\nCode: SC-" + from.slice(-6) + " — share for R50 off for a mate";
+      msg += "\n\nCode: SC-" + from.slice(-6) + " � share for R50 off for a mate";
       await redis.hset("c:" + from, { last: text.split("+")[0], kg: "bulk", prod: "bulk", col: "mix" });
       await redis.incr("stats:quotes:today");
       return msg;
@@ -309,7 +311,7 @@ async function smartMatch(text, from, session) {
   var mood = p.detectMood(text);
   if (mood === "angry") {
     await sendMessage(PERSONAL_NUMBER, "ANGRY " + from + ": \"" + text + "\"");
-    return "I hear you, and I am sorry. Let me get Ridhor on this right now. He will call you — what is your name and number? Or WhatsApp him directly on 076 760 4350.";
+    return "I hear you, and I am sorry. Let me get Ridhor on this right now. He will call you � what is your name and number? Or WhatsApp him directly on 076 760 4350.";
   }
   if (mood === "tired") return "Long day hey? Send weight + colour, I will do the math so you do not have to think. 20kg gate black = R368 all-in.";
 
@@ -400,7 +402,7 @@ async function handleConversationFlow(text, from, session) {
       flow.state = "delivery_asking_size";
       session.flow = flow;
       await saveSession(from, session);
-      return "Got it, " + t + " is about " + dist + "km from our workshop in Blackheath. Now — is the item under 1 ton and under 3m long? Or bigger? Reply SMALL or LARGE.";
+      return "Got it, " + t + " is about " + dist + "km from our workshop in Blackheath. Now � is the item under 1 ton and under 3m long? Or bigger? Reply SMALL or LARGE.";
     }
     return "I could not find that area. Can you try a nearby town or suburb? For example: Bellville, Durbanville, Stellenbosch, Cape Town CBD.";
   }
@@ -454,7 +456,7 @@ async function handleConversationFlow(text, from, session) {
       await saveSession(from, session);
       return p.pick(p.NEXT_QUESTIONS.asked_weight);
     }
-    return "Sorry, I need a number. How many kg roughly? Just guess — 10kg? 20kg? 50kg?";
+    return "Sorry, I need a number. How many kg roughly? Just guess � 10kg? 20kg? 50kg?";
   }
 
   if (flow.state === "asked_colour") {
