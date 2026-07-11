@@ -21,42 +21,56 @@ var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
+// ============ FALLBACKS & WISDOM ============
 var funFallbacks = [
-  "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *menu* to see my secret menu, or WhatsApp Ridhor on 076 760 4350.",
-  "Eish, you got me there! I know coating, not that. \n\nType *menu* to see what I am good at, or chat to Ridhor: 076 760 4350.",
-  "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350.",
-  "Ha! If only I knew everything. I stick to what I am good at - coating. \n\nType *menu* — I know a few things or call Ridhor: 076 760 4350.",
-  "Sorry my bru, that is not in my toolbox. \n\nTry *menu* to see what I know, or WhatsApp Ridhor: 076 760 4350."
+  "Ag sorry, I'm just a powder coating oom, not Google! \n\nTry *menu* to see my Secret List, or WhatsApp Ridhor on 076 760 4350.",
+  "Eish, you got me there! I know coating, not that. \n\nType *menu* for what I CAN do, or chat to Ridhor: 076 760 4350.",
+  "That one's above my pay grade! I'm here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350."
 ];
-
 var affirmations = [
-  "Fun fact: A well-coated gate is the silent guardian of your driveway. Sleep well tonight!",
-  "Did you know? Powder coating is tougher than your mother-in-law opinions.",
-  "Hot tip: Black powder coat absorbs less heat than you think. Science, my bru.",
-  "Life advice: When in doubt, coat it black. It matches everything.",
-  "Weekend wisdom: A coated rim is a happy rim. Do not let your rims be sad. Bring them in.",
-  "Solomon truth: We have been coating since 88. That is before Google. Before smartphones."
+  "Fun fact: A well-coated gate is the silent guardian of your driveway.",
+  "Did you know? Powder coating is tougher than your mother-in-law's opinions.",
+  "Hot tip: Black powder coat absorbs less heat than you'd think. Science, my bru.",
+  "Solomon truth: We've been coating since '88. That's before Google."
 ];
+var TPS_QUOTES = [
+  "TPS 1988: Started in a garage with one compressor and a dream.",
+  "TPS: Prep is 90% of the job. The coating is the easy part.",
+  "TPS: If you can see rust, it's already too late â€” blast it properly.",
+  "TPS: Black never goes out of style, but charcoal hides dust better.",
+  "TPS: Coastal air eats cheap coating. Do it once, do it right.",
+  "TPS: A clean gate before coating is like a clean plate â€” everything sticks better.",
+  "TPS: We don't cut corners, we coat them.",
+  "TPS: 36 years taught me one thing â€” the customer remembers the finish, not the price.",
+  "TPS: Loadshedding can't stop rust, but it can delay us. We work around it.",
+  "TPS: If it can handle 200C, we can coat it. If it melts, we can't.",
+  "TPS: Good blasting is noisy, dusty, and worth every cent.",
+  "TPS: The cheapest quote is usually the most expensive redo.",
+  "TPS: Satin hides fingerprints. Gloss shows off. Choose your battle.",
+  "TPS: Measure twice, blast once, coat once.",
+  "TPS: A gate coated in winter lasts longer than excuses in summer.",
+  "TPS: We are not the cheapest. We are the ones you call to fix the cheapest.",
+  "TPS: RAL codes are suggestions. Real colour is in the oven.",
+  "TPS: Since '88, one rule: treat every gate like it's your own driveway."
+];
+function randomFallback(){ return funFallbacks[Math.floor(Math.random()*funFallbacks.length)]; }
+function randomAffirmation(){ return affirmations[Math.floor(Math.random()*affirmations.length)]; }
+function randomTPS(){ return "TPS DAILY WISDOM\n\n" + TPS_QUOTES[Math.floor(Math.random()*TPS_QUOTES.length)] + "\n\nType *menu* for more."; }
 
-function randomAffirmation() { return affirmations[Math.floor(Math.random() * affirmations.length)]; }
-function randomFallback() { return funFallbacks[Math.floor(Math.random() * funFallbacks.length)]; }
-function randomTPS() { var q = ["The customer is always right... whatever the cost.","We never lose. We either win or we learn.","Always do your best to give the customer what they want.","If the coating is right, the rust stays away.","Quality is remembered long after the price is forgotten.","A man's work is his signature.","We have been coating since 88. That is not luck. That is graft.","Patience in the booth, perfection on the metal.","Your name is on every job. Never forget that.","Do not cut corners. Corners are where the rust starts.","The metal does not lie.","A happy customer is a customer for life.","We do not follow trends. We set the standard.","Every gate, every rim, every bracket.","The oven does not care who you are.","Coat it once, coat it right. Comebacks cost more than pride.","In this trade, your reputation is your best tool."]; return q[Math.floor(Math.random()*q.length)]; }
-
-function getOrderRef() {
-  var d = new Date();
-  return "SC" + d.getFullYear().toString().slice(-2) + ("0"+(d.getMonth()+1)).slice(-2) + ("0"+d.getDate()).slice(-2) + "-" + Math.floor(Math.random()*9000+1000);
+// ============ UTILITIES ============
+function getOrderRef(){
+  var d=new Date();
+  return "SC"+d.getFullYear().toString().slice(-2)+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2)+"-"+Math.floor(Math.random()*9000+1000);
 }
-
-function isAfterHours() {
-  var now = new Date();
-  var day = now.getDay(), hour = now.getHours(), min = now.getMinutes();
-  var t = hour * 60 + min;
-  if (day === 0 || day === 6) return true;
-  if (day === 5 && t >= 885) return true;
-  if (day >= 1 && day <= 4 && (t < 480 || t >= 1005)) return true;
+function isAfterHours(){
+  var now=new Date(); var day=now.getDay(); var t=now.getHours()*60+now.getMinutes();
+  if(day===0||day===6) return true;
+  if(day===5 && t>=885) return true;
+  if(day>=1&&day<=4&&(t<480||t>=1005)) return true;
   return false;
 }
 
+// ============ PRICE CALCULATOR - DO NOT TOUCH ============
 function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
@@ -102,304 +116,213 @@ function estimatePrice(text) {
   }
   return null;
 }
+// ============ END CALCULATOR ============
 
 var QR = {
-  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nType *menu* to see our Secret List.\n\nOr just tell me what you need:\nGates/Fencing | Rims | Chassis | Sheet Metal | Trucks\n\nFor wetspray, connect to Ridhor directly.",
-  "hello":"Hi there! Solomon Coatings here.\n\nType *menu* for the list, or just tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will put you through to Ridhor directly.",
-  "hey":"Howzit!\n\nType *menu* for our Secret List, or tell me what you need:\nGates | Rims | Chassis | Sheet Metal | Trucks",
-  "howzit":"Howzit!\n\nType *menu* for our Secret List, or tell me what you need priced.",
-  "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see what I can help with, or tell me what you need priced!",
-  "menu":"WHAT I CAN DO — pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced — gates, rims, steel, blasting, trucks.\n\nFor wetspray, I will connect you to Ridhor directly.",
+  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *menu* to see our Secret List\nOr tell me what you need priced â€” gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will connect you directly to Ridhor.",
+  "hello":"Hi there! Solomon Coatings here.\n\nType *menu* to see our Secret List, or tell me what you need priced â€” gates, rims, steel, shotblasting, trucks.",
+  "hey":"Howzit! Type *menu* to see our Secret List, or just ask your question.",
+  "howzit":"Howzit! Type *menu* for the full list, or tell me what you need coated.",
+  "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see our Secret List, or just ask your question!",
+  "menu":"SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461\n\n1.Pricing 2.Colours 3.Quote 4.Turnaround 5.Hours 6.Delivery 7.Blasting 8.T&Cs 9.Gallery 10.Review 11.Callback 12.Ridhor 13.Accounts 14.TPS Wisdom",
   "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "colours":"Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee examples: "+FACEBOOK,
   "hours":"Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
   "turnaround":"Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
   "delivery":"R150 Cape Town metro. Free collection. 7% daily storage after 7 days.",
-  "contact":"060 507 4461 | Office: "+OFFICE_NUMBER+" | Email: "+OFFICE_EMAIL+" | FB: "+FACEBOOK+" | TikTok: "+TIKTOK,
-  "help":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced - gates, rims, steel, blasting, trucks.\n\nFor wetspray, I will connect you to Ridhor directly.",
-  "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
-  "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee: "+FACEBOOK,
-  "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI will calculate it with VAT!",
-  "4":"TURNAROUND\nUnder 1 ton: 3 working days.\nOver 1 ton: 5-8 working days.\nTimelines affected by loadshedding/weather.",
-  "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed Saturdays and Sundays.",
-  "6":"DELIVERY - For a delivery quote, just type *delivery* and I will ask where you are, size, and if you need help loading.\n\nR150 Cape Town metro delivery. Free collection. 7% daily storage after 7 days.\n\nType *menu* to go back.",
-  "7":"BLASTING SERVICES\nSandblasting/Shot blasting: R8-R12/kg (blasting only)\nTruck blasting (5m): R5,000-R7,500\nMedium: Grit/slag 0.12-0.4mm, 6 bar\n\nAll blasting at client risk.\nRemove plastic/glass/hydraulics before bringing.",
-  "8":"TERMS AND CONDITIONS\n- COD only - no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client risk\n- Items remain our property until paid\n\nFull document: email "+OFFICE_EMAIL,
-  "9":"GALLERY\nCheck our work on Facebook: "+FACEBOOK+"\nTikTok: "+TIKTOK+"\n\nWe post real jobs regularly!",
-  "10":"REVIEW US\nLeave a review: "+GOOGLE_REVIEW+"\nOr on Facebook: "+FACEBOOK+"\n\nThank you for supporting us since 1988!",
-  "11":"BOOK A CALLBACK\nWant Ridhor to call you?\nSend your name, number, and what you need.\nOr call the office: "+OFFICE_NUMBER,
-  "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350\nEmail: "+QUOTE_EMAIL+"\nOffice: "+OFFICE_NUMBER,
-  "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey will check your account and get back to you.",
-  "14":"TPS_PLACEHOLDER" + randomTPS() + \"\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
-  "thank you":"Only a pleasure!",
+  "contact":"060 507 4461 | Office: "+OFFICE_NUMBER+" | Email: "+OFFICE_EMAIL,
+  "help":"SECRET MENU - Reply with a number:\n\n1.Pricing 2.Colours 3.Quote 4.Turnaround 5.Hours 6.Delivery 7.Blasting 8.T&Cs 9.Gallery 10.Review 11.Callback 12.Ridhor 13.Accounts 14.TPS Wisdom\n\nOr just ask your question!",
+  "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99",
+  "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture",
+  "3":"Send: quote 20kg gate charcoal | quote 4 rims metallic | quote 10sqm sheet black | quote 20kg blasting only",
+  "4":"TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
+  "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
+  "6":"DELIVERY & COLLECTION\nR150 metro. Free collection. Collect within 7 days. Late: 7% daily storage.",
+  "7":"BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
+  "8":"TERMS\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items ours until paid.",
+  "9":"GALLERY\nFB: "+FACEBOOK+" | TikTok: "+TIKTOK,
+  "10":"REVIEW US\n"+GOOGLE_REVIEW,
+  "11":"BOOK A CALLBACK\nSend name + number. Or call "+OFFICE_NUMBER,
+  "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350 | Email: "+QUOTE_EMAIL,
+  "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+" | Phone: "+OFFICE_NUMBER,
+  "thanks":"Pleasure! Anything else? Type *menu*",
+  "thank you":"Only a pleasure! Type *menu* for more.",
   "bye":"Cheers! Sien jou later."
 };
 
-async function forwardImageToOwner(imageId, fromNumber) {
-  try {
-    if (!WA_TOKEN || !PHONE_ID) return false;
-    await axios.post("https://graph.facebook.com/v21.0/" + PHONE_ID + "/messages",
-      { messaging_product: "whatsapp", recipient_type: "individual", to: PERSONAL_NUMBER, type: "image", image: { id: imageId } },
-      { headers: { Authorization: "Bearer " + WA_TOKEN, "Content-Type": "application/json" } });
+async function forwardImageToOwner(imageId){
+  try{
+    if(!WA_TOKEN||!PHONE_ID) return false;
+    await axios.post("https://graph.facebook.com/v21.0/"+PHONE_ID+"/messages",
+      { messaging_product:"whatsapp", recipient_type:"individual", to:PERSONAL_NUMBER, type:"image", image:{id:imageId} },
+      { headers:{ Authorization:"Bearer "+WA_TOKEN } });
     return true;
-  } catch(e) { console.error("forwardImage error:", e.response?.data || e.message); return false; }
+  }catch(e){ console.error("forwardImage error:", e.response?.data||e.message); return false; }
 }
 
-function smartMatch(text, fromNumber, session) {
-  var t = text.toLowerCase().trim();
-  var calcResult = estimatePrice(text);
-  if (calcResult) return calcResult;
-  if (t === "14") return "TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\n" + randomTPS() + "\n\nType *menu* to go back to the main list.";
-  if (QR[t] && QR[t] !== "TPS_PLACEHOLDER") return QR[t];
-  if (t.includes("affirmation")||t.includes("fact")||t.includes("wisdom")||t.includes("tip")) return randomAffirmation();
-  if (t.includes("reference")||t.includes("order number")||t.includes("job number")) return "Your reference: " + getOrderRef();
-  if (t.includes("invoice")&&(t.includes("send")||t.includes("email"))) return "Send your order reference and I will arrange your invoice. Or call "+OFFICE_NUMBER+".";
-  if (t.includes("how busy")||t.includes("queue")) return "For real-time wait time, WhatsApp Ridhor on 076 760 4350.";
-  if ((t.includes("show")||t.includes("see")||t.includes("example"))&&(t.includes("colour")||t.includes("black")||t.includes("white")||t.includes("red")||t.includes("blue"))) return "See colours on Facebook: "+FACEBOOK+" and TikTok: "+TIKTOK;
-  if (t.includes("review")||t.includes("rate")||t.includes("feedback")) return "Leave a review: "+GOOGLE_REVIEW+"\nThank you since 1988!";
-  if (t.includes("gallery")||t.includes("portfolio")||t.includes("past job")) return "See our work: "+FACEBOOK+" | "+TIKTOK;
-  if (t.includes("terms")||t.includes("t&c")||t.includes("conditions")) return QR["8"];
-  if (t.includes("order")&&(t.includes("status")||t.includes("update")||t.includes("ready"))) return "For order updates, WhatsApp Ridhor: 076 760 4350.";
-  if (t.includes("book")||t.includes("callback")||t.includes("call me")) return QR["11"];
-  if (t.includes("complaint")||t.includes("problem")||t.includes("unhappy")) return "Sorry! WhatsApp Ridhor on 076 760 4350 or email "+OFFICE_EMAIL;
-  if ((t.includes("how")&&t.includes("order"))||t.includes("process")||t.includes("steps")) return "1. Send pic 2. Get estimate 3. Bring items 4. We coat 5. Pay (COD) 6. Collect";
-  if (t.includes("recommend")||t.includes("refer")) return "We love referrals! Share 060 507 4461 or "+FACEBOOK;
-  if (t.includes("urgent")||t.includes("emergency")||t.includes("asap")) return "For urgent jobs, WhatsApp Ridhor: 076 760 4350.";
-  if (t.includes("material")||t.includes("what can you coat")||t.includes("can you coat")||t.includes("do you coat")) return "We coat metals handling 200C+: steel, aluminium, cast iron. No plastic, wood, fibreglass.";
-  if (t.includes("collect")||t.includes("storage")) return "Collect within 7 days. Late: 7% daily storage. No release without payment.";
-  if (t.includes("coastal")||t.includes("sea")||t.includes("warranty")||t.includes("guarantee")) return "No warranties within 15km of shoreline. Coastal work at client risk.";
-  if (t.includes("defect")||t.includes("crack")||t.includes("warp")) return "Not liable for latent defects. All work at client risk.";
-  if (t.includes("plastic")||t.includes("glass")||t.includes("hydraulic")) return "Before blasting: Remove plastic, glass, hydraulics. Empty tanks.";
-  if (t.includes("maintenance")||t.includes("clean")||t.includes("look after")) return "Maintain with drying, wiping, cleaning. Keep records.";
-  if (t.includes("pay")||t.includes("payment")||t.includes("cod")) return "Strict COD. No release without payment. Accounts: "+OFFICE_EMAIL;
-  if (t.includes("intellectual")||t.includes("ownership")) return "All processes remain Solomon Coatings IP. Items ours until paid.";
-  if (t.includes("batch")||t.includes("colour match")) return "Colours vary by batch every 4-6 months.";
-  if (t.includes("primer")||t.includes("top coat")||t.includes("etch")) return "Primed: top-coat within 12-24hrs. High-heat paints available.";
-  if (t.includes("wetspray")||t.includes("wet spray")) return "Wetspray: Contact Ridhor 076 760 4350 or "+QUOTE_EMAIL;
-  if (t.includes("account")||t.includes("statement")||t.includes("balance")) return QR["13"];
-  if ((t.includes("speak")||t.includes("talk"))&&(t.includes("ridhor")||t.includes("owner")||t.includes("boss"))) return QR["12"];
-  if (t.includes("bulk")||t.includes("discount")||t.includes("volume")) return "Bulk discounts up to 10%. WhatsApp Ridhor: 076 760 4350.";
-  if (t.includes("facebook")||t.includes("social")||t.includes("tiktok")) return "FB: "+FACEBOOK+" | TikTok: "+TIKTOK;
-  if (t.includes("truck")||t.includes("bakkie")||t.includes("flatbed")) return "Truck blasting: R5,000-R7,500 excl VAT. No rubber.";
-  if (t.includes("blast")||t.includes("sandblast")) return "Blasting: R8-R12/kg (only). Truck: R5,000-R7,500. Client risk.";
-  if (t.includes("rust")) return "Rusted items: Blasting R8-R12/kg. May reveal defects.";
-  if (t.includes("price")||t.includes("cost")||t.includes("how much")) return QR["pricing"];
-  if (t.includes("colour")||t.includes("color")||t.includes("finish")||t.includes("ral")) return QR["colours"];
-  if (t.includes("hour")||t.includes("open")||t.includes("close")) return QR["hours"];
-  if (t.includes("turnaround")||t.includes("how long")) return QR["turnaround"];
-  if (t.includes("deliver")||t.includes("where")||t.includes("address")) return QR["delivery"];
-  if (t.includes("contact")||t.includes("email")||t.includes("phone")) return QR["contact"];
-  if (t.includes("rim")||t.includes("wheel")||t.includes("mag")) return "Rims: R1,000-R1,500/set of 4. Remove tyres. For estimate: quote 4 rims black";
-  if (t.includes("gate")||t.includes("fence")||t.includes("burglar")||t.includes("steel")||t.includes("security")) return "Gates/Steel/Security: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
-  if (t.includes("sheet")||t.includes("mesh")||t.includes("panel")) return "Sheet: R175-R250/sqm B/W, R251-R350/sqm premium.";
-  if (t.includes("chassis")||t.includes("trailer")) return "Chassis: R16/kg B/W, R17-R20/kg premium. WhatsApp pics: 076 760 4350.";
-  if (t.includes("minimum")||t.includes("small job")) return "Min: R173.99 B/W, R225 hammered, R300+ metallic. Excl VAT.";
-  if (t.includes("tyre")||t.includes("tire")) return "Customer MUST remove tyres. We do NOT remove tyres.";
-  if (t.includes("vat")) return "All prices exclude 15% VAT unless stated.";
-  if (t.includes("saturday")||t.includes("weekend")) return "Closed weekends. Mon-Thurs 8-4:45, Fri 8-2:45.";
-  if ((t.includes("oversized")||t.includes("large"))&&t.includes("item")) return "Large items (6m-7.2m): R1000 setup fee.";
-  if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
-  if (t.includes("rain")) return "Once cured, powder coating is weather-resistant. Fresh coating avoid rain 24hrs.";
-  if (t.includes("pizza")||t.includes("sun")||t.includes("google")) return "Ha! I am a coating oom, not Google. But I CAN tell you about powder coating! Type *menu* — I know a few things.";
+// ============ SMART MATCH - CALCULATOR FIRST, THEN TPS ============
+function smartMatch(text){
+  var t=text.toLowerCase().trim();
+
+  // CHANGE 1 & 3: 14 is executable here, not in QR. Returns ONE random quote.
+  if(t==="14" || t==="tps" || t==="wisdom" || t==="daily wisdom" || t==="tps wisdom"){
+    return randomTPS();
+  }
+
+  var calc=estimatePrice(text);
+  if(calc) return calc;
+
+  if(QR[t]) return QR[t];
+
+  if(t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
+  if(t.includes("reference")||t.includes("order number")) return "Your reference: "+getOrderRef();
+  if(t.includes("how busy")||t.includes("queue")) return "For wait time, WhatsApp Ridhor 076 760 4350.";
+  if(t.includes("review")||t.includes("rate")) return "Leave a review: "+GOOGLE_REVIEW;
+  if(t.includes("gallery")||t.includes("portfolio")) return "See our work: "+FACEBOOK+" | "+TIKTOK;
+  if(t.includes("terms")||t.includes("t&c")) return QR["8"];
+  if(t.includes("order")&&(t.includes("status")||t.includes("update")||t.includes("ready"))) return "For order updates, WhatsApp Ridhor: 076 760 4350.";
+  if(t.includes("book")||t.includes("callback")) return QR["11"];
+  if(t.includes("complaint")||t.includes("problem")||t.includes("unhappy")) return "Sorry! WhatsApp Ridhor 076 760 4350 or email "+OFFICE_EMAIL;
+  if(t.includes("recommend")||t.includes("refer")) return "We love referrals! Share 060 507 4461";
+  if(t.includes("urgent")||t.includes("emergency")||t.includes("asap")) return "For urgent jobs, WhatsApp Ridhor: 076 760 4350.";
+  if(t.includes("material")||t.includes("can you coat")) return "We coat metals handling 200C+: steel, aluminium, cast iron. No plastic/wood.";
+  if(t.includes("collect")||t.includes("storage")) return "Collect within 7 days. Late: 7% daily storage.";
+  if(t.includes("coastal")||t.includes("warranty")) return "No warranties within 15km of shoreline.";
+  if(t.includes("plastic")||t.includes("glass")||t.includes("hydraulic")) return "Before blasting: Remove plastic, glass, hydraulics.";
+  if(t.includes("pay")||t.includes("payment")||t.includes("cod")) return "Strict COD. No release without payment. Accounts: "+OFFICE_EMAIL;
+  if(t.includes("account")||t.includes("statement")) return QR["13"];
+  if((t.includes("speak")||t.includes("talk"))&&(t.includes("ridhor")||t.includes("owner"))) return QR["12"];
+  if(t.includes("bulk")||t.includes("discount")) return "Bulk discounts up to 10%. WhatsApp Ridhor: 076 760 4350.";
+  if(t.includes("truck")||t.includes("bakkie")) return "Truck blasting: R5,000-R7,500 excl VAT.";
+  if(t.includes("blast")||t.includes("sandblast")) return "Blasting: R8-R12/kg. Truck: R5,000-R7,500.";
+  if(t.includes("rust")) return "Rusted items: Blasting R8-R12/kg. May reveal defects.";
+  if(t.includes("price")||t.includes("cost")||t.includes("how much")) return QR["pricing"];
+  if(t.includes("colour")||t.includes("color")||t.includes("finish")||t.includes("ral")) return QR["colours"];
+  if(t.includes("hour")||t.includes("open")||t.includes("close")) return QR["hours"];
+  if(t.includes("turnaround")||t.includes("how long")) return QR["turnaround"];
+  if(t.includes("deliver")||t.includes("where")||t.includes("address")) return QR["delivery"];
+  if(t.includes("contact")||t.includes("email")||t.includes("phone")) return QR["contact"];
+  if(t.includes("rim")||t.includes("wheel")) return "Rims: R1,000-R1,500/set of 4. For estimate: quote 4 rims black";
+  if(t.includes("gate")||t.includes("fence")) return "Gates: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
+  if(t.includes("sheet")||t.includes("mesh")) return "Sheet: R175-R250/sqm B/W, R251-R350/sqm premium.";
+  if(t.includes("minimum")||t.includes("small job")) return "Min: R173.99 B/W, R225 hammered, R300+ metallic. Excl VAT.";
+  if(t.includes("tyre")||t.includes("tire")) return "Customer MUST remove tyres.";
+  if(t.includes("vat")) return "All prices exclude 15% VAT unless stated.";
+  if(t.includes("weekend")||t.includes("saturday")) return "Closed weekends. Mon-Thurs 8-4:45, Fri 8-2:45.";
+  if(t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
   return randomFallback();
 }
 
-async function handleMessage(text, from, session) {
-  var t = text.toLowerCase().trim();
-  var flow = session.flow || { state: "idle" };
+// ============ HANDLE MESSAGE WITH GREETING RESET + FLOWS ============
+async function handleMessage(text, from, session){
+  var t=text.toLowerCase().trim();
+  var flow=session.flow||{state:"idle"};
 
-  if (flow.state !== "idle" && /^(cancel|menu|help|stop)$/.test(t)) {
-    flow.state = "idle"; session.flow = flow; await saveSession(from, session);
-    return "No problem, cancelled.\n\n" + smartMatch(text, from, session);
+  // CHANGE 2: Session reset - greeting always clears stuck flow
+  var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola|menu)$/.test(t);
+  if(isGreeting){
+    flow={state:"idle"};
+    session.flow=flow;
+    await saveSession(from, session);
+    // fall through to return greeting via smartMatch below, don't stay stuck
   }
 
-  // CONVERSATIONAL FLOW
-  if (flow.state === "idle" && /^(hi|hello|hey|howzit|good morning|sup|yo|aweh)$/i.test(t)) {
-    flow.state = "asked_product";
-    session.flow = flow; await saveSession(from, session);
-    return "Howzit! What can I help you with today?\n\nGates/Fencing | Rims | Chassis | Sheet Metal | Trucks\n\nType *menu* to see our Secret List.";
+  if(flow.state!=="idle" && /^(cancel|menu|help|stop)$/.test(t)){
+    flow={state:"idle"}; session.flow=flow; await saveSession(from, session);
+    return "No problem, cancelled.\n\n"+smartMatch(text);
   }
 
-  if (flow.state === "asked_product") {
-    var product = "item";
-    if (t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.includes("steel") || t.includes("security") || t.includes("fencing")) {
-      product = "gate";
-      flow.product = product; flow.state = "asked_condition";
-      session.flow = flow; await saveSession(from, session);
-      return "Gates/Fencing — lekker. What is the condition? Fresh metal, light rust, or badly rusted?";
-    }
-    else if (t.includes("rim") || t.includes("wheel") || t.includes("mag")) {
-      product = "rims";
-      flow.product = product; flow.state = "idle";
-      session.flow = flow; await saveSession(from, session);
-      return "Rims! We charge R1,000-R1,500 per set of 4 (10-15 inch). Black/white is cheapest, metallic colours cost more. Customer MUST remove tyres.\n\nWant an exact estimate? Tell me: how many rims and what colour?";
-    }
-    else if (t.includes("chassis") || t.includes("trailer")) {
-      product = "chassis";
-      flow.product = product; flow.state = "idle";
-      session.flow = flow; await saveSession(from, session);
-      return "Chassis and trailers — these need proper assessment. I am going to connect you to Ridhor directly for this one.\n\nWhatsApp Ridhor: 076 760 4350\nEmail: " + QUOTE_EMAIL + "\n\nHe will check the condition, size, and give you an exact quote for blasting and spraying.";
-    }
-    else if (t.includes("sheet") || t.includes("mesh") || t.includes("panel")) {
-      product = "sheet metal";
-      flow.product = product; flow.state = "idle";
-      session.flow = flow; await saveSession(from, session);
-      return "Sheet metal! We charge per square meter:\n- Black/White: R175-R250/sqm\n- Metallic/Charcoal: R251-R350/sqm\n- Hammered finishes: R225+\n\nAll prices excl VAT. Blasting included within reason.\n\nWant an estimate? Tell me how many square meters and what colour.";
-    }
-    else if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed")) {
-      product = "truck";
-      flow.product = product; flow.state = "idle";
-      session.flow = flow; await saveSession(from, session);
-      return "Truck blasting! We charge R5,000-R7,500 for a 5m flatbed truck (excl VAT).\n\nImportant: No rubber can be blasted — must be removed first.\n\nWant to book or need more info? WhatsApp Ridhor: 076 760 4350.";
-    }
-    flow.product = product; flow.state = "asked_condition";
-    session.flow = flow; await saveSession(from, session);
-    return "Lekker. What is the condition? Fresh metal, light rust, or badly rusted?";
+  // RUST FLOW
+  if(t==="gate"||t==="gates"||t.includes("security gate")){
+    flow={state:"asked_condition", product:"gate", rustSurcharge:false}; session.flow=flow; await saveSession(from, session);
+    return "Got it â€” gate. What condition? Reply: CLEAN, LIGHT RUST, or BADLY RUSTED.";
   }
-
-  if (flow.state === "asked_condition") {
-    var condition = "clean";
-    if (/heavy|bad|proper|severe|pitted|flaking|rust|rusty|badly/.test(t)) condition = "rusty";
-    else if (/light|surface|bit|little/.test(t)) condition = "light rust";
-    flow.condition = condition;
-    flow.state = "asked_weight";
-    flow.rustSurcharge = (condition === "rusty");
-    session.flow = flow; await saveSession(from, session);
-    if (condition === "rusty") return "Agh, those are the best ones. Full blasting job — that will add about R4-R8 per kg extra for rust removal. But worth it! Rough weight? If you are not sure, just guess — medium gate is usually 15-25kg.";
-    if (condition === "light rust") return "Light rust — quick blast and she is clean. No extra charge. Rough weight?";
-    return "Cool, no rust — standard rate applies. Rough weight? Do not stress — ballpark is fine. 10kg? 20kg? 50kg?";
+  if(flow.state==="asked_condition"){
+    var cond="clean";
+    if(/heavy|bad|badly|severe|pitted|flaking|rusty/.test(t)) cond="rusty";
+    else if(/light|surface|bit|little/.test(t)) cond="light rust";
+    flow.condition=cond; flow.state="asked_weight"; session.flow=flow; await saveSession(from, session);
+    if(cond==="rusty"){ flow.rustSurcharge=true; return "Agh, best ones. Full blast â€” adds R4-R8/kg extra. Rough weight? Medium gate 15-25kg."; }
+    if(cond==="light rust") return "Light rust â€” quick blast, no extra charge. Rough weight?";
+    return "Cool, no rust. Rough weight? 10kg? 20kg? 50kg?";
   }
-
-  if (flow.state === "asked_weight") {
-    var kg = t.match(/(\d+)/);
-    if (kg) {
-      flow.weight = parseInt(kg[1]); flow.state = "asked_colour";
-      session.flow = flow; await saveSession(from, session);
-      return "And colour? Black, white, charcoal, or something wild?";
-    }
-    return "Sorry, I need a number. How many kg roughly? Just guess — 10kg? 20kg? 50kg?";
+  if(flow.state==="asked_weight"){
+    var kgMatch=t.match(/(\d+)/); var kg=kgMatch?parseInt(kgMatch[1]):20;
+    flow.weight=kg; flow.state="asked_colour"; session.flow=flow; await saveSession(from, session);
+    return "Got it, "+kg+"kg. Colour? Black/White=R16/kg, Charcoal/metallic/custom=R17-R20/kg.";
   }
-
-  if (flow.state === "asked_colour") {
-    var isPremium = /charcoal|metallic|bronze|gold|red|blue|green|custom|ral|colour|color/.test(t);
-    var rate = isPremium ? 18 : 16;
-    var productName = flow.product || "item";
-    var weight = flow.weight || 20;
-    var coatingTotal = weight * rate;
-    var rustExtra = 0;
-    if (flow.rustSurcharge) {
-      rustExtra = weight * 6;
-      coatingTotal += rustExtra;
-    }
-    var vatAmount = Math.round(coatingTotal * 0.15);
-    var total = coatingTotal + vatAmount;
-    flow.state = "idle"; session.flow = flow; await saveSession(from, session);
-    var colourMsg = isPremium ? "Ooh, fancy! That gives a modern look." : "Classic choice. Black never goes out of style.";
-    var msg = colourMsg + "\n\nYOUR ESTIMATE - Ref: " + getOrderRef() + "\n\n" + weight + "kg " + productName + "\nBase rate: R" + rate + "/kg";
-    if (flow.rustSurcharge && rustExtra > 0) {
-      msg += "\nRust removal surcharge: R" + rustExtra.toLocaleString() + " (R4-R8/kg extra)";
-    }
-    msg += "\n\nExcl VAT: R" + coatingTotal.toLocaleString() + "\nVAT (15%): R" + vatAmount.toLocaleString() + "\nTOTAL (incl VAT): R" + total.toLocaleString() + "\n\nBlasting included within reason. Estimate only.\n\nWant to book? Reply YES with your name. Or WhatsApp Ridhor: 076 760 4350.";
+  if(flow.state==="asked_colour"){
+    var isPremium=/charcoal|metallic|bronze|gold|red|blue|green|custom|ral|colour|color/.test(t);
+    var rate=isPremium?18:16; var weight=flow.weight||20; var coatingTotal=weight*rate; var rustExtra=0;
+    if(flow.rustSurcharge){ rustExtra=weight*6; coatingTotal+=rustExtra; }
+    var vat=Math.round(coatingTotal*0.15); var total=coatingTotal+vat;
+    flow={state:"idle"}; session.flow=flow; await saveSession(from, session);
+    var msg="YOUR ESTIMATE - Ref: "+getOrderRef()+"\n\n"+weight+"kg gate\nBase: R"+rate+"/kg";
+    if(rustExtra>0) msg+="\nRust surcharge: R"+rustExtra+" (R4-R8/kg)";
+    msg+="\n\nExcl VAT: R"+coatingTotal.toLocaleString()+"\nVAT: R"+vat.toLocaleString()+"\nTOTAL: R"+total.toLocaleString()+"\n\nWant to book? Reply YES. Or Ridhor: 076 760 4350.";
     return msg;
   }
 
   // DELIVERY FLOW
-  if (flow.state === "delivery_asking_where") {
-    var dist = (delivery && typeof delivery.findDistance === "function") ? delivery.findDistance(t) : null;
-    if (dist) {
-      flow.deliveryKm = dist; flow.deliveryLocation = t; flow.state = "delivery_asking_size";
-      session.flow = flow; await saveSession(from, session);
-      return "Got it, " + t + " is about " + dist + "km from our workshop in Blackheath. Now - is the item under 1 ton and under 3m long? Or bigger? Reply SMALL or LARGE.";
-    }
-    var nearby = (delivery && typeof delivery.getNearbyAreas === "function") ? delivery.getNearbyAreas().join(", ") : "Bellville, Durbanville, Stellenbosch, Cape Town CBD";
-    return "I could not find that area. Try a nearby town: " + nearby;
+  if(flow.state==="delivery_asking_where"){
+    var dist=(delivery&&typeof delivery.findDistance==="function")?delivery.findDistance(t):null;
+    if(dist){ flow.deliveryKm=dist; flow.deliveryLocation=t; flow.state="delivery_asking_size"; session.flow=flow; await saveSession(from, session); return "Got it, "+t+" is about "+dist+"km from Blackheath. Under 1 ton and under 3m? Reply SMALL or LARGE."; }
+    var nearby=(delivery&&typeof delivery.getNearbyAreas==="function")?delivery.getNearbyAreas().join(", "):"Bellville, Durbanville, Stellenbosch";
+    return "Could not find that area. Try: "+nearby;
+  }
+  if(flow.state==="delivery_asking_size"){
+    var isLarge=/large|big|over|more|truck/.test(t); flow.deliveryIsLarge=isLarge; flow.state="delivery_asking_labour"; session.flow=flow; await saveSession(from, session);
+    return "Got it. Do you have people to help load? Reply YES (I have help) or NO (send labourer).";
+  }
+  if(flow.state==="delivery_asking_labour"){
+    var needsLabour=/no|need|send|don|dont|labour/.test(t)&&!/yes|have|got|sorted/.test(t);
+    var calc=(delivery&&typeof delivery.calculateDelivery==="function")?delivery.calculateDelivery(flow.deliveryKm, flow.deliveryIsLarge, needsLabour):null;
+    var resp=(calc&&delivery&&typeof delivery.formatDeliveryResponse==="function")?delivery.formatDeliveryResponse(calc, flow.deliveryLocation):"Delivery to "+flow.deliveryLocation+" calculated. WhatsApp Ridhor 076 760 4350.";
+    flow={state:"idle"}; session.flow=flow; await saveSession(from, session); return resp;
   }
 
-  if (flow.state === "delivery_asking_size") {
-    var isLarge = /large|big|over|more|truck/.test(t);
-    flow.deliveryIsLarge = isLarge; flow.state = "delivery_asking_labour";
-    session.flow = flow; await saveSession(from, session);
-    return "Got it. One more thing - do you have people to help load at your side? Or do you need us to send a labourer? Reply YES (I have help) or NO (send labourer).";
+  var normal=smartMatch(text);
+  if(normal===QR["delivery"]){
+    flow.state="delivery_asking_where"; session.flow=flow; await saveSession(from, session);
+    return "Sure! Which area/town? e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD";
   }
-
-  if (flow.state === "delivery_asking_labour") {
-    var needsLabour = /no|need|send|don|dont|help|labour|please/.test(t) && !/yes|have|got|sorted|fine|okay|covered/.test(t);
-    var calc = (delivery && typeof delivery.calculateDelivery === "function") ? delivery.calculateDelivery(flow.deliveryKm, flow.deliveryIsLarge, needsLabour) : null;
-    var responseMsg = (calc && delivery && typeof delivery.formatDeliveryResponse === "function") ? delivery.formatDeliveryResponse(calc, flow.deliveryLocation) : "Delivery to " + flow.deliveryLocation + " calculated. WhatsApp Ridhor 076 760 4350 for exact quote.";
-    flow.state = "idle"; session.flow = flow; await saveSession(from, session);
-    return responseMsg;
-  }
-
-  var normalMatch = smartMatch(text, from, session);
-  if (normalMatch === QR["delivery"]) {
-    flow.state = "delivery_asking_where"; session.flow = flow; await saveSession(from, session);
-    return "Sure! Which area or town are you in? (e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD) I will work out the delivery cost and time for you.";
-  }
-  return normalMatch;
+  return normal;
 }
 
-app.get("/health", function(req, res) { res.json({ status:"healthy", service:"Solomon Coatings AI", version:"11.2" }); });
-app.get("/", function(req, res) { res.json({ service:"Solomon Coatings", version:"11.2 - Rust Surcharge + Conversational Flow + Delivery" }); });
-app.get("/webhook", function(req, res) {
-  if (req.query["hub.mode"]==="subscribe"&&req.query["hub.verify_token"]===VT) return res.status(200).send(req.query["hub.challenge"]);
-  res.sendStatus(403);
-});
+app.get("/health",function(req,res){res.json({status:"healthy",version:"11.2"});});
+app.get("/",function(req,res){res.json({service:"Solomon Coatings",version:"11.2"});});
+app.get("/webhook",function(req,res){ if(req.query["hub.mode"]==="subscribe"&&req.query["hub.verify_token"]===VT) return res.status(200).send(req.query["hub.challenge"]); res.sendStatus(403); });
 
-app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
+app.post("/webhook",validateWhatsAppSignature,async function(req,res){
   res.sendStatus(200);
-  try {
-    var entries = (req.body&&req.body.entry)?req.body.entry:[];
-    for (var i=0; i<entries.length; i++) {
-      var changes = entries[i].changes||[];
-      for (var j=0; j<changes.length; j++) {
-        var msgs = (changes[j].value&&changes[j].value.messages)?changes[j].value.messages:[];
-        for (var k=0; k<msgs.length; k++) {
+  try{
+    var entries=req.body?.entry||[];
+    for(var i=0;i<entries.length;i++){
+      var changes=entries[i].changes||[];
+      for(var j=0;j<changes.length;j++){
+        var msgs=changes[j].value?.messages||[];
+        for(var k=0;k<msgs.length;k++){
           var from=msgs[k].from, type=msgs[k].type;
-          var text=(msgs[k].text&&msgs[k].text.body)?msgs[k].text.body.trim():null;
-          var imageId=msgs[k].image?msgs[k].image.id:null;
+          var text=msgs[k].text?.body?.trim()||null;
+          var imageId=msgs[k].image?.id||null;
           var afterHours=isAfterHours();
-
-          if (type==="image"&&imageId) {
-            var cap=msgs[k].image.caption||"";
-            await forwardImageToOwner(imageId, from);
-            try { await sendMessage(PERSONAL_NUMBER, "Image from "+from+(cap?" - "+cap:"")); } catch(e){}
-            await sendMessage(from, "Thanks! Forwarded to Ridhor on 076 760 4350. He will check now.");
-            continue;
+          if(type==="image"&&imageId){
+            await forwardImageToOwner(imageId);
+            try{await sendMessage(PERSONAL_NUMBER,"Image from "+from);}catch(e){}
+            await sendMessage(from,"Thanks! Forwarded to Ridhor 076 760 4350."); continue;
           }
-          if (!text) continue;
-
-          console.log("["+from+"]: \""+text+"\""+(afterHours?" [AFTER HOURS]":""));
-          var session = await getSession(from);
-          var match = await handleMessage(text, from, session);
-          
-          if (afterHours) {
-            var showClosed = Math.floor(Math.random() * 4) === 0;
-            if (showClosed) {
-              match = "Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + match;
-            }
-            try { await sendMessage(PERSONAL_NUMBER, "After-hours from "+from+": "+text); } catch(e){}
-          }
-          await sendMessage(from, match);
-          session.history = session.history || [];
-          session.history.push({role:"user",content:text},{role:"model",content:match});
-          if (session.history.length > 40) session.history = session.history.slice(-20);
-          await saveSession(from, session);
+          if(!text) continue;
+          var session=await getSession(from);
+          var match=await handleMessage(text,from,session);
+          if(afterHours){ match="Workshop closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n"+match; try{await sendMessage(PERSONAL_NUMBER,"After-hours from "+from+": "+text);}catch(e){} }
+          await sendMessage(from,match);
+          session.history=session.history||[]; session.history.push({role:"user",content:text},{role:"model",content:match});
+          if(session.history.length>40) session.history=session.history.slice(-20);
+          await saveSession(from,session);
         }
       }
     }
-  } catch(e) { console.error("WEBHOOK ERROR:", e.message); }
+  }catch(e){console.error("WEBHOOK ERROR:",e.message);}
 });
 
-app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
-
-
-
-
-
-
-
-
-
-
-
-
+app.listen(PORT,function(){console.log("\nSOLOMON v11.2 - Calculator LOCKED | 14=TPS | Greeting resets flow | Menu fixed\n");});
