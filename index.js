@@ -1,4 +1,4 @@
-ï»¿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -23,10 +23,10 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var funFallbacks = [
   "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *help* to see my secret menu, or WhatsApp Ridhor on 076 760 4350.",
-  "Eish, you got me there! I know coating, not that. \n\nType *help* for what I CAN do, or chat to Ridhor: 076 760 4350.",
-  "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *help* or WhatsApp Ridhor: 076 760 4350.",
-  "Ha! If only I knew everything. I stick to what I am good at - coating. \n\nType *help* for my menu or call Ridhor: 076 760 4350.",
-  "Sorry my bru, that is not in my toolbox. \n\nTry *help* to see what I can answer, or WhatsApp Ridhor: 076 760 4350."
+  "Eish, you got me there! I know coating, not that. \n\nType *menu* to see what I am good at, or chat to Ridhor: 076 760 4350.",
+  "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350.",
+  "Ha! If only I knew everything. I stick to what I am good at - coating. \n\nType *menu* — I know a few things or call Ridhor: 076 760 4350.",
+  "Sorry my bru, that is not in my toolbox. \n\nTry *menu* to see what I know, or WhatsApp Ridhor: 076 760 4350."
 ];
 
 var affirmations = [
@@ -103,19 +103,19 @@ function estimatePrice(text) {
 }
 
 var QR = {
-  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *help* for the full list of things I can do\nOr just tell me what you need a price on â€” gates, rims, steel/security items, shotblasting, or trucks.\n\nFor wetspray quotes, I will connect you directly to Ridhor.\n\nWhat can I help with?",
-  "hello":"Hi there! Solomon Coatings here.\n\nType *help* for the menu, or just tell me what you need priced â€” gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will put you through to Ridhor directly.",
-  "hey":"Howzit! What can I help with?\n\nType *help* for the full menu, or tell me what you need a price on!",
-  "howzit":"Howzit! What can I help with?\n\nType *help* for the full menu, or just ask!",
-  "good morning":"Morning! Solomon Coatings here.\n\nType *help* to see what I can do, or tell me what you need priced!",
-  "menu":"SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461\n\nType *help* for more options!",
+  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *menu* to see what I am capable of (spoiler: it is a lot)\nOr just tell me what you need a price on — gates, rims, steel/security items, shotblasting, or trucks.\n\nFor wetspray quotes, I will connect you directly to Ridhor.\n\nWhat can I help with?",
+  "hello":"Hi there! Solomon Coatings here.\n\nType *menu* for the list, or just tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will put you through to Ridhor directly.",
+  "hey":"Howzit! What can I help with?\n\nType *menu* — I have got a few things up my sleeve, or tell me what you need a price on!",
+  "howzit":"Howzit! What can I help with?\n\nType *menu* — I have got a few things up my sleeve, or just ask!",
+  "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see what I can help with, or tell me what you need priced!",
+  "menu":"WHAT I CAN DO — pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced — gates, rims, steel, blasting, trucks.\n\nFor wetspray, I will connect you to Ridhor directly.",\n  "old_menu":"SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461\n\nType *help* for more options!",
   "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "colours":"Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee examples: "+FACEBOOK,
   "hours":"Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
   "turnaround":"Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
   "delivery":"R150 Cape Town metro. Free collection. 7% daily storage after 7 days.",
   "contact":"060 507 4461 | Office: "+OFFICE_NUMBER+" | Email: "+OFFICE_EMAIL+" | FB: "+FACEBOOK+" | TikTok: "+TIKTOK,
-  "help":"SECRET MENU - Reply with a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery and collection\n7. Blasting services\n8. T&Cs and warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just ask your question!",
+  "menu":"WHAT I CAN DO — pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced — gates, rims, steel, blasting, trucks.\n\nFor wetspray, I will connect you to Ridhor directly."\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery and collection\n7. Blasting services\n8. T&Cs and warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just ask your question!",
   "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee: "+FACEBOOK,
   "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI will calculate it with VAT!",
@@ -198,7 +198,7 @@ function smartMatch(text, fromNumber, session) {
   if ((t.includes("oversized")||t.includes("large"))&&t.includes("item")) return "Large items (6m-7.2m): R1000 setup fee.";
   if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
   if (t.includes("rain")) return "Once cured, powder coating is weather-resistant. Fresh coating avoid rain 24hrs.";
-  if (t.includes("pizza")||t.includes("sun")||t.includes("google")) return "Ha! I am a coating oom, not Google. But I CAN tell you about powder coating! Type *help* for my menu.";
+  if (t.includes("pizza")||t.includes("sun")||t.includes("google")) return "Ha! I am a coating oom, not Google. But I CAN tell you about powder coating! Type *menu* — I know a few things.";
   return randomFallback();
 }
 
@@ -238,9 +238,9 @@ async function handleMessage(text, from, session) {
     flow.state = "asked_weight";
     flow.rustSurcharge = (condition === "rusty");
     session.flow = flow; await saveSession(from, session);
-    if (condition === "rusty") return "Agh, those are the best ones. Full blasting job â€” that will add about R4-R8 per kg extra for rust removal. But worth it! Rough weight? If you are not sure, just guess â€” medium gate is usually 15-25kg.";
-    if (condition === "light rust") return "Light rust â€” quick blast and she is clean. No extra charge. Rough weight?";
-    return "Cool, no rust â€” standard rate applies. Rough weight? Do not stress â€” ballpark is fine. 10kg? 20kg? 50kg?";
+    if (condition === "rusty") return "Agh, those are the best ones. Full blasting job — that will add about R4-R8 per kg extra for rust removal. But worth it! Rough weight? If you are not sure, just guess — medium gate is usually 15-25kg.";
+    if (condition === "light rust") return "Light rust — quick blast and she is clean. No extra charge. Rough weight?";
+    return "Cool, no rust — standard rate applies. Rough weight? Do not stress — ballpark is fine. 10kg? 20kg? 50kg?";
   }
 
   if (flow.state === "asked_weight") {
@@ -250,7 +250,7 @@ async function handleMessage(text, from, session) {
       session.flow = flow; await saveSession(from, session);
       return "And colour? Black, white, charcoal, or something wild?";
     }
-    return "Sorry, I need a number. How many kg roughly? Just guess â€” 10kg? 20kg? 50kg?";
+    return "Sorry, I need a number. How many kg roughly? Just guess — 10kg? 20kg? 50kg?";
   }
 
   if (flow.state === "asked_colour") {
@@ -361,3 +361,4 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
