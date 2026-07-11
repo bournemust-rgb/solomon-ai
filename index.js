@@ -40,6 +40,7 @@ var affirmations = [
 
 function randomAffirmation() { return affirmations[Math.floor(Math.random() * affirmations.length)]; }
 function randomFallback() { return funFallbacks[Math.floor(Math.random() * funFallbacks.length)]; }
+function randomTPS() { var q = ["The customer is always right... whatever the cost.","We never lose. We either win or we learn.","Always do your best to give the customer what they want.","If the coating is right, the rust stays away.","Quality is remembered long after the price is forgotten.","A man's work is his signature.","We have been coating since 88. That is not luck. That is graft.","Patience in the booth, perfection on the metal.","Your name is on every job. Never forget that.","Do not cut corners. Corners are where the rust starts.","The metal does not lie.","A happy customer is a customer for life.","We do not follow trends. We set the standard.","Every gate, every rim, every bracket.","The oven does not care who you are.","Coat it once, coat it right. Comebacks cost more than pride.","In this trade, your reputation is your best tool."]; return q[Math.floor(Math.random()*q.length)]; }
 
 function getOrderRef() {
   var d = new Date();
@@ -389,6 +390,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
