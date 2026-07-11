@@ -6,7 +6,8 @@ var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var delivery = require("./delivery");
 var tcdb = require("./tcdb");
-var { randomFallback, randomAffirmation, randomTPS } = require("./quotes");
+var { randomFallback, randomAffirmation, randomTPS } = require('./quotes');
+var { randomGreeting } = require('./greetings');
 var { getOrderRef, estimatePrice } = require("./calculator");
 var { buildMenu } = require("./menu");
 var { smartMatch } = require("./smartmatch");
@@ -85,4 +86,5 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 });
 
 app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 8 modules. index.js is " + "~100 lines.\n");});
+
 

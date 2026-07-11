@@ -4,6 +4,7 @@
   var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t);
   if(isGreeting){
     flow={state:"idle"}; session.flow=flow; await saveSession(from, session);
+    if(/^(hi|hello|hey|howzit|good morning)$/i.test(t)) return randomGreeting() + '\n\nType *menu* to see our Secret List.\n\nOr tell me what you need priced.';
     return smartMatch(text);
   }
   if(flow.state!=="idle" && /^(cancel|stop)$/.test(t)){
@@ -63,3 +64,4 @@
   return normal;
 }
 module.exports = { handleMessage };
+
