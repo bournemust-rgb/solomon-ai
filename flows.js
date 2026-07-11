@@ -130,6 +130,7 @@ var PRODUCT_MAP = {
 
 function fuzzyMatch(text) {
   var t = text.toLowerCase().trim();
+  if (t.length < 4) return null; // ignore short words like hi, ok, yes, no
   // Check for typos - if word is close to a known product
   for (var product in PRODUCT_MAP) {
     for (var i = 0; i < PRODUCT_MAP[product].length; i++) {
@@ -163,5 +164,6 @@ function didYouMean(guess) {
 }
 
 module.exports = { handleMessage };
+
 
 
