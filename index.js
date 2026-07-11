@@ -22,21 +22,20 @@ var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var funFallbacks = [
-  "Ag sorry, I'm just a powder coating oom, not Google! \n\nTry *help* to see my secret menu of tricks, or WhatsApp Ridhor on 076 760 4350.",
+  "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *help* to see my secret menu, or WhatsApp Ridhor on 076 760 4350.",
   "Eish, you got me there! I know coating, not that. \n\nType *help* for what I CAN do, or chat to Ridhor: 076 760 4350.",
-  "That one's above my pay grade! I'm here for powder coating, colours, and quotes. \n\nType *help* or WhatsApp Ridhor: 076 760 4350.",
-  "Ha! If only I knew everything. I stick to what I'm good at - coating. \n\nType *help* for my menu or call Ridhor: 076 760 4350.",
-  "Sorry my bru, that's not in my toolbox. \n\nTry *help* to see what I can answer, or WhatsApp Ridhor: 076 760 4350."
+  "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *help* or WhatsApp Ridhor: 076 760 4350.",
+  "Ha! If only I knew everything. I stick to what I am good at - coating. \n\nType *help* for my menu or call Ridhor: 076 760 4350.",
+  "Sorry my bru, that is not in my toolbox. \n\nTry *help* to see what I can answer, or WhatsApp Ridhor: 076 760 4350."
 ];
 
 var affirmations = [
   "Fun fact: A well-coated gate is the silent guardian of your driveway. Sleep well tonight!",
-  "Did you know? Powder coating is tougher than your mother-in-law's opinions. And that's saying something.",
-  "Hot tip: Black powder coat absorbs less heat than you'd think. Science, my bru.",
-  "Random thought: Every time you powder coat something, an angel gets its wings. Or at least a rust-free gate.",
-  "Life advice: When in doubt, coat it black. It matches everything. Even your soul.",
-  "Weekend wisdom: A coated rim is a happy rim. Don't let your rims be sad. Bring them in.",
-  "Solomon truth: We've been coating since '88. That's before Google. Before smartphones. Before... basically everything."
+  "Did you know? Powder coating is tougher than your mother-in-law opinions.",
+  "Hot tip: Black powder coat absorbs less heat than you think. Science, my bru.",
+  "Life advice: When in doubt, coat it black. It matches everything.",
+  "Weekend wisdom: A coated rim is a happy rim. Do not let your rims be sad. Bring them in.",
+  "Solomon truth: We have been coating since 88. That is before Google. Before smartphones."
 ];
 
 function randomAffirmation() { return affirmations[Math.floor(Math.random() * affirmations.length)]; }
@@ -61,7 +60,6 @@ function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
   var vatRate = 0.15;
-
   if (t.includes("rim")) {
     var qty = t.match(/(\d+)/); qty = qty ? parseInt(qty[1]) : 4;
     var sets = Math.ceil(qty / 4);
@@ -72,7 +70,6 @@ function estimatePrice(text) {
     var rimVatLow = Math.round(rimTotalLow * vatRate), rimVatHigh = Math.round(rimTotalHigh * vatRate);
     return "RIMS ESTIMATE - Ref: " + ref + "\n\n" + qty + " rims = " + sets + " set(s)\nColour: " + (rimColour === "standard" ? "Standard" : "Premium") + "\n\nExcl VAT: R" + rimTotalLow.toLocaleString() + " - R" + rimTotalHigh.toLocaleString() + "\nVAT (15%): R" + rimVatLow.toLocaleString() + " - R" + rimVatHigh.toLocaleString() + "\nIncl VAT: R" + (rimTotalLow+rimVatLow).toLocaleString() + " - R" + (rimTotalHigh+rimVatHigh).toLocaleString() + "\n\nCustomer MUST remove tyres. Estimate only. WhatsApp Ridhor: 076 760 4350.\n\n" + randomAffirmation();
   }
-
   if (t.includes("kg") || t.includes("gate") || t.includes("burglar") || t.includes("fence") || t.includes("railing") || t.includes("balustrade")) {
     var kg = t.match(/(\d+)\s*kg/); kg = kg ? parseInt(kg[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 10);
     var isPremium = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("silver")||t.includes("blue")||t.includes("red")||t.includes("green")||t.includes("yellow")||t.includes("colour")||t.includes("color"));
@@ -90,7 +87,6 @@ function estimatePrice(text) {
     msg += "\n\nEstimate only. WhatsApp Ridhor: 076 760 4350.\n\n" + randomAffirmation();
     return msg;
   }
-
   if (t.includes("sheet") || t.includes("mesh")) {
     var sqm = t.match(/(\d+)\s*sqm/); sqm = sqm ? parseInt(sqm[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 5);
     var sp = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("colour")||t.includes("color"));
@@ -99,7 +95,6 @@ function estimatePrice(text) {
     var svl = Math.round(stl*vatRate), svh = Math.round(sth*vatRate);
     return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\n" + sqm + " sqm\nColour: " + (sp?"Premium":"Standard") + "\n\nExcl VAT: R" + stl.toLocaleString() + " - R" + sth.toLocaleString() + "\nVAT: R" + svl.toLocaleString() + " - R" + svh.toLocaleString() + "\nIncl VAT: R" + (stl+svl).toLocaleString() + " - R" + (sth+svh).toLocaleString() + "\n\n" + randomAffirmation();
   }
-
   if (t.includes("truck")||t.includes("bakkie")||t.includes("flatbed")) {
     var tl=5000, th=7500;
     return "TRUCK BLASTING ESTIMATE - Ref: " + ref + "\n\n5m flatbed\n\nExcl VAT: R"+tl.toLocaleString()+" - R"+th.toLocaleString()+"\nVAT: R"+Math.round(tl*vatRate).toLocaleString()+" - R"+Math.round(th*vatRate).toLocaleString()+"\nIncl VAT: R"+Math.round(tl*1.15).toLocaleString()+" - R"+Math.round(th*1.15).toLocaleString()+"\n\n" + randomAffirmation();
@@ -108,11 +103,11 @@ function estimatePrice(text) {
 }
 
 var QR = {
-  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nNeed pricing, a quote, or just curious? Just ask! Type *help* to see everything I can do.",
-  "hello":"Hi there! Solomon Coatings here.\n\nAsk me anything about powder coating, or type *help* for the secret menu.",
-  "hey":"Howzit! What can I help with?\n\nType *help* for the full list of tricks I can do.",
-  "howzit":"Howzit! What can I help with?\n\nType *help* for the full menu.",
-  "good morning":"Morning! Solomon Coatings here.\n\nType *help* to see what I can do, or just ask your question!",
+  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *help* for the full list of things I can do\nOr just tell me what you need a price on — gates, rims, steel/security items, shotblasting, or trucks.\n\nFor wetspray quotes, I will connect you directly to Ridhor.\n\nWhat can I help with?",
+  "hello":"Hi there! Solomon Coatings here.\n\nType *help* for the menu, or just tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will put you through to Ridhor directly.",
+  "hey":"Howzit! What can I help with?\n\nType *help* for the full menu, or tell me what you need a price on!",
+  "howzit":"Howzit! What can I help with?\n\nType *help* for the full menu, or just ask!",
+  "good morning":"Morning! Solomon Coatings here.\n\nType *help* to see what I can do, or tell me what you need priced!",
   "menu":"SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461\n\nType *help* for more options!",
   "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "colours":"Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee examples: "+FACEBOOK,
@@ -120,20 +115,20 @@ var QR = {
   "turnaround":"Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
   "delivery":"R150 Cape Town metro. Free collection. 7% daily storage after 7 days.",
   "contact":"060 507 4461 | Office: "+OFFICE_NUMBER+" | Email: "+OFFICE_EMAIL+" | FB: "+FACEBOOK+" | TikTok: "+TIKTOK,
-  "help":"SECRET MENU - Reply with a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just ask your question!",
+  "help":"SECRET MENU - Reply with a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery and collection\n7. Blasting services\n8. T&Cs and warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n\nOr just ask your question!",
   "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee: "+FACEBOOK,
-  "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI'll calculate it with VAT!",
+  "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI will calculate it with VAT!",
   "4":"TURNAROUND\nUnder 1 ton: 3 working days.\nOver 1 ton: 5-8 working days.\nTimelines affected by loadshedding/weather.",
-  "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed Saturdays & Sundays.",
-  "6":"DELIVERY & COLLECTION\nR150 delivery Cape Town metro.\nFree collection from workshop.\nItems must be collected within 7 days.\nLate collection: 7% daily storage fee.",
-  "7":"BLASTING SERVICES\nSandblasting/Shot blasting: R8-R12/kg (blasting only)\nTruck blasting (5m): R5,000-R7,500\nMedium: Grit/slag 0.12-0.4mm, 6 bar\n\nAll blasting at client's risk.\nRemove plastic/glass/hydraulics before bringing.",
-  "8":"TERMS & CONDITIONS\n- COD only - no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client's risk\n- Items remain our property until paid\n\nFull document: email "+OFFICE_EMAIL,
+  "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed Saturdays and Sundays.",
+  "6":"DELIVERY AND COLLECTION\nR150 delivery Cape Town metro.\nFree collection from workshop.\nItems must be collected within 7 days.\nLate collection: 7% daily storage fee.",
+  "7":"BLASTING SERVICES\nSandblasting/Shot blasting: R8-R12/kg (blasting only)\nTruck blasting (5m): R5,000-R7,500\nMedium: Grit/slag 0.12-0.4mm, 6 bar\n\nAll blasting at client risk.\nRemove plastic/glass/hydraulics before bringing.",
+  "8":"TERMS AND CONDITIONS\n- COD only - no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client risk\n- Items remain our property until paid\n\nFull document: email "+OFFICE_EMAIL,
   "9":"GALLERY\nCheck our work on Facebook: "+FACEBOOK+"\nTikTok: "+TIKTOK+"\n\nWe post real jobs regularly!",
   "10":"REVIEW US\nLeave a review: "+GOOGLE_REVIEW+"\nOr on Facebook: "+FACEBOOK+"\n\nThank you for supporting us since 1988!",
   "11":"BOOK A CALLBACK\nWant Ridhor to call you?\nSend your name, number, and what you need.\nOr call the office: "+OFFICE_NUMBER,
   "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350\nEmail: "+QUOTE_EMAIL+"\nOffice: "+OFFICE_NUMBER,
-  "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey'll check your account and get back to you.",
+  "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey will check your account and get back to you.",
   "thanks":"Pleasure! Anything else?",
   "thank you":"Only a pleasure!",
   "bye":"Cheers! Sien jou later."
@@ -156,7 +151,7 @@ function smartMatch(text, fromNumber, session) {
   if (QR[t]) return QR[t];
   if (t.includes("affirmation")||t.includes("fact")||t.includes("wisdom")||t.includes("tip")) return randomAffirmation();
   if (t.includes("reference")||t.includes("order number")||t.includes("job number")) return "Your reference: " + getOrderRef();
-  if (t.includes("invoice")&&(t.includes("send")||t.includes("email"))) return "Send your order reference and I'll arrange your invoice. Or call "+OFFICE_NUMBER+".";
+  if (t.includes("invoice")&&(t.includes("send")||t.includes("email"))) return "Send your order reference and I will arrange your invoice. Or call "+OFFICE_NUMBER+".";
   if (t.includes("how busy")||t.includes("queue")) return "For real-time wait time, WhatsApp Ridhor on 076 760 4350.";
   if ((t.includes("show")||t.includes("see")||t.includes("example"))&&(t.includes("colour")||t.includes("black")||t.includes("white")||t.includes("red")||t.includes("blue"))) return "See colours on Facebook: "+FACEBOOK+" and TikTok: "+TIKTOK;
   if (t.includes("review")||t.includes("rate")||t.includes("feedback")) return "Leave a review: "+GOOGLE_REVIEW+"\nThank you since 1988!";
@@ -193,7 +188,7 @@ function smartMatch(text, fromNumber, session) {
   if (t.includes("deliver")||t.includes("where")||t.includes("address")) return QR["delivery"];
   if (t.includes("contact")||t.includes("email")||t.includes("phone")) return QR["contact"];
   if (t.includes("rim")||t.includes("wheel")||t.includes("mag")) return "Rims: R1,000-R1,500/set of 4. Remove tyres. For estimate: quote 4 rims black";
-  if (t.includes("gate")||t.includes("fence")||t.includes("burglar")) return "Gates: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
+  if (t.includes("gate")||t.includes("fence")||t.includes("burglar")||t.includes("steel")||t.includes("security")) return "Gates/Steel/Security: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
   if (t.includes("sheet")||t.includes("mesh")||t.includes("panel")) return "Sheet: R175-R250/sqm B/W, R251-R350/sqm premium.";
   if (t.includes("chassis")||t.includes("trailer")) return "Chassis: R16/kg B/W, R17-R20/kg premium. WhatsApp pics: 076 760 4350.";
   if (t.includes("minimum")||t.includes("small job")) return "Min: R173.99 B/W, R225 hammered, R300+ metallic. Excl VAT.";
@@ -203,7 +198,7 @@ function smartMatch(text, fromNumber, session) {
   if ((t.includes("oversized")||t.includes("large"))&&t.includes("item")) return "Large items (6m-7.2m): R1000 setup fee.";
   if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
   if (t.includes("rain")) return "Once cured, powder coating is weather-resistant. Fresh coating avoid rain 24hrs.";
-  if (t.includes("pizza")||t.includes("sun")||t.includes("google")) return "Ha! I'm a coating oom, not Google. But I CAN tell you about powder coating! Type *help* for my menu.";
+  if (t.includes("pizza")||t.includes("sun")||t.includes("google")) return "Ha! I am a coating oom, not Google. But I CAN tell you about powder coating! Type *help* for my menu.";
   return randomFallback();
 }
 
@@ -216,6 +211,72 @@ async function handleMessage(text, from, session) {
     return "No problem, cancelled.\n\n" + smartMatch(text, from, session);
   }
 
+  // CONVERSATIONAL FLOW
+  if (flow.state === "idle" && /^(hi|hello|hey|howzit|good morning|sup|yo|aweh)$/i.test(t)) {
+    flow.state = "asked_product";
+    session.flow = flow; await saveSession(from, session);
+    return "Howzit! What can we coat for you today? Gates/steel/security, rims, chassis, sheet metal, or something else?";
+  }
+
+  if (flow.state === "asked_product") {
+    var product = "item";
+    if (t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.includes("steel") || t.includes("security")) product = "gate/steel";
+    else if (t.includes("rim") || t.includes("wheel") || t.includes("mag")) product = "rims";
+    else if (t.includes("chassis") || t.includes("trailer")) product = "chassis";
+    else if (t.includes("sheet") || t.includes("mesh") || t.includes("panel")) product = "sheet metal";
+    else if (t.includes("truck") || t.includes("bakkie")) product = "truck";
+    flow.product = product; flow.state = "asked_condition";
+    session.flow = flow; await saveSession(from, session);
+    return "Lekker. What is the condition? Fresh metal, light rust, or badly rusted?";
+  }
+
+  if (flow.state === "asked_condition") {
+    var condition = "clean";
+    if (/heavy|bad|proper|severe|pitted|flaking|rust|rusty|badly/.test(t)) condition = "rusty";
+    else if (/light|surface|bit|little/.test(t)) condition = "light rust";
+    flow.condition = condition;
+    flow.state = "asked_weight";
+    flow.rustSurcharge = (condition === "rusty");
+    session.flow = flow; await saveSession(from, session);
+    if (condition === "rusty") return "Agh, those are the best ones. Full blasting job — that will add about R4-R8 per kg extra for rust removal. But worth it! Rough weight? If you are not sure, just guess — medium gate is usually 15-25kg.";
+    if (condition === "light rust") return "Light rust — quick blast and she is clean. No extra charge. Rough weight?";
+    return "Cool, no rust — standard rate applies. Rough weight? Do not stress — ballpark is fine. 10kg? 20kg? 50kg?";
+  }
+
+  if (flow.state === "asked_weight") {
+    var kg = t.match(/(\d+)/);
+    if (kg) {
+      flow.weight = parseInt(kg[1]); flow.state = "asked_colour";
+      session.flow = flow; await saveSession(from, session);
+      return "And colour? Black, white, charcoal, or something wild?";
+    }
+    return "Sorry, I need a number. How many kg roughly? Just guess — 10kg? 20kg? 50kg?";
+  }
+
+  if (flow.state === "asked_colour") {
+    var isPremium = /charcoal|metallic|bronze|gold|red|blue|green|custom|ral|colour|color/.test(t);
+    var rate = isPremium ? 18 : 16;
+    var productName = flow.product || "item";
+    var weight = flow.weight || 20;
+    var coatingTotal = weight * rate;
+    var rustExtra = 0;
+    if (flow.rustSurcharge) {
+      rustExtra = weight * 6;
+      coatingTotal += rustExtra;
+    }
+    var vatAmount = Math.round(coatingTotal * 0.15);
+    var total = coatingTotal + vatAmount;
+    flow.state = "idle"; session.flow = flow; await saveSession(from, session);
+    var colourMsg = isPremium ? "Ooh, fancy! That gives a modern look." : "Classic choice. Black never goes out of style.";
+    var msg = colourMsg + "\n\nYOUR ESTIMATE - Ref: " + getOrderRef() + "\n\n" + weight + "kg " + productName + "\nBase rate: R" + rate + "/kg";
+    if (flow.rustSurcharge && rustExtra > 0) {
+      msg += "\nRust removal surcharge: R" + rustExtra.toLocaleString() + " (R4-R8/kg extra)";
+    }
+    msg += "\n\nExcl VAT: R" + coatingTotal.toLocaleString() + "\nVAT (15%): R" + vatAmount.toLocaleString() + "\nTOTAL (incl VAT): R" + total.toLocaleString() + "\n\nBlasting included within reason. Estimate only.\n\nWant to book? Reply YES with your name. Or WhatsApp Ridhor: 076 760 4350.";
+    return msg;
+  }
+
+  // DELIVERY FLOW
   if (flow.state === "delivery_asking_where") {
     var dist = (delivery && typeof delivery.findDistance === "function") ? delivery.findDistance(t) : null;
     if (dist) {
@@ -245,13 +306,13 @@ async function handleMessage(text, from, session) {
   var normalMatch = smartMatch(text, from, session);
   if (normalMatch === QR["delivery"]) {
     flow.state = "delivery_asking_where"; session.flow = flow; await saveSession(from, session);
-    return "Sure! Which area or town are you in? (e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD) I'll work out the delivery cost and time for you.";
+    return "Sure! Which area or town are you in? (e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD) I will work out the delivery cost and time for you.";
   }
   return normalMatch;
 }
 
-app.get("/health", function(req, res) { res.json({ status:"healthy", service:"Solomon Coatings AI", version:"11.0" }); });
-app.get("/", function(req, res) { res.json({ service:"Solomon Coatings", version:"11.0 - Final" }); });
+app.get("/health", function(req, res) { res.json({ status:"healthy", service:"Solomon Coatings AI", version:"11.2" }); });
+app.get("/", function(req, res) { res.json({ service:"Solomon Coatings", version:"11.2 - Rust Surcharge + Conversational Flow + Delivery" }); });
 app.get("/webhook", function(req, res) {
   if (req.query["hub.mode"]==="subscribe"&&req.query["hub.verify_token"]===VT) return res.status(200).send(req.query["hub.challenge"]);
   res.sendStatus(403);
@@ -275,7 +336,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
             var cap=msgs[k].image.caption||"";
             await forwardImageToOwner(imageId, from);
             try { await sendMessage(PERSONAL_NUMBER, "Image from "+from+(cap?" - "+cap:"")); } catch(e){}
-            await sendMessage(from, "Thanks! Forwarded to Ridhor on 076 760 4350. He'll check now.");
+            await sendMessage(from, "Thanks! Forwarded to Ridhor on 076 760 4350. He will check now.");
             continue;
           }
           if (!text) continue;
@@ -299,4 +360,4 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   } catch(e) { console.error("WEBHOOK ERROR:", e.message); }
 });
 
-app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.0 - FINAL - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Fallbacks: FUN\n"); });
+app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
