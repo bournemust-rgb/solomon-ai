@@ -215,16 +215,41 @@ async function handleMessage(text, from, session) {
   if (flow.state === "idle" && /^(hi|hello|hey|howzit|good morning|sup|yo|aweh)$/i.test(t)) {
     flow.state = "asked_product";
     session.flow = flow; await saveSession(from, session);
-    return "Howzit! What can we coat for you today? Gates/steel/security, rims, chassis, sheet metal, or something else?";
+    return "Howzit! What can I help you with today?\n\nGates/Fencing, Rims, Chassis, Sheet Metal, or Trucks?";
   }
 
   if (flow.state === "asked_product") {
     var product = "item";
-    if (t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.includes("steel") || t.includes("security")) product = "gate/steel";
-    else if (t.includes("rim") || t.includes("wheel") || t.includes("mag")) product = "rims";
-    else if (t.includes("chassis") || t.includes("trailer")) product = "chassis";
-    else if (t.includes("sheet") || t.includes("mesh") || t.includes("panel")) product = "sheet metal";
-    else if (t.includes("truck") || t.includes("bakkie")) product = "truck";
+    if (t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.includes("steel") || t.includes("security") || t.includes("fencing")) {
+      product = "gate";
+      flow.product = product; flow.state = "asked_condition";
+      session.flow = flow; await saveSession(from, session);
+      return "Gates/Fencing — lekker. What is the condition? Fresh metal, light rust, or badly rusted?";
+    }
+    else if (t.includes("rim") || t.includes("wheel") || t.includes("mag")) {
+      product = "rims";
+      flow.product = product; flow.state = "idle";
+      session.flow = flow; await saveSession(from, session);
+      return "Rims! We charge R1,000-R1,500 per set of 4 (10-15 inch). Black/white is cheapest, metallic colours cost more. Customer MUST remove tyres.\n\nWant an exact estimate? Tell me: how many rims and what colour?";
+    }
+    else if (t.includes("chassis") || t.includes("trailer")) {
+      product = "chassis";
+      flow.product = product; flow.state = "idle";
+      session.flow = flow; await saveSession(from, session);
+      return "Chassis and trailers — these need proper assessment. I am going to connect you to Ridhor directly for this one.\n\nWhatsApp Ridhor: 076 760 4350\nEmail: " + QUOTE_EMAIL + "\n\nHe will check the condition, size, and give you an exact quote for blasting and spraying.";
+    }
+    else if (t.includes("sheet") || t.includes("mesh") || t.includes("panel")) {
+      product = "sheet metal";
+      flow.product = product; flow.state = "idle";
+      session.flow = flow; await saveSession(from, session);
+      return "Sheet metal! We charge per square meter:\n- Black/White: R175-R250/sqm\n- Metallic/Charcoal: R251-R350/sqm\n- Hammered finishes: R225+\n\nAll prices excl VAT. Blasting included within reason.\n\nWant an estimate? Tell me how many square meters and what colour.";
+    }
+    else if (t.includes("truck") || t.includes("bakkie") || t.includes("flatbed")) {
+      product = "truck";
+      flow.product = product; flow.state = "idle";
+      session.flow = flow; await saveSession(from, session);
+      return "Truck blasting! We charge R5,000-R7,500 for a 5m flatbed truck (excl VAT).\n\nImportant: No rubber can be blasted — must be removed first.\n\nWant to book or need more info? WhatsApp Ridhor: 076 760 4350.";
+    }
     flow.product = product; flow.state = "asked_condition";
     session.flow = flow; await saveSession(from, session);
     return "Lekker. What is the condition? Fresh metal, light rust, or badly rusted?";
@@ -364,6 +389,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
