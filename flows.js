@@ -1,5 +1,11 @@
 ﻿async function handleMessage(text, from, session, smartMatch, QR, delivery, getOrderRef, saveSession, randomGreeting, tcdb) {
   var t=text.toLowerCase().trim();
+  // FUZZY MATCHING
+  var fuzzyResult = fuzzyMatch(t);
+  if (fuzzyResult && flow.state === "idle" && !t.includes("yes") && !t.includes("no")) {
+    var dym = didYouMean(fuzzyResult);
+    if (dym) return dym;
+  }
   var flow=session.flow||{state:"idle"};
   var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t);
   if(isGreeting){
@@ -111,4 +117,50 @@
   }
   return normal;
 }
+// FUZZY MATCHING - catches typos and asks "did you mean?"
+var PRODUCT_MAP = {
+  "gate": ["gate","gates","gste","gtea","gaet","agte","gates","gate ","gates ","security gate","sliding gate","driveway gate","gated","gating"],
+  "rim": ["rim","rims","rims ","rmi","rimz","mag","mags","wheel","wheels","alloy","alloys","rwheel","wheesl"],
+  "truck": ["truck","trucks","trkcu","truk","bakkie","bakkies","flatbed","flat bed","ldv","truckk","truc"],
+  "shotblast": ["shotblast","shot blast","sandblast","sand blast","blast","blasting","blsting","shotblasting","sandblasting","blsat","blst"],
+  "chassis": ["chassis","chasis","chasssis","trailer","trailor","chassi","chasssis"],
+  "sheet": ["sheet","sheets","sheet metal","mesh","panel","panels","sheeet","shet"],
+  "steel": ["steel","steal","stel","steel ","metal","iron","stainless","galvanized","galvanised"]
+};
+
+function fuzzyMatch(text) {
+  var t = text.toLowerCase().trim();
+  // Check for typos - if word is close to a known product
+  for (var product in PRODUCT_MAP) {
+    for (var i = 0; i < PRODUCT_MAP[product].length; i++) {
+      var variant = PRODUCT_MAP[product][i];
+      // Exact match in the text
+      if (t.indexOf(variant) !== -1) return product;
+      // Close match (1-2 characters different)
+      if (t.length >= variant.length - 2 && t.length <= variant.length + 2) {
+        var matches = 0;
+        for (var j = 0; j < Math.min(t.length, variant.length); j++) {
+          if (t[j] === variant[j]) matches++;
+        }
+        if (matches >= variant.length - 2) return product;
+      }
+    }
+  }
+  return null;
+}
+
+function didYouMean(guess) {
+  var map = {
+    "gate": "Did you mean *gate*? Reply YES and I will ask you about condition and weight.",
+    "rim": "Did you mean *rims*? Reply YES and I will ask you about size and colour.",
+    "truck": "Did you mean *truck*? Reply YES for truck blasting info.",
+    "shotblast": "Did you mean *shotblasting*? Reply YES and I will ask you about size.",
+    "chassis": "Did you mean *chassis*? Reply YES and I will connect you to Ridhor for this.",
+    "sheet": "Did you mean *sheet metal*? Reply YES for square meter pricing.",
+    "steel": "Did you mean *steel/gate/security item*? Reply YES and I will ask you about condition and weight."
+  };
+  return map[guess] || null;
+}
+
 module.exports = { handleMessage };
+
