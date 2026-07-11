@@ -24,11 +24,9 @@ var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 var APP_URL = "https://solomon-ai-izyb.onrender.com";
 
-// ============ WORKLOAD PRICING ============
 var WORKLOAD_LEVEL = 3;
 var WORKLOAD_MULTIPLIERS = { 1: 0.90, 2: 0.95, 3: 1.00, 4: 1.07, 5: 1.15 };
 
-// ============ VISUAL SHELF ============
 var SHELF = [
   { file: "gate-charcoal-1.jpg", tags: ["gate", "charcoal"], line: "Ja, I have got that exact charcoal right here. Did one last week in Blackheath. Came out lekker." },
   { file: "rim-gloss-black-1.jpg", tags: ["rim", "black", "gloss"], line: "Ag this black gloss rim? Finished yesterday, still warm from the oven." },
@@ -45,7 +43,6 @@ function findOnShelf(text) {
   return bestScore > 0 ? best : null;
 }
 
-// ============ UTILITIES ============
 function getOrderRef() {
   var d = new Date();
   return "SC" + d.getFullYear().toString().slice(-2) + ("0"+(d.getMonth()+1)).slice(-2) + ("0"+d.getDate()).slice(-2) + "-" + Math.floor(Math.random()*9000+1000);
@@ -69,10 +66,9 @@ function cleanPhone(phone) {
   return phone.replace(/\D/g, "");
 }
 
-// ============ SINGLE CALCULATOR ============
 function calculateQuote(text) {
   var t = (text || "").toLowerCase();
-  var kg = null, sqm = null;
+  var kg = null;
   var km = t.match(/(\d+(?:\.\d+)?)\s*kg/);
   var sm = t.match(/(\d+(?:\.\d+)?)\s*sqm/);
   if (km) kg = parseFloat(km[1]);
@@ -102,6 +98,12 @@ function calculateQuote(text) {
   var coatingHigh = Math.round(kg * (rate + 2));
   var subtotalLow = blastOnly ? bl : coatingLow;
   var subtotalHigh = blastOnly ? bh : coatingHigh;
+
+  if (p.CONTRACTOR_MODE) {
+    subtotalLow = Math.round(subtotalLow * 0.92);
+    subtotalHigh = Math.round(subtotalHigh * 0.92);
+  }
+
   var vatLow = Math.round(subtotalLow * 0.15);
   var vatHigh = Math.round(subtotalHigh * 0.15);
 
@@ -115,15 +117,16 @@ function calculateQuote(text) {
 }
 
 function formatQuote(q) {
+  var prefix = p.CONTRACTOR_MODE ? "CONTRACTOR RATE " : "";
   if (q.blastOnly) {
-    return "BLASTING ONLY ESTIMATE - Ref: " + q.ref + "\n\nWeight: " + q.kg + "kg\nR8-R12/kg\n\nExcl VAT: R" + q.coatingLow.toLocaleString() + " - R" + q.coatingHigh.toLocaleString() + "\nVAT (15%): R" + q.vatLow.toLocaleString() + " - R" + q.vatHigh.toLocaleString() + "\nIncl VAT: R" + q.inclLow.toLocaleString() + " - R" + q.inclHigh.toLocaleString() + "\n\nEstimate only. WhatsApp Ridhor: 076 760 4350.";
+    return prefix + "BLASTING ONLY ESTIMATE - Ref: " + q.ref + "\n\nWeight: " + q.kg + "kg\nR8-R12/kg\n\nExcl VAT: R" + q.coatingLow.toLocaleString() + " - R" + q.coatingHigh.toLocaleString() + "\nVAT (15%): R" + q.vatLow.toLocaleString() + " - R" + q.vatHigh.toLocaleString() + "\nIncl VAT: R" + q.inclLow.toLocaleString() + " - R" + q.inclHigh.toLocaleString();
   }
-  var msg = "GATE/PER KG ESTIMATE - Ref: " + q.ref + "\n\nWeight: " + q.kg + "kg\nProduct: " + q.product + "\nColour: " + q.colour + " (R" + q.rate + "/kg)\n\nCoating (blasting included): R" + q.coatingLow.toLocaleString() + " - R" + q.coatingHigh.toLocaleString() + "\nVAT (15%): R" + q.vatLow.toLocaleString() + " - R" + q.vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + q.inclLow.toLocaleString() + " - R" + q.inclHigh.toLocaleString();
+  var msg = prefix + "GATE/PER KG ESTIMATE - Ref: " + q.ref + "\n\nWeight: " + q.kg + "kg\nProduct: " + q.product + "\nColour: " + q.colour + " (R" + q.rate + "/kg)\n\nCoating (blasting included): R" + q.coatingLow.toLocaleString() + " - R" + q.coatingHigh.toLocaleString() + "\nVAT (15%): R" + q.vatLow.toLocaleString() + " - R" + q.vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + q.inclLow.toLocaleString() + " - R" + q.inclHigh.toLocaleString();
   if (q.kg > 100) msg += "\n\nBulk discount up to 10% may apply.";
+  msg += p.getLoadsheddingNotice();
   return msg;
 }
 
-// ============ BULK PARSER ============
 function parseBulk(text) {
   if (text.indexOf("+") === -1) return null;
   var parts = text.split("+");
@@ -138,7 +141,6 @@ function parseBulk(text) {
   return { items: items, totalIncl: totalIncl, discount: discount, finalTotal: totalIncl - discount };
 }
 
-// ============ QUICK REPLIES ============
 var QR = {
   "menu": "SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461",
   "pricing": "PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99",
@@ -164,7 +166,6 @@ var QR = {
   "14": "TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\nThe customer is always right... whatever the cost.\nWe never lose. We either win or we learn.\nAlways do your best to give the customer what they want.\nIf the coating is right, the rust stays away.\nQuality is remembered long after the price is forgotten.\nA man's work is his signature. Make yours worth reading.\nWe have been coating since 88. That is not luck. That is graft.\nPatience in the booth, perfection on the metal.\nYour name is on every job. Never forget that.\nDo not cut corners. Corners are where the rust starts.\nThe metal does not lie. If the prep is bad, the coat will show it.\nA happy customer is a customer for life. Since 1988, we have many.\nWe do not follow trends. We set the standard.\nEvery gate, every rim, every bracket - do it like it is your own.\nThe oven does not care who you are. The heat treats everyone the same.\nCoat it once, coat it right. Comebacks cost more than pride.\nIn this trade, your reputation is your best tool.\nFrom Tommy to Ridhor - the name changed but the pride stayed.\n\nType *help* for the menu."
 };
 
-// ============ OWNER COMMANDS ============
 async function handleOwnerCommand(from, text) {
   var t = text.toLowerCase().trim();
 
@@ -178,9 +179,24 @@ async function handleOwnerCommand(from, text) {
     }
   }
 
+  if (t.indexOf("contractor") === 0) {
+    if (t.indexOf("on") !== -1) { p.CONTRACTOR_MODE = true; await sendMessage(from, p.getPersona("contractor_mode", "on")); return true; }
+    if (t.indexOf("off") !== -1) { p.CONTRACTOR_MODE = false; await sendMessage(from, p.getPersona("contractor_mode", "off")); return true; }
+  }
+
+  if (t.indexOf("loadshedding") === 0) {
+    var stage = parseInt(t.match(/\d/)[0] || "0");
+    p.LOADSHEDDING_STAGE = stage;
+    await sendMessage(from, "Loadshedding set to Stage " + stage + ". Quotes will include delay notices.");
+    return true;
+  }
+
   if (t.indexOf("report") === 0) {
     var stats = await redis.get("stats:quotes:today") || "0";
-    await sendMessage(from, "Today: " + stats + " quotes\nWorkload: " + WORKLOAD_LEVEL + "/5\nShelf: " + SHELF.length + " photos\nPricing at " + (WORKLOAD_MULTIPLIERS[WORKLOAD_LEVEL] * 100).toFixed(0) + "%");
+    var msgs = await redis.get("stats:messages:today") || "0";
+    var isFriday = p.isFriday();
+    var fridayMsg = isFriday ? "\nIt's Friday! Time to wrap up the week." : "";
+    await sendMessage(from, "SOLOMON COATINGS REPORT\n\nToday: " + stats + " quotes, " + msgs + " messages\nWorkload: " + WORKLOAD_LEVEL + "/5\nContractor mode: " + (p.CONTRACTOR_MODE ? "ON (8% discount)" : "OFF") + "\nLoadshedding: Stage " + p.LOADSHEDDING_STAGE + "\nShelf: " + SHELF.length + " photos" + fridayMsg);
     return true;
   }
 
@@ -202,9 +218,9 @@ async function handleOwnerCommand(from, text) {
   }
 
   if (t.indexOf("addshelf") === 0) {
-    var shelfParts = text.split("|");
-    if (shelfParts.length >= 3) {
-      SHELF.push({ file: shelfParts[1].trim(), tags: shelfParts[2].trim().split(","), line: shelfParts[3] ? shelfParts[3].trim() : "From our workshop in Blackheath." });
+    var sp = text.split("|");
+    if (sp.length >= 3) {
+      SHELF.push({ file: sp[1].trim(), tags: sp[2].trim().split(","), line: sp[3] ? sp[3].trim() : "From our workshop in Blackheath." });
       await sendMessage(from, "Added to shelf. " + SHELF.length + " photos now.");
     }
     return true;
@@ -213,11 +229,9 @@ async function handleOwnerCommand(from, text) {
   return false;
 }
 
-// ============ SMART MATCH ENGINE ============
 async function smartMatch(text, from, session) {
   var t = text.toLowerCase().trim();
 
-  // OWNER COMMANDS
   if (isOwner(from)) {
     var handled = await handleOwnerCommand(from, text);
     if (handled) return null;
@@ -234,8 +248,10 @@ async function smartMatch(text, from, session) {
       var msg = lines.join("\n") + "\n──────────\nSubtotal: R" + bulk.totalIncl.toLocaleString();
       if (bulk.discount > 0) msg += "\nBulk -10%: -R" + bulk.discount.toLocaleString() + "\nTOTAL: R" + bulk.finalTotal.toLocaleString() + " incl VAT";
       else msg += "\nTOTAL: R" + bulk.totalIncl.toLocaleString() + " incl VAT";
+      if (p.CONTRACTOR_MODE) msg += "\n\nContractor rate applied (-8%)";
+      msg += p.getLoadsheddingNotice();
       msg += "\n\nCode: SC-" + from.slice(-6) + " — share for R50 off for a mate";
-      await redis.hset("c:" + from, { last: parts[0], kg: "bulk", prod: "bulk", col: "mix" });
+      await redis.hset("c:" + from, { last: text.split("+")[0], kg: "bulk", prod: "bulk", col: "mix" });
       await redis.incr("stats:quotes:today");
       return msg;
     }
@@ -245,10 +261,13 @@ async function smartMatch(text, from, session) {
   if (/look|show|charcoal|black|finish|example|sample|see/.test(t)) {
     var hit = findOnShelf(text);
     if (hit) {
-      try {
-        await sendMessage(from, hit.line);
-      } catch(e) { /* image send may fail if file missing, continue */ }
+      try { await sendMessage(from, hit.line); } catch(e) {}
     }
+  }
+
+  // ROAST MY RUST
+  if (/rust|rusted|rusty/.test(t) && /photo|image|pic|look|see|sent|this|check/.test(t)) {
+    return p.getPersona("rust_roast");
   }
 
   // CALCULATOR
@@ -267,10 +286,10 @@ async function smartMatch(text, from, session) {
     await redis.hset("c:" + from, { last: q.kg + "kg " + q.product, kg: String(q.kg), prod: q.product, col: q.colour });
     await redis.incr("stats:quotes:today");
     await redis.expire("c:" + from, 1209600);
-    return formatQuote(q) + (mult !== 1 ? "\n\nWorkload pricing active (" + (mult*100).toFixed(0) + "%)" : "");
+    return formatQuote(q) + (mult !== 1 && !p.CONTRACTOR_MODE ? "\n\nWorkload pricing active (" + (mult*100).toFixed(0) + "%)" : "");
   }
 
-  // "SAME THING BUT DIFFERENT COLOUR" MEMORY
+  // SAME THING MEMORY
   if (/same thing|dieselfde|that one|daai|again|last time/.test(t)) {
     var mem = await redis.hgetall("c:" + from);
     if (mem && mem.kg) {
@@ -286,7 +305,7 @@ async function smartMatch(text, from, session) {
     }
   }
 
-  // MOOD DETECTION
+  // MOOD
   var mood = p.detectMood(text);
   if (mood === "angry") {
     await sendMessage(PERSONAL_NUMBER, "ANGRY " + from + ": \"" + text + "\"");
@@ -296,6 +315,11 @@ async function smartMatch(text, from, session) {
 
   // AI QUESTION
   if (p.isAIQuestion(text)) return p.getPersona("ai_question");
+
+  // FRIDAY VIBE
+  if (p.isFriday() && p.isGreeting(text)) {
+    return p.getPersona("friday_vibe") + "\n\n" + p.getPersona("greetings", p.getTimeOfDay());
+  }
 
   // APPRECIATION
   if (p.isAppreciation(text)) return p.getPersona("appreciation");
@@ -312,7 +336,7 @@ async function smartMatch(text, from, session) {
     return "Ja, we can deliver! Usually takes 2-3 working days. Where are you based? (Suburb or town)";
   }
 
-  // KEYWORD MATCHING
+  // KEYWORDS
   if (/reference|order number|job number/.test(t)) return "Your reference: " + getOrderRef();
   if (/invoice/.test(t) && /send|email/.test(t)) return "Send your reference and I will arrange your invoice. Or call " + OFFICE_NUMBER;
   if (/how busy|queue/.test(t)) return "For real-time wait time, WhatsApp Ridhor on 076 760 4350.";
@@ -364,12 +388,10 @@ async function smartMatch(text, from, session) {
   return p.getPersona("fallback");
 }
 
-// ============ CONVERSATIONAL FLOW ============
 async function handleConversationFlow(text, from, session) {
   var t = text.toLowerCase().trim();
   var flow = session.flow || { state: "idle" };
 
-  // DELIVERY FLOW
   if (flow.state === "delivery_asking_where") {
     var dist = delivery.findDistance(t);
     if (dist) {
@@ -392,7 +414,6 @@ async function handleConversationFlow(text, from, session) {
     return "DELIVERY ESTIMATE\n\nDistance: " + calc.km + "km\nVehicle: " + calc.vehicle + "\n\nBase cost: R" + calc.baseCost.toLocaleString() + "\nSurcharge (13%): R" + calc.surcharge.toLocaleString() + "\nTOTAL: R" + calc.total.toLocaleString() + "\n\nDelivery usually takes 2-3 working days.\n\nThis is an ESTIMATE ONLY. Contact Ridhor on 076 760 4350 for an exact delivery quote.";
   }
 
-  // GREETING FLOW
   if (flow.state === "idle" && p.isGreeting(text)) {
     flow.state = "asked_product";
     session.flow = flow;
@@ -454,7 +475,6 @@ async function handleConversationFlow(text, from, session) {
   return null;
 }
 
-// ============ IMAGE FORWARDING ============
 async function forwardImageToOwner(imageId, fromNumber) {
   try {
     await axios.post("https://graph.facebook.com/v21.0/" + PHONE_ID + "/messages",
@@ -464,9 +484,8 @@ async function forwardImageToOwner(imageId, fromNumber) {
   } catch(e) { return false; }
 }
 
-// ============ SERVER ============
-app.get("/health", function(req, res) { res.json({ status: "healthy", service: "Solomon Coatings AI", version: "12.0", workload: WORKLOAD_LEVEL }); });
-app.get("/", function(req, res) { res.json({ service: "Solomon Coatings", version: "12.0 - Sentient Workshop Lad" }); });
+app.get("/health", function(req, res) { res.json({ status: "healthy", service: "Solomon Coatings AI", version: "13.0", contractor: p.CONTRACTOR_MODE, loadshedding: p.LOADSHEDDING_STAGE }); });
+app.get("/", function(req, res) { res.json({ service: "Solomon Coatings", version: "13.0 - Roast My Rust + Voice + Contractor Mode" }); });
 app.get("/webhook", function(req, res) {
   if (req.query["hub.mode"] === "subscribe" && req.query["hub.verify_token"] === VT) return res.status(200).send(req.query["hub.challenge"]);
   res.sendStatus(403);
@@ -484,28 +503,41 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var from = msgs[k].from, type = msgs[k].type;
           var text = (msgs[k].text && msgs[k].text.body) ? msgs[k].text.body.trim() : null;
           var imageId = msgs[k].image ? msgs[k].image.id : null;
+          var isVoice = (type === "audio" || type === "voice" || msgs[k].audio);
           var afterHours = isAfterHours();
 
-          if (type === "image" && imageId) {
-            await forwardImageToOwner(imageId, from);
-            await sendMessage(PERSONAL_NUMBER, "Image from " + from);
-            await sendMessage(from, "Got your photo! Forwarding to Ridhor now. He will check it and get back to you.");
+          // VOICE NOTE
+          if (isVoice) {
+            console.log("[" + from + "]: Voice note");
+            await sendMessage(from, p.getPersona("voice_note"));
+            await sendMessage(PERSONAL_NUMBER, "Voice note from " + from + ". Check WhatsApp Business.");
             continue;
           }
+
+          // IMAGE WITH ROAST DETECTION
+          if (type === "image" && imageId) {
+            var cap = (msgs[k].image && msgs[k].image.caption) ? msgs[k].image.caption.toLowerCase() : "";
+            await forwardImageToOwner(imageId, from);
+            await sendMessage(PERSONAL_NUMBER, "Image from " + from + (cap ? " - " + cap : ""));
+            if (/rust|rusted|rusty|terrible|bad|old|damage/.test(cap) || /rust|rusted|rusty/.test(text || "")) {
+              await sendMessage(from, p.getPersona("rust_roast"));
+            } else {
+              await sendMessage(from, "Got your photo! Forwarding to Ridhor now. He will check it and get back to you. If you want a quick quote, send me the weight and colour.");
+            }
+            continue;
+          }
+
           if (!text) continue;
 
           console.log("[" + from + "]: \"" + text + "\"" + (afterHours ? " [AFTER HOURS]" : ""));
+          await redis.incr("stats:messages:today");
           var session = await getSession(from);
 
-          // Thinking delay for longer messages
           if (text.length > 15 || /quote|price|estimate/.test(text)) {
             await sendMessage(from, p.pick(p.PERSONA.thinking));
           }
 
-          // Conversational flow first
           var match = await handleConversationFlow(text, from, session);
-
-          // Fall back to smartMatch
           if (!match) match = await smartMatch(text, from, session);
 
           if (match) {
@@ -524,4 +556,4 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   } catch(e) { console.error("WEBHOOK ERROR:", e.message); }
 });
 
-app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v12.0 - Sentient Workshop Lad - Port " + PORT); });
+app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v13.0 - Roast My Rust + Voice + Contractor Mode - Port " + PORT); });
