@@ -103,10 +103,10 @@ function estimatePrice(text) {
 }
 
 var QR = {
-  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *menu* to see what I am capable of (spoiler: it is a lot)\nOr just tell me what you need a price on — gates, rims, steel/security items, shotblasting, or trucks.\n\nFor wetspray quotes, I will connect you directly to Ridhor.\n\nWhat can I help with?",
+  "hi":"Hi there! Solomon Coatings here - since 1988.\n\nType *menu* to see our Secret List.\n\nOr just tell me what you need:\nGates/Fencing | Rims | Chassis | Sheet Metal | Trucks\n\nFor wetspray, connect to Ridhor directly.",
   "hello":"Hi there! Solomon Coatings here.\n\nType *menu* for the list, or just tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will put you through to Ridhor directly.",
-  "hey":"Howzit! What can I help with?\n\nType *menu* — I have got a few things up my sleeve, or tell me what you need a price on!",
-  "howzit":"Howzit! What can I help with?\n\nType *menu* — I have got a few things up my sleeve, or just ask!",
+  "hey":"Howzit!\n\nType *menu* for our Secret List, or tell me what you need:\nGates | Rims | Chassis | Sheet Metal | Trucks",
+  "howzit":"Howzit!\n\nType *menu* for our Secret List, or tell me what you need priced.",
   "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see what I can help with, or tell me what you need priced!",
   "menu":"WHAT I CAN DO — pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced — gates, rims, steel, blasting, trucks.\n\nFor wetspray, I will connect you to Ridhor directly.",
   "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
@@ -121,7 +121,7 @@ var QR = {
   "3":"Send me a quote request like:\n- quote 20kg gate charcoal\n- quote 4 rims metallic\n- quote 10sqm sheet black\n- quote truck blasting\n- quote 20kg blasting only\n\nI will calculate it with VAT!",
   "4":"TURNAROUND\nUnder 1 ton: 3 working days.\nOver 1 ton: 5-8 working days.\nTimelines affected by loadshedding/weather.",
   "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed Saturdays and Sundays.",
-  "6":"DELIVERY - For a delivery quote, type *delivery* and I will ask where you are, size, and if you need help loading.\n\nR150 Cape Town metro. Free collection. 7% daily storage after 7 days.\n\nType *menu* to go back.",
+  "6":"FLOW_TRIGGER",
   "7":"BLASTING SERVICES\nSandblasting/Shot blasting: R8-R12/kg (blasting only)\nTruck blasting (5m): R5,000-R7,500\nMedium: Grit/slag 0.12-0.4mm, 6 bar\n\nAll blasting at client risk.\nRemove plastic/glass/hydraulics before bringing.",
   "8":"TERMS AND CONDITIONS\n- COD only - no release without payment\n- No coastal warranties (within 15km)\n- 7% daily storage after 7 days\n- All blasting at client risk\n- Items remain our property until paid\n\nFull document: email "+OFFICE_EMAIL,
   "9":"GALLERY\nCheck our work on Facebook: "+FACEBOOK+"\nTikTok: "+TIKTOK+"\n\nWe post real jobs regularly!",
@@ -215,7 +215,7 @@ async function handleMessage(text, from, session) {
   if (flow.state === "idle" && /^(hi|hello|hey|howzit|good morning|sup|yo|aweh)$/i.test(t)) {
     flow.state = "asked_product";
     session.flow = flow; await saveSession(from, session);
-    return "Howzit! What can I help you with today?\n\nGates/Fencing | Rims | Chassis | Sheet Metal | Trucks\n\nType *menu* to see our Secret List of everything I can do.";
+    return "Howzit! What can I help you with today?\n\nGates/Fencing | Rims | Chassis | Sheet Metal | Trucks\n\nType *menu* to see our Secret List.";
   }
 
   if (flow.state === "asked_product") {
@@ -389,6 +389,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
