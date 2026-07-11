@@ -7,6 +7,8 @@ var { sendMessage } = require("./queue");
 var delivery = require("./delivery");
 var tcdb = require("./tcdb");
 var { randomFallback, randomAffirmation, randomTPS } = require('./quotes');
+var { getSocialsResponse, FACEBOOK, TIKTOK, WEBSITE } = require('./socials');
+var { getGalleryList, getColorByIndex, searchGallery } = require('./gallery');
 var { randomGreeting } = require('./greetings');
 var { getOrderRef, estimatePrice } = require("./calculator");
 var { buildMenu } = require("./menu");
@@ -23,8 +25,8 @@ var PERSONAL_NUMBER = "27767604350";
 var OFFICE_NUMBER = "0219052912";
 var OFFICE_EMAIL = "populier@mweb.co.za";
 var QUOTE_EMAIL = "infosc@mweb.co.za";
-var FACEBOOK = "https://www.facebook.com/SolomonCoatings/";
-var TIKTOK = "https://www.tiktok.com/@solomon.coatings";
+
+
 var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -32,6 +34,13 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 var QR = buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW);
 
 var smartMatchFn = function(text) {
+  var t = text.toLowerCase().trim();
+  if (t === 'socials' || t === '10') return getSocialsResponse();
+  if (t === 'gallery' || t === '9') return getGalleryList(1);
+  if (/^gallery \d+$/.test(t)) { var pg = parseInt(t.split(' ')[1]); return getGalleryList(pg); }
+  var galSearch = searchGallery(text);
+  if (galSearch) return galSearch;
+  if (/^\d+$/.test(t) && parseInt(t) >= 1 && parseInt(t) <= 30) { var ci = getColorByIndex(parseInt(t)); if (ci) return ci; }
   return smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, randomGreeting, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb);
 };
 
@@ -86,5 +95,6 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 });
 
 app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});
+
 
 
