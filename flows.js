@@ -1,12 +1,12 @@
 ﻿async function handleMessage(text, from, session, smartMatch, QR, delivery, getOrderRef, saveSession, randomGreeting, tcdb) {
   var t=text.toLowerCase().trim();
+  var flow=session.flow||{state:"idle"};
   // FUZZY MATCHING
   var fuzzyResult = fuzzyMatch(t);
   if (fuzzyResult && flow.state === "idle" && !t.includes("yes") && !t.includes("no")) {
     var dym = didYouMean(fuzzyResult);
     if (dym) return dym;
   }
-  var flow=session.flow||{state:"idle"};
   var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t);
   if(isGreeting){
     flow={state:"idle"}; session.flow=flow; await saveSession(from, session);
@@ -163,4 +163,5 @@ function didYouMean(guess) {
 }
 
 module.exports = { handleMessage };
+
 
