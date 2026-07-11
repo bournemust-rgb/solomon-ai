@@ -130,7 +130,7 @@ var QR = {
   "11":"BOOK A CALLBACK\nWant Ridhor to call you?\nSend your name, number, and what you need.\nOr call the office: "+OFFICE_NUMBER,
   "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350\nEmail: "+QUOTE_EMAIL+"\nOffice: "+OFFICE_NUMBER,
   "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+"\nPhone: "+OFFICE_NUMBER+"\n\nThey will check your account and get back to you.",
-  "14":"TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\n\" + randomTPS() + \"\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
+  "14":"TPS_PLACEHOLDER" + randomTPS() + \"\n\nType *menu* to go back.","thanks":"Pleasure! Anything else?",
   "thank you":"Only a pleasure!",
   "bye":"Cheers! Sien jou later."
 };
@@ -149,7 +149,8 @@ function smartMatch(text, fromNumber, session) {
   var t = text.toLowerCase().trim();
   var calcResult = estimatePrice(text);
   if (calcResult) return calcResult;
-  if (QR[t]) return QR[t];
+  if (t === "14") return "TPS DAILY WISDOM - Tommy Phillip Solomon (1988)\n\n" + randomTPS() + "\n\nType *menu* to go back to the main list.";
+  if (QR[t] && QR[t] !== "TPS_PLACEHOLDER") return QR[t];
   if (t.includes("affirmation")||t.includes("fact")||t.includes("wisdom")||t.includes("tip")) return randomAffirmation();
   if (t.includes("reference")||t.includes("order number")||t.includes("job number")) return "Your reference: " + getOrderRef();
   if (t.includes("invoice")&&(t.includes("send")||t.includes("email"))) return "Send your order reference and I will arrange your invoice. Or call "+OFFICE_NUMBER+".";
@@ -390,6 +391,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
