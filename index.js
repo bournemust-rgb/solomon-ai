@@ -32,7 +32,7 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 var QR = buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW);
 
 var smartMatchFn = function(text) {
-  return smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb);
+  return smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, randomGreeting, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb);
 };
 
 async function forwardImageToOwner(imageId){
@@ -45,7 +45,7 @@ async function forwardImageToOwner(imageId){
   }catch(e){ console.error("forwardImage error:", e.response?.data||e.message); return false; }
 }
 
-app.get("/health",function(req,res){res.json({status:"healthy",version:"13.0",modules:8});});
+app.get("/health",function(req,res){res.json({status:"healthy",version:"13.0",modules:9});});
 app.get("/",function(req,res){res.json({service:"Solomon Coatings",version:"13.0 Modular"});});
 app.get("/webhook",function(req,res){ if(req.query["hub.mode"]==="subscribe"&&req.query["hub.verify_token"]===VT) return res.status(200).send(req.query["hub.challenge"]); res.sendStatus(403); });
 
@@ -69,10 +69,10 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
           }
           if(!text) continue;
           var session=await getSession(from);
-          var match=await handleMessage(text, from, session, smartMatchFn, QR, delivery, getOrderRef, saveSession);
+          var match=await handleMessage(text, from, session, smartMatchFn, QR, delivery, getOrderRef, saveSession, randomGreeting);
           if(afterHours){
             var showClosed = Math.floor(Math.random() * 4) === 0;
-            if(showClosed) match="Howzit! SC here, lekker ready to help — what are we coating today?\n\n"+match;
+            if(showClosed) match="Howzit! SC here, lekker ready to help - what are we coating today?\n\n"+match;
             try{await sendMessage(PERSONAL_NUMBER,"After-hours from "+from+": "+text);}catch(e){}
           }
           await sendMessage(from,match);
@@ -85,6 +85,4 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
   }catch(e){console.error("WEBHOOK ERROR:",e.message);}
 });
 
-app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 8 modules. index.js is " + "~100 lines.\n");});
-
-
+app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});

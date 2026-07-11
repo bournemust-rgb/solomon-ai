@@ -1,4 +1,4 @@
-﻿function smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb) {
+﻿function smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, randomGreeting, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb) {
   var t=text.toLowerCase().trim();
   if(t==="14" || t==="tps" || t==="wisdom") return randomTPS();
   var calc=estimatePrice(text, randomAffirmation);
@@ -44,4 +44,3 @@
   return randomFallback();
 }
 module.exports = { smartMatch };
-

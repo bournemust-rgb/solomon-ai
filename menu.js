@@ -31,6 +31,3 @@
   };
 }
 module.exports = { buildMenu };
-
-
-

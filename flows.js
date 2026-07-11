@@ -1,4 +1,4 @@
-﻿async function handleMessage(text, from, session, smartMatch, QR, delivery, getOrderRef, saveSession) {
+﻿async function handleMessage(text, from, session, smartMatch, QR, delivery, getOrderRef, saveSession, randomGreeting) {
   var t=text.toLowerCase().trim();
   var flow=session.flow||{state:"idle"};
   var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t);
@@ -64,4 +64,3 @@
   return normal;
 }
 module.exports = { handleMessage };
-
