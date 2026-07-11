@@ -21,7 +21,9 @@ var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
+// ============ FALLBACKS & WISDOM ============
 var funFallbacks = [
+<<<<<<< HEAD
   "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *menu* to see my Secret List, or WhatsApp Ridhor on 076 760 4350.",
   "Eish, you got me there! I know coating, not that. \n\nType *menu* for what I CAN do, or chat to Ridhor: 076 760 4350.",
   "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350."
@@ -31,10 +33,22 @@ var affirmations = [
   "Did you know? Powder coating is tougher than your mother-in-law opinions.",
   "Hot tip: Black powder coat absorbs less heat than you think. Science, my bru.",
   "Solomon truth: We have been coating since 88. That is before Google."
+=======
+  "Ag sorry, I'm just a powder coating oom, not Google! \n\nTry *menu* to see my Secret List, or WhatsApp Ridhor on 076 760 4350.",
+  "Eish, you got me there! I know coating, not that. \n\nType *menu* for what I CAN do, or chat to Ridhor: 076 760 4350.",
+  "That one's above my pay grade! I'm here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350."
+];
+var affirmations = [
+  "Fun fact: A well-coated gate is the silent guardian of your driveway.",
+  "Did you know? Powder coating is tougher than your mother-in-law's opinions.",
+  "Hot tip: Black powder coat absorbs less heat than you'd think. Science, my bru.",
+  "Solomon truth: We've been coating since '88. That's before Google."
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
 ];
 var TPS_QUOTES = [
   "TPS 1988: Started in a garage with one compressor and a dream.",
   "TPS: Prep is 90% of the job. The coating is the easy part.",
+<<<<<<< HEAD
   "TPS: If you can see rust, it is already too late — blast it properly.",
   "TPS: Black never goes out of style, but charcoal hides dust better.",
   "TPS: Coastal air eats cheap coating. Do it once, do it right.",
@@ -43,6 +57,16 @@ var TPS_QUOTES = [
   "TPS: 36 years taught me one thing — the customer remembers the finish, not the price.",
   "TPS: Loadshedding cannot stop rust, but it can delay us. We work around it.",
   "TPS: If it can handle 200C, we can coat it. If it melts, we cannot.",
+=======
+  "TPS: If you can see rust, it's already too late — blast it properly.",
+  "TPS: Black never goes out of style, but charcoal hides dust better.",
+  "TPS: Coastal air eats cheap coating. Do it once, do it right.",
+  "TPS: A clean gate before coating is like a clean plate — everything sticks better.",
+  "TPS: We don't cut corners, we coat them.",
+  "TPS: 36 years taught me one thing — the customer remembers the finish, not the price.",
+  "TPS: Loadshedding can't stop rust, but it can delay us. We work around it.",
+  "TPS: If it can handle 200C, we can coat it. If it melts, we can't.",
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   "TPS: Good blasting is noisy, dusty, and worth every cent.",
   "TPS: The cheapest quote is usually the most expensive redo.",
   "TPS: Satin hides fingerprints. Gloss shows off. Choose your battle.",
@@ -50,12 +74,20 @@ var TPS_QUOTES = [
   "TPS: A gate coated in winter lasts longer than excuses in summer.",
   "TPS: We are not the cheapest. We are the ones you call to fix the cheapest.",
   "TPS: RAL codes are suggestions. Real colour is in the oven.",
+<<<<<<< HEAD
   "TPS: Since 88, one rule: treat every gate like it is your own driveway."
+=======
+  "TPS: Since '88, one rule: treat every gate like it's your own driveway."
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
 ];
 function randomFallback(){ return funFallbacks[Math.floor(Math.random()*funFallbacks.length)]; }
 function randomAffirmation(){ return affirmations[Math.floor(Math.random()*affirmations.length)]; }
 function randomTPS(){ return "TPS DAILY WISDOM\n\n" + TPS_QUOTES[Math.floor(Math.random()*TPS_QUOTES.length)] + "\n\nType *menu* for more."; }
 
+<<<<<<< HEAD
+=======
+// ============ UTILITIES ============
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
 function getOrderRef(){
   var d=new Date();
   return "SC"+d.getFullYear().toString().slice(-2)+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2)+"-"+Math.floor(Math.random()*9000+1000);
@@ -68,6 +100,7 @@ function isAfterHours(){
   return false;
 }
 
+// ============ PRICE CALCULATOR - DO NOT TOUCH ============
 function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
@@ -113,6 +146,7 @@ function estimatePrice(text) {
   }
   return null;
 }
+// ============ END CALCULATOR ============
 
 var QR = {
   "hi":"Hi there! Solomon Coatings here - since 1988.\n\nYou can either:\nType *menu* to see our Secret List\nOr tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will connect you directly to Ridhor.",
@@ -120,13 +154,18 @@ var QR = {
   "hey":"Howzit! Type *menu* to see our Secret List, or just ask your question.",
   "howzit":"Howzit! Type *menu* for the full list, or tell me what you need coated.",
   "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see our Secret List, or just ask your question!",
+<<<<<<< HEAD
   "menu":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced.",
+=======
+  "menu":"SOLOMON COATINGS - Since 1988\n\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nMon-Thurs 8AM-4:45PM | Fri 8AM-2:45PM\n060 507 4461\n\n1.Pricing 2.Colours 3.Quote 4.Turnaround 5.Hours 6.Delivery 7.Blasting 8.T&Cs 9.Gallery 10.Review 11.Callback 12.Ridhor 13.Accounts 14.TPS Wisdom",
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
   "colours":"Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\nSee examples: "+FACEBOOK,
   "hours":"Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
   "turnaround":"Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
   "delivery":"R150 Cape Town metro. Free collection. 7% daily storage after 7 days.",
   "contact":"060 507 4461 | Office: "+OFFICE_NUMBER+" | Email: "+OFFICE_EMAIL,
+<<<<<<< HEAD
   "help":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just ask your question!",
   "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nType *menu* to go back.",
   "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\n\nType *menu* to go back.",
@@ -141,6 +180,22 @@ var QR = {
   "11":"BOOK A CALLBACK\nSend name + number. Or call "+OFFICE_NUMBER+"\n\nType *menu* to go back.",
   "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350 | Email: "+QUOTE_EMAIL+"\n\nType *menu* to go back.",
   "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+" | Phone: "+OFFICE_NUMBER+"\n\nType *menu* to go back.",
+=======
+  "help":"SECRET MENU - Reply with a number:\n\n1.Pricing 2.Colours 3.Quote 4.Turnaround 5.Hours 6.Delivery 7.Blasting 8.T&Cs 9.Gallery 10.Review 11.Callback 12.Ridhor 13.Accounts 14.TPS Wisdom\n\nOr just ask your question!",
+  "1":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99",
+  "2":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture",
+  "3":"Send: quote 20kg gate charcoal | quote 4 rims metallic | quote 10sqm sheet black | quote 20kg blasting only",
+  "4":"TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
+  "5":"BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
+  "6":"DELIVERY & COLLECTION\nR150 metro. Free collection. Collect within 7 days. Late: 7% daily storage.",
+  "7":"BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
+  "8":"TERMS\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items ours until paid.",
+  "9":"GALLERY\nFB: "+FACEBOOK+" | TikTok: "+TIKTOK,
+  "10":"REVIEW US\n"+GOOGLE_REVIEW,
+  "11":"BOOK A CALLBACK\nSend name + number. Or call "+OFFICE_NUMBER,
+  "12":"TALK TO RIDHOR\nWhatsApp: 076 760 4350 | Email: "+QUOTE_EMAIL,
+  "13":"ACCOUNT QUERIES\nEmail: "+OFFICE_EMAIL+" | Phone: "+OFFICE_NUMBER,
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   "thanks":"Pleasure! Anything else? Type *menu*",
   "thank you":"Only a pleasure! Type *menu* for more.",
   "bye":"Cheers! Sien jou later."
@@ -156,6 +211,7 @@ async function forwardImageToOwner(imageId){
   }catch(e){ console.error("forwardImage error:", e.response?.data||e.message); return false; }
 }
 
+<<<<<<< HEAD
 function smartMatch(text){
   var t=text.toLowerCase().trim();
   if(t==="14" || t==="tps" || t==="wisdom" || t==="daily wisdom" || t==="tps wisdom"){
@@ -164,6 +220,22 @@ function smartMatch(text){
   var calc=estimatePrice(text);
   if(calc) return calc;
   if(QR[t]) return QR[t];
+=======
+// ============ SMART MATCH - CALCULATOR FIRST, THEN TPS ============
+function smartMatch(text){
+  var t=text.toLowerCase().trim();
+
+  // CHANGE 1 & 3: 14 is executable here, not in QR. Returns ONE random quote.
+  if(t==="14" || t==="tps" || t==="wisdom" || t==="daily wisdom" || t==="tps wisdom"){
+    return randomTPS();
+  }
+
+  var calc=estimatePrice(text);
+  if(calc) return calc;
+
+  if(QR[t]) return QR[t];
+
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   if(t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
   if(t.includes("reference")||t.includes("order number")) return "Your reference: "+getOrderRef();
   if(t.includes("how busy")||t.includes("queue")) return "For wait time, WhatsApp Ridhor 076 760 4350.";
@@ -203,22 +275,41 @@ function smartMatch(text){
   return randomFallback();
 }
 
+<<<<<<< HEAD
+=======
+// ============ HANDLE MESSAGE WITH GREETING RESET + FLOWS ============
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
 async function handleMessage(text, from, session){
   var t=text.toLowerCase().trim();
   var flow=session.flow||{state:"idle"};
 
+<<<<<<< HEAD
+=======
+  // CHANGE 2: Session reset - greeting always clears stuck flow
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   var isGreeting = /^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola|menu)$/.test(t);
   if(isGreeting){
     flow={state:"idle"};
     session.flow=flow;
     await saveSession(from, session);
+<<<<<<< HEAD
   }
 
   if(flow.state!=="idle" && /^(cancel|stop)$/.test(t)){
+=======
+    // fall through to return greeting via smartMatch below, don't stay stuck
+  }
+
+  if(flow.state!=="idle" && /^(cancel|menu|help|stop)$/.test(t)){
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
     flow={state:"idle"}; session.flow=flow; await saveSession(from, session);
     return "No problem, cancelled.\n\n"+smartMatch(text);
   }
 
+<<<<<<< HEAD
+=======
+  // RUST FLOW
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   if(t==="gate"||t==="gates"||t.includes("security gate")){
     flow={state:"asked_condition", product:"gate", rustSurcharge:false}; session.flow=flow; await saveSession(from, session);
     return "Got it — gate. What condition? Reply: CLEAN, LIGHT RUST, or BADLY RUSTED.";
@@ -249,6 +340,10 @@ async function handleMessage(text, from, session){
     return msg;
   }
 
+<<<<<<< HEAD
+=======
+  // DELIVERY FLOW
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
   if(flow.state==="delivery_asking_where"){
     var dist=(delivery&&typeof delivery.findDistance==="function")?delivery.findDistance(t):null;
     if(dist){ flow.deliveryKm=dist; flow.deliveryLocation=t; flow.state="delivery_asking_size"; session.flow=flow; await saveSession(from, session); return "Got it, "+t+" is about "+dist+"km from Blackheath. Under 1 ton and under 3m? Reply SMALL or LARGE."; }
@@ -299,11 +394,15 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
           if(!text) continue;
           var session=await getSession(from);
           var match=await handleMessage(text,from,session);
+<<<<<<< HEAD
           if(afterHours){
             var showClosed = Math.floor(Math.random() * 4) === 0;
             if(showClosed) match="Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n"+match;
             try{await sendMessage(PERSONAL_NUMBER,"After-hours from "+from+": "+text);}catch(e){}
           }
+=======
+          if(afterHours){ match="Workshop closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n"+match; try{await sendMessage(PERSONAL_NUMBER,"After-hours from "+from+": "+text);}catch(e){} }
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
           await sendMessage(from,match);
           session.history=session.history||[]; session.history.push({role:"user",content:text},{role:"model",content:match});
           if(session.history.length>40) session.history=session.history.slice(-20);
@@ -314,4 +413,8 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
   }catch(e){console.error("WEBHOOK ERROR:",e.message);}
 });
 
+<<<<<<< HEAD
 app.listen(PORT,function(){console.log("\nSOLOMON v11.2 - Calculator LOCKED | 14=TPS | Greeting resets flow | After-hours random\n");});
+=======
+app.listen(PORT,function(){console.log("\nSOLOMON v11.2 - Calculator LOCKED | 14=TPS | Greeting resets flow | Menu fixed\n");});
+>>>>>>> cbe6ed81db04f326daf2ad620c9c2e93be7f61f9
