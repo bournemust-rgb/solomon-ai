@@ -22,7 +22,7 @@ var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var funFallbacks = [
-  "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *help* to see my secret menu, or WhatsApp Ridhor on 076 760 4350.",
+  "Ag sorry, I am just a powder coating oom, not Google! \n\nTry *menu* to see my secret menu, or WhatsApp Ridhor on 076 760 4350.",
   "Eish, you got me there! I know coating, not that. \n\nType *menu* to see what I am good at, or chat to Ridhor: 076 760 4350.",
   "That one is above my pay grade! I am here for powder coating, colours, and quotes. \n\nType *menu* or WhatsApp Ridhor: 076 760 4350.",
   "Ha! If only I knew everything. I stick to what I am good at - coating. \n\nType *menu* — I know a few things or call Ridhor: 076 760 4350.",
@@ -390,6 +390,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 });
 
 app.listen(PORT, function() { console.log("\nSOLOMON COATINGS v11.2 - Port "+PORT+"\nCalculator: LOCKED | Delivery: LIVE | Conversational: LIVE | Rust Surcharge: ACTIVE\n"); });
+
 
 
 
