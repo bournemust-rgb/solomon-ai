@@ -1,6 +1,6 @@
 ﻿// ============================================
-// SOLOMON COATINGS - DELIVERY ENGINE v2.0
-// Hidden rates, minimum charges enforced
+// SOLOMON COATINGS - DELIVERY ENGINE v2.1
+// Hidden rates, minimum charges, labour fee
 // ============================================
 
 const DISTANCES = {
@@ -24,11 +24,17 @@ const DISTANCES = {
   "athlone": 22, "gugulethu": 24, "langa": 20, "nyanga": 24, "crossroads": 26
 };
 
+// HIDDEN - never shown to customer
 const BAKKIE_RATE = 19;
 const TRUCK_RATE = 23;
 const SURCHARGE = 0.13;
+
+// MINIMUM CHARGES
 const BAKKIE_MINIMUM = 400;
 const TRUCK_MINIMUM = 700;
+
+// LABOUR
+const LABOUR_FEE_PERCENT = 0.15;
 
 function findDistance(location) {
   var loc = location.toLowerCase().trim();
@@ -39,26 +45,39 @@ function findDistance(location) {
   return null;
 }
 
-function calculateDelivery(km, isLarge) {
+function calculateDelivery(km, isLarge, needsLabour) {
   var rate = isLarge ? TRUCK_RATE : BAKKIE_RATE;
   var minimum = isLarge ? TRUCK_MINIMUM : BAKKIE_MINIMUM;
   var vehicleName = isLarge ? "truck" : "bakkie";
   
+  // Calculate base
   var baseCost = km * rate;
   var surcharge = Math.round(baseCost * SURCHARGE);
-  var calculatedTotal = baseCost + surcharge;
+  var deliveryCost = baseCost + surcharge;
   
-  // Apply minimum charge
-  var finalTotal = Math.max(calculatedTotal, minimum);
-  var wasAdjusted = finalTotal !== calculatedTotal;
+  // Apply minimum
+  var minimumApplied = false;
+  if (deliveryCost < minimum) {
+    deliveryCost = minimum;
+    minimumApplied = true;
+  }
+  
+  // Labour fee
+  var labourCost = 0;
+  if (needsLabour) {
+    labourCost = Math.round(deliveryCost * LABOUR_FEE_PERCENT);
+  }
+  
+  var finalTotal = deliveryCost + labourCost;
   
   return {
     km: km,
     vehicle: vehicleName,
-    calculatedTotal: calculatedTotal,
-    minimum: minimum,
-    finalTotal: finalTotal,
-    wasAdjusted: wasAdjusted
+    deliveryCost: deliveryCost,
+    labourCost: labourCost,
+    needsLabour: needsLabour,
+    minimumApplied: minimumApplied,
+    finalTotal: finalTotal
   };
 }
 
@@ -67,12 +86,20 @@ function formatDeliveryResponse(calc, location) {
   msg += "From: Blackheath\n";
   msg += "To: " + location + " (" + calc.km + "km)\n";
   msg += "Vehicle: " + calc.vehicle + "\n\n";
-  msg += "Delivery cost: R" + calc.finalTotal.toLocaleString() + "\n\n";
-  if (calc.wasAdjusted) {
-    msg += "Minimum delivery charge applied.\n\n";
+  msg += "Delivery fee: R" + calc.deliveryCost.toLocaleString() + "\n";
+  
+  if (calc.minimumApplied) {
+    msg += "(Minimum delivery charge applied)\n";
   }
+  
+  if (calc.needsLabour && calc.labourCost > 0) {
+    msg += "Labour (help to load): R" + calc.labourCost.toLocaleString() + "\n";
+  }
+  
+  msg += "────────────────\n";
+  msg += "TOTAL: R" + calc.finalTotal.toLocaleString() + "\n\n";
   msg += "Delivery usually takes 2-3 working days.\n\n";
-  msg += "This is an ESTIMATE ONLY. Contact Ridhor on 076 760 4350 for an exact delivery quote and to arrange.";
+  msg += "ESTIMATE ONLY. Contact Ridhor on 076 760 4350 for exact quote.";
   return msg;
 }
 
