@@ -1,5 +1,5 @@
-ï»¿// ============================================
-// SOLOMON COATINGS â€” MASTER DATA FILE
+// ============================================
+// SOLOMON COATINGS — MASTER DATA FILE
 // Real pricing, terms, and conditions.
 // ============================================
 
@@ -24,32 +24,32 @@ const KNOWLEDGE = {
   pricing: {
     rims: {
       label: "Rims - Set of 4 (10-15 inch)",
-      range: "R1,000 â€“ R1,500 per set",
+      range: "R1,000 – R1,500 per set",
       details: "Price excludes VAT. Depends on colour choice and prep work needed. Customer MUST remove tyres before bringing rims in. We do NOT remove tyres.",
       factors: "Colour, amount of stripping/prep needed, condition of rims."
     },
     sheetMetal: {
       label: "Sheet metal / mesh panels (per sqm)",
-      blackWhite: "R175 â€“ R250 per sqm",
-      metallicColours: "R251 â€“ R350 per sqm",
+      blackWhite: "R175 – R250 per sqm",
+      metallicColours: "R251 – R350 per sqm",
       details: "Black and white are cheapest. Metallic colours (bronze, gold, charcoal, etc.) charged at higher rate. Price excludes VAT.",
       factors: "Colour choice, size, condition."
     },
     coatingPerKg: {
       label: "Coating per kg",
-      range: "R15 â€“ R23 per kg",
+      range: "R15 – R23 per kg",
       details: "For items charged by weight. Price excludes VAT.",
       factors: "Item type, colour, condition."
     },
     blasting: {
       label: "Sandblasting / Shot blasting for rusted items",
-      range: "R8 â€“ R12 per kg",
+      range: "R8 – R12 per kg",
       details: "For rusted items needing blasting before coating. Price depends on severity of rust. Price excludes VAT.",
       factors: "How badly rusted, material type."
     },
     shotBlastingTruck: {
       label: "Shot blasting - Flatbed truck (5m)",
-      range: "R5,000 â€“ R7,500",
+      range: "R5,000 – R7,500",
       details: "For a 5m flatbed truck. Price excludes VAT. Only if NO rubber needs to be blasted off.",
       factors: "Condition, presence of rubber."
     },
@@ -107,8 +107,8 @@ const KNOWLEDGE = {
     "We CAN strip and recoat previously powder coated items",
     "Maximum item size: approximately 6m x 2m x 2m",
     "Items over 3m incur a R1,000 surcharge",
-    "We only coat METAL â€” no plastic, wood, or fibreglass",
-    "We do NOT remove tyres from rims â€” customer must do this",
+    "We only coat METAL — no plastic, wood, or fibreglass",
+    "We do NOT remove tyres from rims — customer must do this",
     "No rubber items can be blasted"
   ],
 
@@ -119,7 +119,7 @@ const KNOWLEDGE = {
     { q: "Can the price change after I get a quote?", a: "Yes. All quotes are estimates. If the item condition differs from what was described, we will re-quote on physical inspection." },
     { q: "Do you blast rubber items?", a: "No. We do not blast items with rubber. Rubber must be removed first." },
     { q: "How long does powder coating last?", a: "15-20 years outdoors, 30+ indoors. Tougher than wet paint." },
-    { q: "Do you offer warranties?", a: "We stand by our workmanship. Issues from our process â€” bring it back." },
+    { q: "Do you offer warranties?", a: "We stand by our workmanship. Issues from our process — bring it back." },
     { q: "Do you do callouts or onsite work?", a: "All work done at our workshop. You bring items to us or arrange transport." },
     { q: "What's the biggest item you can coat?", a: "Approximately 6m x 2m x 2m. Items over 3m incur a R1,000 surcharge." },
     { q: "How long does it take?", a: "3 working days per ton for jobs under 1 ton. 5-8 working days for jobs over 1 ton." }

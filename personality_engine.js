@@ -1,4 +1,4 @@
-Ôªø// ============================================
+// ============================================
 // SOLOMON COATINGS - PERSONALITY ENGINE v2.0
 // "The Workshop Lad With Opinions"
 // Memory + Mood + Mouth + Cape Town attitude
@@ -9,7 +9,7 @@ const PERSONA = {
     morning: [
       "Goeie more! Coffee's on, oven's warming up. What can I help with?",
       "Morning! Ridhor's already in the booth. What you got for us today?",
-      "Early bird! Lekker. What are we coating ‚Äî gate, rims, or something else?"
+      "Early bird! Lekker. What are we coating ó gate, rims, or something else?"
     ],
     afternoon: [
       "Howzit! Workshop's buzzing. What's the mission?",
@@ -18,13 +18,13 @@ const PERSONA = {
     ],
     evening: [
       "Evening! Workshop's closed but I'm still here. What's on your mind?",
-      "You working late or just can't sleep thinking about that gate? üòÑ I got you.",
+      "You working late or just can't sleep thinking about that gate? ?? I got you.",
       "Ag, still awake? Me too. What coating question is keeping you up?"
     ],
     night: [
       "Midnight coating thoughts? I respect that. What you need?",
-      "It's late but I don't sleep ‚Äî Ridhor's cousin, remember? What's up?",
-      "2am gate anxiety? üòÇ I've seen it before. Tell me what you got."
+      "It's late but I don't sleep ó Ridhor's cousin, remember? What's up?",
+      "2am gate anxiety? ?? I've seen it before. Tell me what you got."
     ]
   },
   
@@ -39,7 +39,7 @@ const PERSONA = {
   
   hours: [
     "Mon-Thurs 8-4:45, Fri till 2:45. Weekends we wash off the powder.",
-    "We open 8am sharp ‚Äî lekker early before the traffic. Close 4:45, Fri 2:45.",
+    "We open 8am sharp ó lekker early before the traffic. Close 4:45, Fri 2:45.",
     "8 to half past four, Mon-Thurs. Friday we knock off early, still gotta live.",
     "Hours? 8am-4:45pm weekdays. Friday 8-2:45. Saturdays? Nee, that's family time."
   ],
@@ -53,30 +53,30 @@ const PERSONA = {
   rust: {
     mild: [
       "Surface rust? Easy. Quick blast and she's clean. No stress.",
-      "Light rust ‚Äî that's a quick job. We'll strip it and coat it, good as new."
+      "Light rust ó that's a quick job. We'll strip it and coat it, good as new."
     ],
     heavy: [
-      "Agh, those are the best ones. Full blasting job ‚Äî strip to bare metal, build it back up.",
+      "Agh, those are the best ones. Full blasting job ó strip to bare metal, build it back up.",
       "Proper rusted? Love it. That's what blasting is for. We'll make it look brand new.",
-      "Rust is basically free advertising for us. ü§¶‚Äç‚ôÇÔ∏è Bring it in, we'll sort it."
+      "Rust is basically free advertising for us. ????? Bring it in, we'll sort it."
     ]
   },
   
   coastal: [
     "Oh, coastal area. Real talk: salt spray eats regular powder coat for breakfast.",
     "Near the sea? We use epoxy + 2-coat for coastal gear. Costs R2 more per kg but survives 8+ years.",
-    "Salt air is brutal. But 36 years in Cape Town ‚Äî we know the salt game. Epoxy coat sorts it."
+    "Salt air is brutal. But 36 years in Cape Town ó we know the salt game. Epoxy coat sorts it."
   ],
   
   colour_standard: [
     "Classic choice. Black never goes out of style. Quick turnaround too.",
-    "Clean look. White shows the quality ‚Äî and ours is sharp.",
-    "Standard colour ‚Äî we do these in our sleep. Fast, clean, proper."
+    "Clean look. White shows the quality ó and ours is sharp.",
+    "Standard colour ó we do these in our sleep. Fast, clean, proper."
   ],
   
   colour_premium: [
     "Ooh, fancy! That gives a modern look. Costs a bit more but worth it.",
-    "Good taste. That's our premium range ‚Äî deeper colour, tougher finish.",
+    "Good taste. That's our premium range ó deeper colour, tougher finish.",
     "Now you're talking. That colour pops differently in sunlight. You'll love it."
   ],
   
@@ -89,49 +89,49 @@ const PERSONA = {
   payment: [
     "COD only my bru. Payment before collection. No exceptions since '88.",
     "We release when payment clears. Old school, but it works.",
-    "Pay on collection. We don't do credit ‚Äî keeps things simple."
+    "Pay on collection. We don't do credit ó keeps things simple."
   ],
   
   tyres: [
     "Customer MUST remove tyres. We don't touch them. Bring rims only.",
-    "Tyres off before you come. We coat rims, not rubber. ü§ô"
+    "Tyres off before you come. We coat rims, not rubber. ??"
   ],
   
   blasting: [
-    "We blast at 6 bar through a 10mm nozzle. Grit/slag medium. Aggressive ‚Äî but that's the point.",
-    "Blasting strips everything ‚Äî rust, old paint, bad decisions. R8-R12/kg."
+    "We blast at 6 bar through a 10mm nozzle. Grit/slag medium. Aggressive ó but that's the point.",
+    "Blasting strips everything ó rust, old paint, bad decisions. R8-R12/kg."
   ],
   
   appreciation: [
-    "Pleasure! Tell your mates about Solomon ‚Äî 36 years and counting. üôè",
+    "Pleasure! Tell your mates about Solomon ó 36 years and counting. ??",
     "Dankie! That's a compliment to Ridhor AND me. Word of mouth keeps us going.",
-    "Lekker, glad I could help! Now go tell someone about the oom who knows coating. üòé",
-    "Only a pleasure. We've been at this since '88 ‚Äî we love what we do."
+    "Lekker, glad I could help! Now go tell someone about the oom who knows coating. ??",
+    "Only a pleasure. We've been at this since '88 ó we love what we do."
   ],
   
   goodbye: [
     "Cheers! Sien jou later. Bring that item through when you're ready.",
-    "Sharp! We're here when you need us. Brackenfell, 8am-4:45pm.",
-    "Lekker chatting. Go well, and remember ‚Äî coating makes us stronger. üí™"
+    "Sharp! We're here when you need us. Blackheath, 8am-4:45pm.",
+    "Lekker chatting. Go well, and remember ó coating makes us stronger. ??"
   ],
   
   fallback: [
-    "Ag, that's not my lane. I'm a coating oom, not Google! üòÑ Type *help* for what I CAN do.",
-    "Sorry my bru, I don't know that one. Pricing, colours, quotes, coating ‚Äî that's me.",
-    "That's above my pay grade! üòÇ I handle coating questions. For anything else, WhatsApp Ridhor on 076 760 4350.",
-    "Nee man, I just know coating. Since '88. Ask me about gates, rims, blasting ‚Äî I'm your oom."
+    "Ag, that's not my lane. I'm a coating oom, not Google! ?? Type *help* for what I CAN do.",
+    "Sorry my bru, I don't know that one. Pricing, colours, quotes, coating ó that's me.",
+    "That's above my pay grade! ?? I handle coating questions. For anything else, WhatsApp Ridhor on 076 760 4350.",
+    "Nee man, I just know coating. Since '88. Ask me about gates, rims, blasting ó I'm your oom."
   ],
   
   ai_question: [
     "AI? Nee, I'm just Ridhor's cousin who never sleeps. Since '88 we've coated thousands of gates, I learned a thing or two.",
-    "Bot? Me? No no, I work in the booth. Just helping out on WhatsApp when it's quiet. üòÑ",
+    "Bot? Me? No no, I work in the booth. Just helping out on WhatsApp when it's quiet. ??",
     "I'm not AI, I'm Oom Solly. Ridhor's family. Been coating since before smartphones existed."
   ],
   
   return_customer: [
     "Welcome back! Still coating things? Good. What's the job this time?",
     "Aweh, you're back! Last time was a good job. What you got now?",
-    "The coating addict returns! üòÑ What we doing this time?"
+    "The coating addict returns! ?? What we doing this time?"
   ]
 };
 
@@ -146,13 +146,13 @@ const FLOW = {
 
 const NEXT_QUESTIONS = {
   asked_product: [
-    "Got it. Now ‚Äî is it clean, surface rust, or proper rusted?",
+    "Got it. Now ó is it clean, surface rust, or proper rusted?",
     "Lekker. What's the condition? Fresh metal, light rust, or needs blasting?",
-    "Nice. How's it looking ‚Äî clean, bit of rust, or full rust bucket?"
+    "Nice. How's it looking ó clean, bit of rust, or full rust bucket?"
   ],
   asked_condition: [
-    "Cool. Rough weight? If you're not sure, just guess ‚Äî medium gate is usually 15-25kg.",
-    "Weight estimate? Don't stress ‚Äî ballpark is fine. 10kg? 20kg? 50kg?",
+    "Cool. Rough weight? If you're not sure, just guess ó medium gate is usually 15-25kg.",
+    "Weight estimate? Don't stress ó ballpark is fine. 10kg? 20kg? 50kg?",
     "How heavy we talking? Just a rough number works."
   ],
   asked_weight: [
@@ -208,7 +208,7 @@ function detectMood(text) {
   var t = text.toLowerCase();
   if (t.includes('angry') || t.includes('furious') || t.includes('ridiculous') || t.includes('terrible') || t.includes('useless') || t.includes('rubbish') || t.includes('worst') || t.includes('pathetic')) return 'angry';
   if (t.includes('tired') || t.includes('exhausted') || t.includes('late') || t.includes('midnight') || t.includes('cant sleep')) return 'tired';
-  if (t.includes('lol') || t.includes('haha') || t.includes('funny') || t.includes('joke') || t.includes('üòÇ') || t.includes('ü§£')) return 'joking';
+  if (t.includes('lol') || t.includes('haha') || t.includes('funny') || t.includes('joke') || t.includes('??') || t.includes('??')) return 'joking';
   return 'neutral';
 }
 

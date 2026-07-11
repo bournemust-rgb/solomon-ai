@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
@@ -174,7 +174,7 @@ async function handleConversationFlow(text, from, session) {
       await saveSession(from, session);
       return p.pick(p.NEXT_QUESTIONS.asked_weight);
     }
-    return "Sorry, I need a number. How many kg roughly? Just guess — 10kg? 20kg? 50kg?";
+    return "Sorry, I need a number. How many kg roughly? Just guess � 10kg? 20kg? 50kg?";
   }
   
   if (flow.state === p.FLOW.ASKED_COLOUR) {
@@ -208,8 +208,8 @@ function smartMatch(text, fromNumber, session) {
   
   // MOOD DETECTION
   var mood = p.detectMood(text);
-  if (mood === 'angry') return "I hear you, and I'm sorry. Let me get Ridhor on this right now. He'll call you — what's your name and number? Or WhatsApp him directly on 076 760 4350.";
-  if (mood === 'tired') return "Late night coating thoughts? 😄 I get it. What's on your mind? I'm here.";
+  if (mood === 'angry') return "I hear you, and I'm sorry. Let me get Ridhor on this right now. He'll call you � what's your name and number? Or WhatsApp him directly on 076 760 4350.";
+  if (mood === 'tired') return "Late night coating thoughts? ?? I get it. What's on your mind? I'm here.";
   
   // AI QUESTION
   if (p.isAIQuestion(text)) return p.getPersona('ai_question');
