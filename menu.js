@@ -1,10 +1,10 @@
 ﻿function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW) {
   return {
-    "hi":"Hi there! Solomon Coatings here - since 1988.\n\nType *menu* to see our Secret List.\n\nOr tell me what you need priced — gates, rims, steel, shotblasting, trucks.\n\nFor wetspray, I will connect you directly to Ridhor.",
-    "hello":"Hi there! Solomon Coatings here.\n\nType *menu* to see our Secret List, or tell me what you need priced.",
-    "hey":"Howzit! Type *menu* to see our Secret List, or just ask your question.",
-    "howzit":"Howzit! Type *menu* for the full list, or tell me what you need coated.",
-    "good morning":"Morning! Solomon Coatings here.\n\nType *menu* to see our Secret List, or just ask your question!",
+    "hi":"Howzit! SC here, lekker ready to help — what are we coating today?\n\nType *menu* to see our Secret List.\n\nOr tell me what you need priced — gates, rims, steel, shotblasting, trucks.",
+    "hello":"Howzit! SC here, lekker ready to help — what are we coating today?\n\nType *menu* to see our Secret List.",
+    "hey":"Howzit! SC here — what are we coating today?\n\nType *menu* for the full list.",
+    "howzit":"Howzit! SC here — what are we coating today?\n\nType *menu* for the full list.",
+    "good morning":"Morning! SC here, lekker ready — what are we coating today?\n\nType *menu* for the full list.",
     "menu":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Get a quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. View our gallery\n10. Leave a review\n11. Book a callback\n12. Talk to Ridhor\n13. Account queries\n14. TPS Daily Wisdom\n\nOr just tell me what you need priced.",
     "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99",
     "colours":"Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture",
@@ -31,3 +31,4 @@
   };
 }
 module.exports = { buildMenu };
+
