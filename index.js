@@ -38,7 +38,6 @@ var smartMatchFn = function(text) {
   if (t === 'socials' || t === '10') return getSocialsResponse();
   if (t === 'gallery' || t === '9') return getGalleryList(1);
   if (/^gallery \d+$/.test(t)) { var pg = parseInt(t.split(' ')[1]); return getGalleryList(pg); }
-  if (/^\d+$/.test(t) && parseInt(t) >= 1 && parseInt(t) <= 30) { var ci = getColorByIndex(parseInt(t)); if (ci) return ci; }
   var galSearch = searchGallery(text);
   if (galSearch) return galSearch;
   return smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, randomGreeting, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb);
@@ -95,6 +94,7 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 });
 
 app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});
+
 
 
 
