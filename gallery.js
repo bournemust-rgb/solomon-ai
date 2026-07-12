@@ -69,3 +69,4 @@ function searchGallery(text) {
 }
 
 module.exports = { GALLERY, getGalleryList, getColorByIndex, searchGallery };
+
