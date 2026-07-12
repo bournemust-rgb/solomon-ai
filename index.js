@@ -6,15 +6,15 @@ var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var delivery = require("./delivery");
 var tcdb = require("./tcdb");
-var { randomFallback, randomAffirmation, randomTPS } = require('./quotes');
-var { getSocialsResponse, FACEBOOK, TIKTOK, WEBSITE } = require('./socials');
+var { getSocialsResponse } = require('./socials');
 var { getGalleryList, getColorByIndex, searchGallery } = require('./gallery');
 var { randomGreeting } = require('./greetings');
-var { getOrderRef, estimatePrice } = require("./calculator");
-var { buildMenu } = require("./menu");
-var { smartMatch } = require("./smartmatch");
-var { handleMessage } = require("./flows");
-var { isAfterHours } = require("./utils");
+var { randomFallback, randomAffirmation, randomTPS } = require('./quotes');
+var { getOrderRef, estimatePrice } = require('./calculator');
+var { buildMenu } = require('./menu');
+var { smartMatch } = require('./smartmatch');
+var { handleMessage } = require('./flows');
+var { isAfterHours } = require('./utils');
 
 var app = express();
 app.use(express.static('public'));
@@ -26,21 +26,17 @@ var PERSONAL_NUMBER = "27767604350";
 var OFFICE_NUMBER = "0219052912";
 var OFFICE_EMAIL = "populier@mweb.co.za";
 var QUOTE_EMAIL = "infosc@mweb.co.za";
-
-
+var FACEBOOK = "https://www.facebook.com/SolomonCoatings/";
+var TIKTOK = "https://www.tiktok.com/@solomon.coatings";
 var GOOGLE_REVIEW = "https://g.page/r/your-review-link";
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var QR = buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW);
+QR["9"] = getGalleryList(1);
+QR["10"] = getSocialsResponse();
 
 var smartMatchFn = function(text) {
-  var t = text.toLowerCase().trim();
-  if (t === 'socials' || t === '10') return getSocialsResponse();
-  if (t === 'gallery' || t === '9') return getGalleryList(1);
-  if (/^gallery \d+$/.test(t)) { var pg = parseInt(t.split(' ')[1]); return getGalleryList(pg); }
-  var galSearch = searchGallery(text);
-  if (galSearch) return galSearch;
   return smartMatch(text, QR, estimatePrice, randomAffirmation, randomTPS, randomFallback, randomGreeting, getOrderRef, GOOGLE_REVIEW, FACEBOOK, TIKTOK, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, tcdb);
 };
 
@@ -54,8 +50,8 @@ async function forwardImageToOwner(imageId){
   }catch(e){ console.error("forwardImage error:", e.response?.data||e.message); return false; }
 }
 
-app.get("/health",function(req,res){res.json({status:"healthy",version:"13.0",modules:9});});
-app.get("/",function(req,res){res.json({service:"Solomon Coatings",version:"13.0 Modular"});});
+app.get("/health",function(req,res){res.json({status:"healthy",version:"14.0",modules:12});});
+app.get("/",function(req,res){res.json({service:"Solomon Coatings",version:"14.0"});});
 app.get("/webhook",function(req,res){ if(req.query["hub.mode"]==="subscribe"&&req.query["hub.verify_token"]===VT) return res.status(200).send(req.query["hub.challenge"]); res.sendStatus(403); });
 
 app.post("/webhook",validateWhatsAppSignature,async function(req,res){
@@ -94,15 +90,4 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
   }catch(e){console.error("WEBHOOK ERROR:",e.message);}
 });
 
-app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});
-
-
-
-
-
-
-
-
-
-
-
+app.listen(PORT,function(){console.log("\nSOLOMON v14.0 - 12 modules. QR page + Gallery + Socials.\n");});
