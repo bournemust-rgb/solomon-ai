@@ -8,7 +8,17 @@
   if(t.includes("reference")||t.includes("order number")) return "Your reference: "+getOrderRef();
   if(t.includes("how busy")||t.includes("queue")) return "For wait time, WhatsApp Ridhor 076 760 4350.";
   if(t.includes("review")||t.includes("rate")) return "Leave a review: "+GOOGLE_REVIEW;
-  if(t.includes("gallery")||t.includes("portfolio")) return "See our work: "+FACEBOOK+" | "+TIKTOK;
+  // Gallery with pagination
+  if(t.includes("gallery")){
+    var pageMatch = t.match(/gallery\s*(\d+)/);
+    var page = pageMatch ? parseInt(pageMatch[1]) : 1;
+    return getGalleryList(page);
+  }
+  // Gallery color selection (1-20)
+  if(/^([1-9]|1[0-9]|20)$/.test(t) && !QR[t]){
+    var colorResp = getColorByIndex(parseInt(t));
+    if(colorResp) return colorResp;
+  }
   if(t.includes("terms")||t.includes("t&c")) return QR["8"];
   if(t.includes("order")&&(t.includes("status")||t.includes("update")||t.includes("ready"))) return "For order updates, WhatsApp Ridhor: 076 760 4350.";
   if(t.includes("book")||t.includes("callback")) return QR["11"];
@@ -44,4 +54,5 @@
   return randomFallback();
 }
 module.exports = { smartMatch };
+
 
