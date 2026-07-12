@@ -3,7 +3,8 @@ var express = require("express");
 var { validateWhatsAppSignature } = require("./security");
 var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
-var delivery = require("./delivery");
+var delivery = require('./delivery');
+var { fullTerms } = require('./terms');
 var axios = require("axios");
 
 var app = express();
@@ -497,3 +498,4 @@ app.listen(PORT, function() {
   console.log("   ✓ After-hours detection");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
