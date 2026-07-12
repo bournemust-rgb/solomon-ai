@@ -17,6 +17,7 @@ var { handleMessage } = require("./flows");
 var { isAfterHours } = require("./utils");
 
 var app = express();
+app.use(express.static('public'));
 app.use(express.json({ verify: function(req, res, buf) { req.rawBody = buf.toString("utf8"); } }));
 
 var VT = process.env.WHATSAPP_VERIFY_TOKEN || "solomon_coatings_1988";
@@ -94,6 +95,7 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 });
 
 app.listen(PORT,function(){console.log("\nSOLOMON v13.0 MODULAR - 9 modules. index.js is ~100 lines.\n");});
+
 
 
 
