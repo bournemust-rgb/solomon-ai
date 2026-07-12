@@ -8,6 +8,7 @@ var { fullTerms } = require('./terms');
 var axios = require("axios");
 
 var app = express();
+app.use(express.static('public'));
 app.use(express.json({ verify: function(req, res, buf) { req.rawBody = buf.toString("utf8"); } }));
 
 var VT = process.env.WHATSAPP_VERIFY_TOKEN || "solomon_coatings_1988";
@@ -498,5 +499,6 @@ app.listen(PORT, function() {
   console.log("   ✓ After-hours detection");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
