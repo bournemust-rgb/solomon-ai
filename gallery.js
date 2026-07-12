@@ -42,7 +42,7 @@ function getGalleryList(page) {
     msg += (i + 1) + ". " + GALLERY[keys[i]].name + "\n";
   }
   msg += "\nReply with a number to see photos.\n";
-  if (page < totalPages) msg += "Type *gallery " + (page + 1) + "* for more.\n";
+  if (page === 1) msg += "Type *S2* for page 2.\n"; if (page === 2) msg += "Type *S3* for page 3.\n";
   msg += "\nFull gallery: https://solomon-ai-izyb.onrender.com/gallery.html\n\nType *menu* to go back.";
   return msg;
 }
@@ -69,4 +69,6 @@ function searchGallery(text) {
 }
 
 module.exports = { GALLERY, getGalleryList, getColorByIndex, searchGallery };
+
+
 

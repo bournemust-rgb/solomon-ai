@@ -92,3 +92,5 @@ app.post("/webhook",validateWhatsAppSignature,async function(req,res){
 
 app.listen(PORT,function(){console.log("\nSOLOMON v14.0 - 12 modules. QR page + Gallery + Socials.\n");});
 
+
+
