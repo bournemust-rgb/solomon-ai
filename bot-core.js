@@ -117,7 +117,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   var t = text.toLowerCase().trim();
 
   if (/^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t)) {
-    if (randomGreeting) return randomGreeting();
+    if (randomGreeting) return randomGreeting() + "\n\nType *menu* to see our Secret List, or tell me what you need priced — gates, rims, steel, shotblasting, trucks.";
     return QR["menu"] || "Hi there! Type *menu* to see our Secret List.";
   }
 
