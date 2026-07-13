@@ -93,7 +93,11 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
             
           }
 
-          await sendMessage(from, reply);
+          // Append menu prompt to every reply (once)
+if (reply.indexOf("Type *menu* to go back") === -1) {
+  reply = reply + "\n\nType *menu* to go back to the main list.";
+}
+await sendMessage(from, reply);
 
           // --- Important event notifications to Ridhor ---
           if (/complaint|problem|unhappy|angry|furious|refund/.test(text)) {
@@ -241,6 +245,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
