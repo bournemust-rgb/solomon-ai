@@ -121,15 +121,15 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
     return QR["menu"] || "Hi there! Type *menu* to see our Secret List.";
   }
 
-  if (t === "15" || t === "tps" || t === "wisdom") return randomTPS();
-  if (t.includes("socials") || t.includes("social") || t.includes("follow") || t === "10") return getSocialsResponse();
+  if (t === "15" || t === "tps" || t === "wisdom") return randomTPS() + "\n\nType *menu* to go back to LIST.";
+  if (t.includes("socials") || t.includes("social") || t.includes("follow") || t === "10") return getSocialsResponse() + "\n\nType *menu* to go back to LIST.";
   if (t.includes("gallery") || t === "9") {
     var pageMatch = t.match(/gallery\s*(\d+)/);
     var page = pageMatch ? parseInt(pageMatch[1]) : 1;
-    return getGalleryMenu(page);
+    return getGalleryMenu(page) + "\n\nType *menu* to go back to LIST.";
   }
-  if (t === "s2") return getGalleryMenu(2);
-  if (t === "s3") return getGalleryMenu(3);
+  if (t === "s2") return getGalleryMenu(2) + "\n\nType *menu* to go back to LIST.";
+  if (t === "s3") return getGalleryMenu(3) + "\n\nType *menu* to go back to LIST.";
   var colorMatch = t.match(/^c(\d+)$/);
   if (colorMatch) {
     var colorResponse = getColorResponse(colorMatch[1]);
@@ -180,7 +180,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("weekend")||t.includes("saturday")||t.includes("sunday")) return "Closed weekends. Mon-Thurs 8-4:45, Fri 8-2:45.";
   if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
 
-  return randomFallback();
+  return randomFallback() + "\n\nType *menu* to go back to LIST.";
 }
 
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
@@ -303,5 +303,6 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
