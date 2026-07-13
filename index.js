@@ -90,10 +90,17 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           if (afterHours) {
             var showClosed = Math.floor(Math.random() * 4) === 0;
             if (showClosed) reply = "Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + reply;
-            try { await sendMessage(PERSONAL_NUMBER, "After-hours msg from " + from + ": " + text); } catch (e) { }
+            
           }
 
           await sendMessage(from, reply);
+
+          // --- Important event notifications to Ridhor ---
+          if (/complaint|problem|unhappy|angry|furious|refund/.test(text)) {
+            try { await sendMessage(PERSONAL_NUMBER, "🚨 Complaint from " + from + ": " + text); } catch(e) {}
+          } else if (/speak.*ridhor|talk.*ridhor|technical|owner|boss/.test(text)) {
+            try { await sendMessage(PERSONAL_NUMBER, "📞 Customer " + from + " wants to talk: " + text); } catch(e) {}
+          }
 
           session.history = session.history || [];
           session.history.push({ role: "user", content: text }, { role: "model", content: reply });
@@ -114,3 +121,4 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
