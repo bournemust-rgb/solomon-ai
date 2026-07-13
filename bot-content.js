@@ -42,7 +42,7 @@ function getGalleryMenu(pageNumber) {
   }
   if (pageNumber === 1 && totalPages > 1) menu += "\n➡️ Type *S2* for page 2.";
   else if (pageNumber === 2 && totalPages > 2) menu += "\n➡️ Type *S3* for page 3.";
-  menu += "\n\n📌 Reply with *C* + number (e.g., *C1* for Red)\n\n🔗 View full gallery:\nhttps://drive.google.com/drive/folders/YOUR-FOLDER-ID\n\nType *menu* to go back.";
+  menu += "\n\n📌 Reply with *C* + number (e.g., *C1* for Red)\n\n🔗 View full gallery:\nhttps://solomon-ai-izyb.onrender.com/gallery.html\n\nType *menu* to go back.";
   return menu;
 }
 
