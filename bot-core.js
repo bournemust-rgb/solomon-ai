@@ -8,7 +8,6 @@ try {
   console.warn("[bot-core] delivery.js not found or broken. Delivery flow will be limited.");
 }
 
-// ----- QUOTES -----
 var funFallbacks = [
   "Ag sorry, I'm just a powder coating oom, not Google! \n\nTry *menu* to see my Secret List, or WhatsApp Ridhor on 076 760 4350.",
   "Eish, you got me there! I know coating, not that. \n\nType *menu* for what I CAN do, or chat to Ridhor: 076 760 4350.",
@@ -44,7 +43,6 @@ function randomFallback() { return funFallbacks[Math.floor(Math.random() * funFa
 function randomAffirmation() { return affirmations[Math.floor(Math.random() * affirmations.length)]; }
 function randomTPS() { return "TPS DAILY WISDOM\n\n" + TPS_QUOTES[Math.floor(Math.random() * TPS_QUOTES.length)] + "\n\nType *menu* for more."; }
 
-// ----- UTILITIES -----
 function getOrderRef() {
   var d = new Date();
   return "SC" + d.getFullYear().toString().slice(-2) + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + Math.floor(Math.random() * 9000 + 1000);
@@ -59,7 +57,6 @@ function isAfterHours() {
   return false;
 }
 
-// ----- CALCULATOR -----
 function estimatePrice(text) {
   var t = text.toLowerCase();
   var ref = getOrderRef();
@@ -116,7 +113,6 @@ function estimatePrice(text) {
   return null;
 }
 
-// ----- SMART MATCHING -----
 function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting) {
   var t = text.toLowerCase().trim();
 
@@ -186,7 +182,6 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   return randomFallback();
 }
 
-// ----- CONVERSATION FLOWS -----
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
   var t = text.toLowerCase().trim();
   var flow = session.flow || { state: "idle" };
