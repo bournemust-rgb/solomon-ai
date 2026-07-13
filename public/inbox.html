@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solomon Coatings - WhatsApp Inbox</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#1a1a1a; color:#fff; font-family:Arial,sans-serif; }
+  h1 { background:#f90; color:#000; padding:15px; text-align:center; font-size:18px; }
+  .chat { background:#2a2a2a; margin:5px 10px; padding:12px; border-radius:8px; cursor:pointer; }
+  .chat:hover { background:#3a3a3a; }
+  .phone { color:#f90; font-weight:bold; font-size:14px; }
+  .preview { color:#aaa; font-size:13px; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .time { color:#666; font-size:11px; margin-top:2px; }
+  .refresh { background:#f90; color:#000; padding:10px; text-align:center; cursor:pointer; font-weight:bold; margin:10px; border-radius:6px; }
+  .empty { text-align:center; padding:40px; color:#666; }
+  .msg { padding:10px; margin:5px 10px; border-radius:8px; max-width:80%; word-wrap:break-word; }
+  .customer { background:#333; margin-right:auto; }
+  .bot { background:#f90; color:#000; margin-left:auto; }
+  .sender { font-size:10px; color:#666; margin-bottom:2px; }
+  .back { background:#444; color:#fff; padding:8px; text-align:center; cursor:pointer; margin:5px 10px; border-radius:6px; }
+</style>
+</head>
+<body>
+<h1>📱 Solomon Coatings - WhatsApp Inbox</h1>
+<div class="refresh" onclick="loadChats()">🔄 Refresh</div>
+<div id="chats"></div>
+
+<script>
+var API = "/api/chats";
+
+async function loadChats() {
+  document.getElementById("chats").innerHTML = '<div class="empty">Loading...</div>';
+  try {
+    var r = await fetch(API);
+    var data = await r.json();
+    if (!data.chats || data.chats.length === 0) {
+      document.getElementById("chats").innerHTML = '<div class="empty">No conversations yet. Send a WhatsApp to 060 507 4461 to start one.</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < data.chats.length; i++) {
+      var c = data.chats[i];
+      html += '<div class="chat" onclick="showChat(\'' + c.phone + '\')">';
+      html += '<div class="phone">' + c.phone + '</div>';
+      html += '<div class="preview">' + (c.lastMsg || "No messages") + '</div>';
+      html += '<div class="time">' + (c.time || "") + '</div>';
+      html += '</div>';
+    }
+    document.getElementById("chats").innerHTML = html;
+  } catch(e) {
+    document.getElementById("chats").innerHTML = '<div class="empty">Could not load chats. Is Redis connected?</div>';
+  }
+}
+
+async function showChat(phone) {
+  document.getElementById("chats").innerHTML = '<div class="empty">Loading conversation...</div>';
+  try {
+    var r = await fetch(API + "?phone=" + phone);
+    var data = await r.json();
+    var html = '<div class="back" onclick="loadChats()">← Back to all chats</div>';
+    if (!data.messages || data.messages.length === 0) {
+      html += '<div class="empty">No messages in this conversation.</div>';
+    } else {
+      for (var i = 0; i < data.messages.length; i++) {
+        var m = data.messages[i];
+        html += '<div class="msg ' + (m.role === "user" ? "customer" : "bot") + '">';
+        html += '<div class="sender">' + (m.role === "user" ? "Customer" : "Bot") + '</div>';
+        html += m.content;
+        html += '</div>';
+      }
+    }
+    document.getElementById("chats").innerHTML = html;
+  } catch(e) {
+    document.getElementById("chats").innerHTML = '<div class="empty">Could not load conversation.</div>';
+  }
+}
+
+loadChats();
+</script>
+</body>
+</html>
