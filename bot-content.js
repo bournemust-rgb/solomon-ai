@@ -61,7 +61,7 @@ function getColorResponse(colorId) {
 
 function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL) {
   var QR = {
-    "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Review\n12.Callback\n13.Ridhor\n14.Accounts\n15.TPS Wisdom\n\nOr just tell me what you need priced.",
+    "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Review\n12.Callback\n13.Technical Support\n14.Accounts\n15.TPS Wisdom\n\nOr just tell me what you need priced.",
     "pricing": "PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nFor a calculated estimate: quote 20kg gate black",
     "colours": "Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\n\nType *gallery* to see 20+ colour examples!",
     "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
@@ -79,7 +79,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
     "11": "REVIEW US\n" + GOOGLE_REVIEW,
     "12": "BOOK A CALLBACK\nSend name + number. Or call " + OFFICE_NUMBER,
-    "13": "TALK TO RIDHOR\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL,
+    "13": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL,
     "14": "ACCOUNT QUERIES\nEmail: " + OFFICE_EMAIL + " | Phone: " + OFFICE_NUMBER,
     "15": "TPS Wisdom - Type *menu* to go back.",
     "thanks": "Pleasure! Anything else? Type *menu*",
