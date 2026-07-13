@@ -164,8 +164,19 @@ app.post("/api/reply", async function(req, res) {
   try {
     var { to, message } = req.body;
     if (!to || !message) return res.json({ error: "Missing to or message" });
+    
+    // Send the message via WhatsApp
     var { sendMessage } = require("./queue");
     var result = await sendMessage(to, message);
+    
+    // Save to the session so it appears in the inbox
+    var { getSession, saveSession } = require("./db");
+    var session = await getSession(to);
+    if (!session.history) session.history = [];
+    session.history.push({ role: "model", content: message });
+    if (session.history.length > 40) session.history = session.history.slice(-20);
+    await saveSession(to, session);
+    
     res.json({ success: true, result: result });
   } catch(e) {
     res.json({ error: e.message });
@@ -178,8 +189,19 @@ app.post("/api/reply", async function(req, res) {
   try {
     var { to, message } = req.body;
     if (!to || !message) return res.json({ error: "Missing to or message" });
+    
+    // Send the message via WhatsApp
     var { sendMessage } = require("./queue");
     var result = await sendMessage(to, message);
+    
+    // Save to the session so it appears in the inbox
+    var { getSession, saveSession } = require("./db");
+    var session = await getSession(to);
+    if (!session.history) session.history = [];
+    session.history.push({ role: "model", content: message });
+    if (session.history.length > 40) session.history = session.history.slice(-20);
+    await saveSession(to, session);
+    
     res.json({ success: true, result: result });
   } catch(e) {
     res.json({ error: e.message });
@@ -193,6 +215,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
