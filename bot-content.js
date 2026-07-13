@@ -11,10 +11,10 @@ var GALLERY_COLORS = [
   { id: "2", name: "🟡 Yellow", images: ["https://solomon-ai-izyb.onrender.com/photos/yellow-001.jpg"] },
   { id: "3", name: "🟢 Green", images: ["https://solomon-ai-izyb.onrender.com/photos/green-001.jpg"] },
   { id: "4", name: "🔵 Blue", images: ["https://solomon-ai-izyb.onrender.com/photos/blue-001.jpg"] },
-  { id: "5", name: "💙 Light Blue", images: ["https://solomon-ai-izyb.onrender.com/photos/blue-light-001.jpg"] },
-  { id: "6", name: "🟦 Dark Blue", images: ["https://solomon-ai-izyb.onrender.com/photos/blue-dark-001.jpg"] },
-  { id: "7", name: "⬛ Black", images: ["https://solomon-ai-izyb.onrender.com/photos/black-gloss-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/black-gloss-002.jpg"] },
-  { id: "8", name: "⚫ Matt Black", images: ["https://solomon-ai-izyb.onrender.com/photos/black-matte-001.jpg"] },
+  { id: "5", name: "🟠 Orange", images: ["https://solomon-ai-izyb.onrender.com/photos/orange-001.jpg"] },
+  { id: "6", name: "🟣 Purple", images: ["https://solomon-ai-izyb.onrender.com/photos/purple-001.jpg"] },
+  { id: "7", name: "⬛ Black Gloss", images: ["https://solomon-ai-izyb.onrender.com/photos/black-gloss-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/black-gloss-002.jpg"] },
+  { id: "8", name: "⚫ Black Matt", images: ["https://solomon-ai-izyb.onrender.com/photos/black-matte-001.jpg"] },
   { id: "9", name: "🔨 Hammered Black", images: ["https://solomon-ai-izyb.onrender.com/photos/hammered-black-001.jpg"] },
   { id: "10", name: "⚪ White", images: ["https://solomon-ai-izyb.onrender.com/photos/white-001.jpg"] },
   { id: "11", name: "🩶 Grey", images: ["https://solomon-ai-izyb.onrender.com/photos/grey-001.jpg"] },
@@ -23,10 +23,8 @@ var GALLERY_COLORS = [
   { id: "14", name: "🟤 Brown", images: ["https://solomon-ai-izyb.onrender.com/photos/brown-001.jpg"] },
   { id: "15", name: "🥉 Bronze", images: ["https://solomon-ai-izyb.onrender.com/photos/bronze-001.jpg"] },
   { id: "16", name: "✨ Charcoal", images: ["https://solomon-ai-izyb.onrender.com/photos/charcoal-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/charcoal-002.jpg"] },
-  { id: "17", name: "🟪 Purple", images: ["https://solomon-ai-izyb.onrender.com/photos/purple-001.jpg"] },
-  { id: "18", name: "🌅 Orange", images: ["https://solomon-ai-izyb.onrender.com/photos/orange-001.jpg"] },
-  { id: "19", name: "🎨 Silver", images: ["https://solomon-ai-izyb.onrender.com/photos/silver-001.jpg"] },
-  { id: "20", name: "🥇 Gold", images: ["https://solomon-ai-izyb.onrender.com/photos/gold-001.jpg"] }
+  { id: "17", name: "🎨 Silver", images: ["https://solomon-ai-izyb.onrender.com/photos/silver-001.jpg"] },
+  { id: "18", name: "🥇 Gold", images: ["https://solomon-ai-izyb.onrender.com/photos/gold-001.jpg"] }
 ];
 
 function getGalleryMenu(pageNumber) {
@@ -88,6 +86,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 
