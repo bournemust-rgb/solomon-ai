@@ -66,13 +66,11 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "colours": "Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone, Sand Texture\n\nType *gallery* to see 20+ colour examples!",
     "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
     "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
-    "delivery": "R150 Cape Town metro. Free collection. 7% daily storage after 7 days.",
     "1": "PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99",
     "2": "COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal\nHammered: R225+\nMetallic/Custom/RAL: R300+\nFinishes: Gloss, Matte, Satin, Wrinkle, Hammertone\n\nType *gallery* for examples!",
     "3": "Send: quote 20kg gate charcoal | quote 4 rims metallic | quote 10sqm sheet black | quote 20kg blasting only",
     "4": "TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
     "5": "BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
-    "6": "DELIVERY & COLLECTION\nR150 metro. Free collection. Collect within 7 days. Late: 7% daily storage.",
     "7": "BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
     "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "\n\nType *menu* to go back.",
     "9": "Type *gallery* to see 20+ colour examples with photos!",
@@ -90,3 +88,4 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+

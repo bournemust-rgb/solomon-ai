@@ -142,6 +142,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
 
   var calc = estimatePrice(text);
   if (calc) return calc;
+  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return "__DELIVERY__";
   if (QR[t]) return QR[t];
 
   if (t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
@@ -168,7 +169,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("price")||t.includes("cost")||t.includes("how much")) return QR["pricing"];
   if (t.includes("hour")||t.includes("open")||t.includes("close")) return QR["hours"];
   if (t.includes("turnaround")||t.includes("how long")) return QR["turnaround"];
-  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return QR["delivery"];
+  
   if (t.includes("contact")||t.includes("email")||t.includes("phone")) return "060 507 4461 | Office: " + OFFICE_NUMBER + " | Email: " + OFFICE_EMAIL;
   if (t.includes("rim")||t.includes("wheel")) return "Rims: R1,000-R1,500/set of 4. For estimate: quote 4 rims black";
   if (t.includes("gate")||t.includes("fence")) return "Gates: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
@@ -289,7 +290,7 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
   }
 
   var normal = smartMatchFn(text);
-  if (normal === QR["delivery"]) {
+  if (normal === "__DELIVERY__") {
     flow.state = "delivery_asking_where";
     session.flow = flow;
     await saveSession(from, session);
@@ -300,3 +301,4 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
