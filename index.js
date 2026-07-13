@@ -172,6 +172,20 @@ app.post("/api/reply", async function(req, res) {
   }
 });
 
+
+// ===== REPLY FROM INBOX =====
+app.post("/api/reply", async function(req, res) {
+  try {
+    var { to, message } = req.body;
+    if (!to || !message) return res.json({ error: "Missing to or message" });
+    var { sendMessage } = require("./queue");
+    var result = await sendMessage(to, message);
+    res.json({ success: true, result: result });
+  } catch(e) {
+    res.json({ error: e.message });
+  }
+});
+
 app.listen(PORT, function() {
   console.log("\n✅ SOLOMON v17.0 MODULAR — 3 FILES");
   console.log("   ✓ index.js    (server + wiring)");
@@ -179,6 +193,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
