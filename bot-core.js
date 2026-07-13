@@ -1,6 +1,10 @@
 ﻿// ============================================
 // BOT-CORE: Calculator, Quotes, SmartMatch, Flows
 // ============================================
+
+const INTENT = {
+  DELIVERY_FLOW: "__DELIVERY__"
+};
 var delivery = null;
 try {
   delivery = require('./delivery');
@@ -8,6 +12,24 @@ try {
   console.warn("[bot-core] delivery.js not found or broken. Delivery flow will be limited.");
 }
 
+
+const MENU_LABELS = {
+  TECHNICAL_SUPPORT: "Technical Support",
+  DELIVERY: "Delivery",
+  PRICING: "Pricing",
+  COLOURS: "Colours",
+  QUOTE: "Quote",
+  TURNAROUND: "Turnaround",
+  HOURS: "Hours",
+  BLASTING: "Blasting",
+  TCS: "T&Cs",
+  GALLERY: "GALLERY (20+ colours)",
+  FOLLOW: "Follow Us",
+  REVIEW: "Review",
+  CALLBACK: "Callback",
+  ACCOUNTS: "Accounts",
+  TPS: "TPS Wisdom"
+};
 var funFallbacks = [
   "Ag sorry, I'm just a powder coating oom, not Google! \n\nTry *menu* to see my Secret List, or WhatsApp Ridhor on 076 760 4350.",
   "Eish, you got me there! I know coating, not that. \n\nType *menu* for what I CAN do, or chat to Ridhor: 076 760 4350.",
@@ -113,11 +135,15 @@ function estimatePrice(text) {
   return null;
 }
 
+
+function getWelcomeMessage(randomGreeting) {
+  return randomGreeting() + "\n\nType *menu* to see our Secret List, or tell me what you need priced — gates, rims, steel, shotblasting, trucks.";
+}
 function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting) {
   var t = text.toLowerCase().trim();
 
   if (/^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t)) {
-    if (randomGreeting) return randomGreeting() + "\n\nType *menu* to see our Secret List, or tell me what you need priced — gates, rims, steel, shotblasting, trucks.";
+    if (randomGreeting) return getWelcomeMessage(randomGreeting);
     return QR["menu"] || "Hi there! Type *menu* to see our Secret List.";
   }
 
@@ -142,7 +168,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
 
   var calc = estimatePrice(text);
   if (calc) return calc;
-  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return "__DELIVERY__";
+  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return INTENT.DELIVERY_FLOW;
   if (QR[t]) return QR[t];
 
   if (t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
@@ -290,7 +316,7 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
   }
 
   var normal = smartMatchFn(text);
-  if (normal === "__DELIVERY__") {
+  if (normal === INTENT.DELIVERY_FLOW) {
     flow.state = "delivery_asking_where";
     session.flow = flow;
     await saveSession(from, session);
@@ -301,4 +327,6 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
+
 
