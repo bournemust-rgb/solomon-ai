@@ -90,3 +90,4 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
 
 
+
