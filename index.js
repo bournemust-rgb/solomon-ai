@@ -114,6 +114,50 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   }
 });
 
+
+// ===== INBOX API =====
+app.get("/api/chats", async function(req, res) {
+  try {
+    var phone = req.query.phone;
+    var { redis } = require("./db");
+    
+    if (phone) {
+      var key = "session:" + phone;
+      var data = await redis.get(key);
+      if (data) {
+        var session = JSON.parse(data);
+        res.json({ phone: phone, messages: session.history || [] });
+      } else {
+        res.json({ phone: phone, messages: [] });
+      }
+    } else {
+      var keys = await redis.keys("session:*");
+      var chats = [];
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var p = k.replace("session:", "");
+        var data = await redis.get(k);
+        if (data) {
+          var session = JSON.parse(data);
+          var lastMsg = "";
+          if (session.history && session.history.length > 0) {
+            var last = session.history[session.history.length - 1];
+            lastMsg = last.content ? last.content.substring(0, 80) : "";
+          }
+          chats.push({
+            phone: p,
+            lastMsg: lastMsg,
+            time: session.lastUpdated || session.createdAt || ""
+          });
+        }
+      }
+      res.json({ chats: chats });
+    }
+  } catch(e) {
+    res.json({ error: e.message });
+  }
+});
+
 app.listen(PORT, function() {
   console.log("\n✅ SOLOMON v17.0 MODULAR — 3 FILES");
   console.log("   ✓ index.js    (server + wiring)");
@@ -121,4 +165,5 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
