@@ -208,6 +208,32 @@ app.post("/api/reply", async function(req, res) {
   }
 });
 
+
+// ===== MANUAL REPLY FROM INBOX =====
+app.post("/api/reply", async function(req, res) {
+  try {
+    var to = req.body.to;
+    var message = req.body.message;
+    if (!to || !message) return res.json({ error: "Missing phone or message" });
+    
+    // Send via WhatsApp
+    var { sendMessage } = require("./queue");
+    var result = await sendMessage(to, message);
+    
+    // Save to Redis session so it appears in inbox
+    var { getSession, saveSession } = require("./db");
+    var session = await getSession(to);
+    if (!session.history) session.history = [];
+    session.history.push({ role: "model", content: message });
+    if (session.history.length > 40) session.history = session.history.slice(-20);
+    await saveSession(to, session);
+    
+    res.json({ success: true, result: result });
+  } catch(e) {
+    console.log("Reply error:", e.message);
+    res.json({ error: e.message });
+  }
+});
 app.listen(PORT, function() {
   console.log("\n✅ SOLOMON v17.0 MODULAR — 3 FILES");
   console.log("   ✓ index.js    (server + wiring)");
@@ -215,6 +241,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
