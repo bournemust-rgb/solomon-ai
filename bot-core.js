@@ -266,7 +266,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("compare") || t.includes("vs") || t.includes("versus") || t.includes("difference")) return "Powder coating vs wet paint: Powder is tougher, lasts 15-20 years, no solvents, eco-friendly. Wet paint chips and fades.";
   if (t.includes("load shedding") || t.includes("loadshedding") || t.includes("eskom") || t.includes("power")) return "Loadshedding can delay us. Stage 4+ adds about a day. We run backup where possible. We'll keep you posted!";
 
-  return randomFallback() + "\n\nType *menu* to go back to LIST.";
+  return randomFallback();
 }
 
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
@@ -385,10 +385,12 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return "Sure! Which area/town? e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD";
   }
 
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
   return normal;
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
