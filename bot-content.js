@@ -73,11 +73,9 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "",
     "9": "Type *gallery* to see 20+ colour examples with photos!",
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
-    "11": "REVIEW US\n" + GOOGLE_REVIEW,
 
-    "13": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL,
-    "12": "ACCOUNT QUERIES\nEmail: " + OFFICE_EMAIL + " | Phone: " + OFFICE_NUMBER + "\n\nType *menu* to go back." + OFFICE_EMAIL + " | Phone: " + OFFICE_NUMBER,
-    "15": "TPS Wisdom - Type *menu* to go back.",
+    "11": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL,
+    "13": "TPS Wisdom - Type *menu* to go back.",
     "braai": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
     "bbq": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
     "grill": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
@@ -320,6 +318,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 

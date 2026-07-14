@@ -160,8 +160,8 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("coastal")||t.includes("warranty")) return "No warranties within 15km of shoreline.";
   if (t.includes("plastic")||t.includes("glass")||t.includes("hydraulic")) return "Before blasting: Remove plastic, glass, hydraulics.";
   if (t.includes("pay")||t.includes("payment")||t.includes("cod")) return "Strict COD. No release without payment. Accounts: " + OFFICE_EMAIL;
-  if (t.includes("account")||t.includes("statement")) return QR["14"];
-  if ((t.includes("speak")||t.includes("talk")) && (t.includes("ridhor")||t.includes("owner"))) return QR["13"];
+  if (t.includes("account")||t.includes("statement")) return QR["12"];
+  if ((t.includes("speak")||t.includes("talk")) && (t.includes("ridhor")||t.includes("owner"))) return QR["11"];
   if (t.includes("bulk")||t.includes("discount")) return "Bulk discounts up to 10%. WhatsApp Ridhor: 076 760 4350.";
   if (t.includes("truck")||t.includes("bakkie")) return "Truck blasting: R5,000-R7,500 excl VAT.";
   if (t.includes("blast")||t.includes("sandblast")) return "Blasting: R8-R12/kg. Truck: R5,000-R7,500.";
@@ -386,10 +386,14 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   }
 
   if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("SOLOMON COATINGS - Since 1988")) {
+    normal = normal + "\n\nType *menu* to go back to LIST.";
+  }
   return normal;
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
