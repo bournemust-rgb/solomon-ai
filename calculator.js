@@ -56,8 +56,9 @@ function estimatePrice(text, randomAffirmation) {
   }
 
   // ===== ITEM 1: SECURITY & FENCING (per kg) =====
-  if (t.includes("kg") || t.includes("gate") || t.includes("burglar") || t.includes("fence") || t.includes("railing") || t.includes("balustrade") || t.includes("palisade") || t.includes("clear view") || t.includes("sliding") || t.includes("spike") || t.includes("mesh panel")) {
+  if (t.includes("kg") || t.includes("gate") || t.includes("burglar") || t.includes("fence") || t.includes("fencing") || t.includes("railing") || t.includes("balustrade") || t.includes("palisade") || t.includes("clear view") || t.includes("sliding") || t.includes("spike") || t.includes("mesh panel") || t.includes("security")) {
     var kgMatch = t.match(/(\d+)\s*kg/);
+    if (!kgMatch && !t.match(/(\d+)/)) return "Got it - security/fencing. I need:\n\n1. Rough weight? (e.g. 20kg, 50kg)\n2. What colour? (Black/White = R16/kg, premium = R17-20/kg)\n\nExample: fence 20kg charcoal";
     var kg = kgMatch ? parseInt(kgMatch[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 10);
     var isPremium = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("silver")||t.includes("blue")||t.includes("red")||t.includes("green")||t.includes("yellow")||t.includes("colour")||t.includes("color"));
     var rateLow = isPremium ? 17 : 16, rateHigh = isPremium ? 20 : 16;
@@ -87,4 +88,5 @@ function estimatePrice(text, randomAffirmation) {
 }
 
 module.exports = { getOrderRef, estimatePrice };
+
 
