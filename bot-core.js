@@ -337,60 +337,6 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return msg;
   }
 
-
-  if (flow.state === "sheet_asking_colour") {
-    var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|orange|purple|silver|premium|colour|color|custom|ral/.test(t);
-    var isBW = /black|white|bw|standard|matt|matte|satin/.test(t);
-    if (!isPrem && !isBW) return "Please reply: BLACK/WHITE (R175-R250/sqm) or PREMIUM colour (charcoal, metallic, green, yellow, etc. R251-R350/sqm)";
-    flow.sheetColour = isPrem ? "premium" : "standard";
-    flow.sheetRateLow = isPrem ? 251 : 175;
-    flow.sheetRateHigh = isPrem ? 350 : 250;
-    flow.state = "sheet_asking_width";
-    session.flow = flow;
-    await saveSession(from, session);
-    return "Got it - " + (isPrem ? "Premium" : "Black/White") + " (R" + flow.sheetRateLow + "-R" + flow.sheetRateHigh + "/sqm). What is the WIDTH in meters? (e.g. 2)";
-  }
-
-  if (flow.state === "sheet_asking_width") {
-    var w = t.match(/(\d+\.?\d*)/);
-    if (!w) return "Please give me the width in meters. e.g. 2 or 1.5";
-    flow.sheetWidth = parseFloat(w[1]);
-    flow.state = "sheet_asking_height";
-    session.flow = flow;
-    await saveSession(from, session);
-    return "Got it - " + flow.sheetWidth + "m wide. What is the HEIGHT in meters? (e.g. 1.5)";
-  }
-
-  if (flow.state === "sheet_asking_height") {
-    var h = t.match(/(\d+\.?\d*)/);
-    if (!h) return "Please give me the height in meters. e.g. 1.5 or 2";
-    flow.sheetHeight = parseFloat(h[1]);
-    flow.state = "sheet_asking_sides";
-    session.flow = flow;
-    await saveSession(from, session);
-    return "Got it - " + flow.sheetHeight + "m high. Do you need ONE SIDE or BOTH SIDES coated?\n\nReply: 1 (one side) or 2 (both sides)";
-  }
-
-  if (flow.state === "sheet_asking_sides") {
-    var sides = t.match(/(\d+)/);
-    var sideCount = sides ? parseInt(sides[1]) : null;
-    if (t.includes("one") || t.includes("single") || sideCount === 1) { sideCount = 1; }
-    else if (t.includes("both") || t.includes("two") || t.includes("double") || sideCount === 2) { sideCount = 2; }
-    if (!sideCount || (sideCount !== 1 && sideCount !== 2)) return "Please reply: 1 (one side only) or 2 (both sides)";
-    var area = flow.sheetWidth * flow.sheetHeight * sideCount;
-    var rateLow = flow.sheetRateLow, rateHigh = flow.sheetRateHigh;
-    var totalLow = Math.round(area * rateLow);
-    var totalHigh = Math.round(area * rateHigh);
-    var vatLow = Math.round(totalLow * 0.15);
-    var vatHigh = Math.round(totalHigh * 0.15);
-    var ref = getOrderRef();
-    var colourLabel = flow.sheetColour === "premium" ? "Premium" : "Standard Black/White";
-    var sideLabel = sideCount === 1 ? "one side" : "both sides";
-    flow = { state: "idle" };
-    session.flow = flow;
-    await saveSession(from, session);
-    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\nSize: " + flow.sheetWidth + "m x " + flow.sheetHeight + "m = " + (flow.sheetWidth * flow.sheetHeight) + " sqm per side\nSides: " + sideLabel + " (" + sideCount + ")\nTotal area: " + area + " sqm\nColour: " + colourLabel + " (R" + rateLow + "-R" + rateHigh + "/sqm)\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\nAll prices are estimates. Final price from Ridhor: 076 760 4350";
-  }
   if (flow.state === "idle" && flow.awaitingBooking && /^(yes|book|ok|sure)$/.test(t)) {
     flow.awaitingBooking = false;
     session.flow = flow;
@@ -438,18 +384,16 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     await saveSession(from, session);
     return "Sure! Which area/town? e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD";
   }
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with") && !normal.includes("SOLOMON COATINGS - Since") && !normal.includes("Or just tell me what you need priced") && !normal.includes("Type *menu*")) {
+    normal = normal + "\n\nType *menu* to go back to LIST.";
+  }
 
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("SOLOMON COATINGS - Since 1988")) {
-    normal = normal + "\n\nType *menu* to go back to LIST.";
-  }
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("11.Review") && !normal.includes("12.Callback") && !normal.includes("Or just tell me what you need priced") && !normal.includes("1.Pricing")) {
-    normal = normal + "\n\nType *menu* to go back to LIST.";
-  }
+
   return normal;
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
