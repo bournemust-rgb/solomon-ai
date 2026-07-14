@@ -4,6 +4,7 @@
 var delivery = null;
 try {
   delivery = require('./delivery');
+var { detectCategory, startQuoteFlow, handleQuoteFlowState, handleAutoPart } = require("./options/quote_flow.js");
 } catch (e) {
   console.warn("[bot-core] delivery.js not found or broken. Delivery flow will be limited.");
 }
@@ -288,12 +289,28 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
   }
 
   // Gate flow trigger: catches any mention of gate/fence/security if no weight given
-var hasWeight = /\d+\s*kg/.test(t) || /\d+\s*kilo/.test(t);
+var cat = detectCategory(text);
+  if (cat && flow.state === "idle") {
+    if (cat === "auto") {
+      var autoResult = handleAutoPart(text);
+      if (autoResult) return autoResult;
+    } else {
+      var startResult = await startQuoteFlow(cat, from, session, saveSession);
+      if (startResult) return startResult;
+    }
+  }
+
+  var hasWeight = /\d+\s*kg/.test(t) || /\d+\s*kilo/.test(t);
 if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.includes("security")) && !hasWeight) {
     flow = { state: "asked_condition", product: "gate", rustSurcharge: false };
     session.flow = flow;
     await saveSession(from, session);
     return "Got it — gate. What condition? Reply: CLEAN, LIGHT RUST, or BADLY RUSTED.";
+  }
+
+  if (flow.state && flow.state.startsWith("sheet_") || flow.state && flow.state.startsWith("security_")) {
+    var quoteResult = await handleQuoteFlowState(flow, text, from, session, saveSession);
+    if (quoteResult) return quoteResult;
   }
 
   if (flow.state === "asked_condition") {
@@ -451,6 +468,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
