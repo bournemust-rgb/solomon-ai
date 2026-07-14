@@ -4,6 +4,7 @@
 var delivery = null;
 try {
   delivery = require('./delivery');
+var { estimatePrice } = require("./calculator");
 } catch (e) {
   console.warn("[bot-core] delivery.js not found or broken. Delivery flow will be limited.");
 }
@@ -393,6 +394,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
