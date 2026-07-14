@@ -389,13 +389,14 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("SOLOMON COATINGS - Since 1988")) {
     normal = normal + "\n\nType *menu* to go back to LIST.";
   }
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("11.Review") && !normal.includes("Or just tell me what you need priced")) {
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("11.Review") && !normal.includes("12.Callback") && !normal.includes("Or just tell me what you need priced") && !normal.includes("1.Pricing")) {
     normal = normal + "\n\nType *menu* to go back to LIST.";
   }
   return normal;
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
