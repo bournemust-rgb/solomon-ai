@@ -46,7 +46,8 @@ function estimatePrice(text, randomAffirmation) {
   // ===== ITEM 2: SHEET METAL =====
   if (t.includes("sheet") || t.includes("sqm") || t.includes("mesh") || t.includes("plate") || t.includes("panel")) {
     var sqmMatch = t.match(/(\d+)\s*sqm/);
-    var sqm = sqmMatch ? parseInt(sqmMatch[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 5);
+    var sqm = sqmMatch ? parseInt(sqmMatch[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : null);
+    if (!sqm) return "Got it - sheet metal. I need a few details:\n\n1. What colour? (Black/White = standard rate, or premium colour?)\n2. What size? Give me the width and height in meters, or total sqm.\n\nExample: sheet metal 10sqm black";
     var sp = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("colour")||t.includes("color"));
     var sl = sp ? 251 : 175, sh = sp ? 350 : 250;
     var stl = sqm * sl, sth = sqm * sh;
@@ -86,3 +87,4 @@ function estimatePrice(text, randomAffirmation) {
 }
 
 module.exports = { getOrderRef, estimatePrice };
+
