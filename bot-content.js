@@ -3,7 +3,7 @@
 // ============================================
 
 function getSocialsResponse(FACEBOOK, TIKTOK) {
-  return "🌐 FOLLOW SOLOMON COATINGS!\n\n📱 Facebook\n" + FACEBOOK + "\n\n🎵 TikTok\n" + TIKTOK + "\n\n🌐 Website\nhttps://solomoncoatings.co.za\n\nSee our latest projects, before/after photos, and coating tips!\n\nType *menu* to go back.";
+  return "🌐 FOLLOW SOLOMON COATINGS!\n\n📱 Facebook\n" + FACEBOOK + "\n\n🎵 TikTok\n" + TIKTOK + "\n\n🌐 Website\nhttps://solomoncoatings.co.za\n\nSee our latest projects, before/after photos, and coating tips!";
 }
 
 var GALLERY_COLORS = [
@@ -42,7 +42,7 @@ function getGalleryMenu(pageNumber) {
   }
   if (pageNumber === 1 && totalPages > 1) menu += "\n➡️ Type *S2* for page 2.";
   else if (pageNumber === 2 && totalPages > 2) menu += "\n➡️ Type *S3* for page 3.";
-  menu += "\n\n📌 Reply with *C* + number (e.g., *C1* for Red)\n\n🔗 View full gallery:\nhttps://solomon-ai-izyb.onrender.com/gallery.html\n\nType *menu* to go back.";
+  menu += "\n\n📌 Reply with *C* + number (e.g., *C1* for Red)\n\n🔗 View full gallery:\nhttps://solomon-ai-izyb.onrender.com/gallery.html";
   return menu;
 }
 
@@ -53,24 +53,24 @@ function getColorResponse(colorId) {
   for (var i = 0; i < category.images.length; i++) {
     msg += "📸 Example " + (i + 1) + ":\n" + category.images[i] + "\n\n";
   }
-  msg += "Want this colour? Type: quote 20kg gate\n\nType *menu* to go back.";
+  msg += "Want this colour? Type: quote 20kg gate";
   return msg;
 }
 
 function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL) {
   var QR = {
     "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Review\n12.Callback\n13.Technical Support\n14.Accounts\n15.TPS Wisdom\n\nOr just tell me what you need priced.",
-    "pricing": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350\n\nType *menu* to go back.",
-    "colours": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Gloss\n- White: Matt / Gloss\n- Brown: Matt\n- Bronze: Matt\n- Dark Grey: Matte\n- Light Grey: Matt\n- Charcoal: Matt / Gloss\n- Red: Standard\n- Yellow: Standard\n- Orange: Standard\n- Green: Standard\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350\n\nType *menu* to go back.",
+    "pricing": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
+    "colours": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Gloss\n- White: Matt / Gloss\n- Brown: Matt\n- Bronze: Matt\n- Dark Grey: Matte\n- Light Grey: Matt\n- Charcoal: Matt / Gloss\n- Red: Standard\n- Yellow: Standard\n- Orange: Standard\n- Green: Standard\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
     "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
     "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
-    "1": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350\n\nType *menu* to go back.",
-    "2": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Satin \n- White: Matt / Satin \n- Brown: Satin\n- Bronze: Matt\n- Dark Grey: Gloss\n- Light Grey: Satin\n- Charcoal: Matt / Gloss\n- Red: Gloss\n- Yellow: Gloss\n- Orange: Satin\n- Green: Gloss\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350\n\nType *menu* to go back.",
+    "1": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
+    "2": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Satin \n- White: Matt / Satin \n- Brown: Satin\n- Bronze: Matt\n- Dark Grey: Gloss\n- Light Grey: Satin\n- Charcoal: Matt / Gloss\n- Red: Gloss\n- Yellow: Gloss\n- Orange: Satin\n- Green: Gloss\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
     "3": "Send: quote 20kg gate charcoal | quote 4 rims metallic | quote 10sqm sheet black | quote 20kg blasting only",
     "4": "TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
     "5": "BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
     "7": "BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
-    "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "\n\nType *menu* to go back.",
+    "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "",
     "9": "Type *gallery* to see 20+ colour examples with photos!",
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
     "11": "REVIEW US\n" + GOOGLE_REVIEW,
@@ -320,6 +320,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 

@@ -43,7 +43,7 @@ function getGalleryList(page) {
   }
   msg += "\nReply with a number to see photos.\n";
   if (page === 1) msg += "Type *S2* for page 2.\n"; if (page === 2) msg += "Type *S3* for page 3.\n";
-  msg += "\nFull gallery: https://solomon-ai-izyb.onrender.com/gallery.html\n\nType *menu* to go back.";
+  msg += "\nFull gallery: https://solomon-ai-izyb.onrender.com/gallery.html";
   return msg;
 }
 
@@ -52,7 +52,7 @@ function getColorByIndex(index) {
   if (index >= 1 && index <= keys.length) {
     var key = keys[index - 1];
     var c = GALLERY[key];
-    return c.name + " - " + c.description + "\n\n" + c.images.join("\n") + "\n\nType *menu* to go back.";
+    return c.name + " - " + c.description + "\n\n" + c.images.join("\n") + "";
   }
   return null;
 }
@@ -69,6 +69,7 @@ function searchGallery(text) {
 }
 
 module.exports = { GALLERY, getGalleryList, getColorByIndex, searchGallery };
+
 
 
 
