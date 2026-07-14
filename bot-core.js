@@ -350,8 +350,8 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   }
 
   if (flow.state === "sheet_asking_colour") {
-    var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|premium|colour|color/.test(t);
-    var isBW = /black|white|bw|standard/.test(t);
+    var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|orange|purple|silver|premium|colour|color|custom|ral/.test(t);
+    var isBW = /black|white|bw|standard|matt|matte|satin/.test(t);
     if (!isPrem && !isBW) return "Please reply: BLACK/WHITE or PREMIUM (charcoal, metallic, etc.)";
     flow.sheetColour = isPrem ? "premium" : "standard";
     flow.state = "sheet_asking_width";
@@ -505,6 +505,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
+
 
 
 
