@@ -75,7 +75,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
 
     "11": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: infosc@mweb.co.za",
-    "12": "📊 ACCOUNTS & INVOICES\n\nFor invoices, statements, or payment queries:\n📧 Email: infosc@mweb.co.za\n📞 Phone: 076 760 4350\n\nPlease include your reference number if you have one.",
+    "12": "📊 ACCOUNTS & INVOICES\n\nFor invoices, statements, or payment queries:\n📧 Email: populier@mweb.co.za\n📞 Phone: 021 905 2912\n📧 Quotes: infosc@mweb.co.za\n\nPlease include your reference number if you have one.",
     "13": "💡 TPS DAILY WISDOM\n\n\"Quality isnt expensive, its priceless.\"\n\nAt Solomon Coatings, we believe in doing things right the first time. Since 1988, weve built our reputation on quality workmanship.\n\nNeed advice? Call Ridhor: 076 760 4350",
     "braai": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
     "bbq": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
@@ -319,6 +319,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 
