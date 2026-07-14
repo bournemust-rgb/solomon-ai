@@ -180,6 +180,92 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("weekend")||t.includes("saturday")||t.includes("sunday")) return "Closed weekends. Mon-Thurs 8-4:45, Fri 8-2:45.";
   if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
 
+
+  // ===== EXPANDED FAQ KEYWORDS (matches inside sentences) =====
+  if (t.includes("braai") || t.includes("bbq") || t.includes("barbecue") || t.includes("grill")) return "Ja my bru, we can coat braai stands and grills! As long as it's metal. High-heat powder available. Send a photo on WhatsApp. 076 760 4350";
+  if (t.includes("aluminium") || t.includes("aluminum") || t.includes("alloy")) return "Ja, we coat aluminium! Needs proper etching first. Bring it through or send a photo. 076 760 4350";
+  if (t.includes("anodizing") || t.includes("anodising") || t.includes("galvanizing") || t.includes("galvanising")) return "We don't do wet paint, anodizing, or galvanizing, my bru. Powder coating only - but it's tougher than all of them!";
+  if (t.includes("wet paint") || t.includes("spray paint")) return "We don't do wet paint or spray paint. Powder coating only - tougher finish, lasts 15-20 years.";
+  if (t.includes("durability") || t.includes("lifespan") || t.includes("last how")) return "Powder coating lasts 15-20 years outdoors, 30+ indoors. Chip-resistant, UV-stable, doesn't fade like wet paint.";
+  if (t.includes("chip") || t.includes("scratch") || t.includes("repair") || t.includes("touch up")) return "Powder coat is chip-resistant but not chip-proof. Small scratches can be touched up. Big damage needs re-blast and re-coat.";
+  if (t.includes("colour") || t.includes("color") || t.includes("ral") || t.includes("colour match")) return "20+ colours including RAL matches! Type *9* for our GALLERY or WhatsApp Ridhor for custom colours. 076 760 4350";
+  if (t.includes("temperature") || t.includes("heat resistant") || t.includes("high heat")) return "Standard powder coat handles up to 180C. High-heat powder available for braais, fire pits, exhausts. 076 760 4350";
+  if (t.includes("thickness") || t.includes("micron") || t.includes("how thick")) return "Standard coat is 60-80 microns. We can go thicker for industrial applications. Tell us your spec.";
+  if (t.includes("prep") || t.includes("preparation") || t.includes("strip") || t.includes("remove old paint")) return "Prep is 90% of the job! We shotblast first (R8-R12/kg) to remove rust and old paint. Then coat. No shortcuts.";
+  if (t.includes("warranty") || t.includes("guarantee") || t.includes("guaranteed")) return "We guarantee proper adhesion and coverage. If it peels due to our prep, we redo it. No coastal warranties though.";
+  if (t.includes("lead time") || t.includes("how quick")) return "Standard turnaround 3-5 working days. Big jobs or custom colours might take longer. Loadshedding can delay things.";
+  if (t.includes("inspection") || t.includes("quality") || t.includes("check")) return "Every job inspected before collection. Not happy? Tell us before you leave - we'll fix it.";
+  if (t.includes("transport") || t.includes("courier") || t.includes("ship") || t.includes("send it")) return "We can arrange courier for out-of-town jobs. Or collect from 5 Jakaranda St, Blackheath, Cape Town.";
+  if (t.includes("outdoor") || t.includes("outside") || t.includes("exterior") || t.includes("weather")) return "Powder coating is perfect for outdoor use! UV-stable, rain-resistant, won't peel. Gates, fences, furniture - all good.";
+  if (t.includes("indoor") || t.includes("inside") || t.includes("interior")) return "Ja, we coat indoor stuff too - furniture, fixtures, bike frames. Any metal that needs a tough finish.";
+  if (t.includes("car part") || t.includes("automotive") || t.includes("engine")) return "We coat car parts, rims, bumpers, bike frames. High-heat parts need special powder. 076 760 4350";
+  if (t.includes("exhaust") || t.includes("manifold") || t.includes("header")) return "Exhausts and manifolds need high-temp powder. We've done plenty. Bring it in. 076 760 4350";
+  if (t.includes("motorcycle") || t.includes("bike frame") || t.includes("bicycle")) return "Bike frames, motorcycle parts, rims - we coat them all! Send a photo. 076 760 4350";
+  if (t.includes("fence") || t.includes("palisade") || t.includes("balustrade") || t.includes("railing")) return "Fences, palisades, balustrades, railings - we coat them all! Price depends on size. Send photos for quote.";
+  if (t.includes("furniture") || t.includes("table") || t.includes("chair") || t.includes("patio")) return "Outdoor furniture, tables, chairs, patio sets - we coat them! Must be metal. Send photos for quote.";
+  if (t.includes("tool") || t.includes("machinery") || t.includes("equipment") || t.includes("industrial")) return "Tools, machinery, industrial equipment - we coat them all. Bring it through. 076 760 4350";
+  if (t.includes("food safe") || t.includes("kitchen") || t.includes("food grade")) return "We have food-safe powder coatings for kitchen equipment. Tell Ridhor what you need. 076 760 4350";
+  if (t.includes("diy") || t.includes("do it myself") || t.includes("home") || t.includes("garage")) return "DIY powder coating is tricky - need blast cabinet, spray booth, oven. Bring it to us. Proper equipment, proper result.";
+  if (t.includes("eco") || t.includes("environment") || t.includes("green") || t.includes("voc")) return "Powder coating is eco-friendly! No solvents, no VOCs, minimal waste. Overspray is recycled. Greener than wet paint.";
+  if (t.includes("electrostatic") || t.includes("how it works") || t.includes("process")) return "We blast, spray charged powder, then bake at 180-200C. The powder melts into a tough, even skin. Lasts 15-20 years!";
+  if (t.includes("sandblast") || t.includes("grit blast")) return "We do shotblasting - cleaner, more controlled. R8-R12/kg. Perfect prep for coating.";
+  if (t.includes("masking") || t.includes("thread") || t.includes("bolt") || t.includes("hole")) return "We mask threads, holes, and mating surfaces. Tell us what needs to stay clean.";
+  if (t.includes("sample") || t.includes("test piece") || t.includes("swatch")) return "Test pieces and colour swatches available. Small fee applies. WhatsApp Ridhor. 076 760 4350";
+  if (t.includes("bee") || t.includes("b-bbee") || t.includes("empowerment")) return "Let me get Ridhor on this - WhatsApp him on 076 760 4350.";
+  if (t.includes("eft") || t.includes("card") || t.includes("credit card") || t.includes("paypal")) return "COD only, my bru. Cash on collection. No EFT, no cards. Payment before release.";
+  if (t.includes("quote") || t.includes("estimate") || t.includes("price")) return "Type *3* for a formal quote, or tell me what you need priced - gates, rims, steel, shotblasting, trucks.";
+  if (t.includes("location") || t.includes("address") || t.includes("where") || t.includes("direction")) return "5 Jakaranda Street, Blackheath, Cape Town. Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM.";
+  if (t.includes("hours") || t.includes("open") || t.includes("close") || t.includes("time")) return "Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM. Closed weekends and public holidays.";
+  if (t.includes("delivery") || t.includes("collect") || t.includes("fetch")) return "Type *6* for delivery options. R150 Cape Town metro. Free collection. 7% daily storage after 7 days.";
+  if (t.includes("storage") || t.includes("leave") || t.includes("hold") || t.includes("keep")) return "Free storage for 7 days. After that, 7% of the job value per day. Collect on time!";
+  if (t.includes("review") || t.includes("google") || t.includes("rating") || t.includes("feedback")) return "Type *11* to leave a Google review! Helps other customers find us. Much appreciated!";
+  if (t.includes("social") || t.includes("facebook") || t.includes("instagram") || t.includes("tiktok")) return "Type *10* to follow us on Facebook and TikTok. Before/after shots posted regularly!";
+  if (t.includes("tip") || t.includes("advice") || t.includes("recommend")) return "TPS Wisdom: Prep is 90% of the job. The coating is the easy part. Type *15* for more Truth Bombs.";
+  if (t.includes("history") || t.includes("since when") || t.includes("experience")) return "Solomon Coatings since 1988, my bru. One compressor and a dream. Now Cape Town's powder coating legends.";
+  if (t.includes("owner") || t.includes("ridhor") || t.includes("solomon")) return "Ridhor runs the show. WhatsApp him directly: 076 760 4350. Coating since the 90s.";
+  if (t.includes("job") || t.includes("hiring") || t.includes("vacancy") || t.includes("career")) return "We're always looking for good people! Send CV to populier@mweb.co.za or WhatsApp. 076 760 4350";
+  if (t.includes("apprentice") || t.includes("student") || t.includes("training") || t.includes("learn")) return "We take apprentices for practical training. WhatsApp Ridhor to discuss. 076 760 4350";
+  if (t.includes("maintenance") || t.includes("clean") || t.includes("wash") || t.includes("care")) return "Just wash with soap and water. No wax needed. No abrasive cleaners. Stays fresh for years.";
+  if (t.includes("uv") || t.includes("sun") || t.includes("fade") || t.includes("discolour")) return "Our powders are UV-stable. Won't fade or chalk in the sun. Gates stay looking fresh.";
+  if (t.includes("salt") || t.includes("sea") || t.includes("marine") || t.includes("boat")) return "Coastal areas need extra prep - salt is sneaky. Corrosion-resistant primers used. Tell Ridhor. 076 760 4350";
+  if (t.includes("oil") || t.includes("grease") || t.includes("petrol") || t.includes("diesel") || t.includes("fuel")) return "Petrol, diesel, oil don't affect powder coating. But clean spills quickly - solvents can soften it over time.";
+  if (t.includes("acid") || t.includes("chemical") || t.includes("solvent") || t.includes("spill")) return "Acids and strong solvents can damage powder coat. Wipe spills immediately.";
+  if (t.includes("dent") || t.includes("bend") || t.includes("warp") || t.includes("damage")) return "We don't do panel beating or welding. Fix dents first, then bring to us for coating.";
+  if (t.includes("weld") || t.includes("fabrication") || t.includes("steel work") || t.includes("metal work")) return "We don't do welding - we coat what you bring. We know good fabricators. Ask Ridhor.";
+  if (t.includes("glass") || t.includes("wood") || t.includes("plastic") || t.includes("rubber")) return "Powder coating is for metal only. No glass, wood, plastic, or rubber. Bring us metal!";
+  if (t.includes("chrome") || t.includes("polish") || t.includes("mirror") || t.includes("shiny")) return "We don't do chrome or mirror finishes. Powder gives smooth colour - matte, satin, or gloss.";
+  if (t.includes("textured") || t.includes("wrinkle") || t.includes("hammer")) return "Ja, we do textured finishes! Wrinkle, hammer tone, vein patterns - all available. 076 760 4350";
+  if (t.includes("metallic") || t.includes("pearl") || t.includes("candy") || t.includes("sparkle")) return "Metallic, pearl, candy colours available! Tell Ridhor your dream colour. 076 760 4350";
+  if (t.includes("gloss") || t.includes("matte") || t.includes("satin") || t.includes("finish")) return "Gloss, satin, matte, textured - your choice! Gloss is shiny, matte is modern, satin is middle ground.";
+  if (t.includes("primer") || t.includes("undercoat") || t.includes("base") || t.includes("sealer")) return "We use zinc-rich primer for steel, etch primer for aluminium. Included in prep price.";
+  if (t.includes("galvanized") || t.includes("galvanised") || t.includes("hot dip") || t.includes("zinc")) return "We can coat over galvanizing - needs special prep. Zinc can outgas. Tell Ridhor. 076 760 4350";
+  if (t.includes("stainless") || t.includes("inox") || t.includes("304") || t.includes("316")) return "Stainless steel can be coated - needs special etching to stick. We know the process. 076 760 4350";
+  if (t.includes("cast") || t.includes("iron") || t.includes("wrought")) return "Cast iron and cast aluminium - we coat them! Need extra cleaning for porous castings. 076 760 4350";
+  if (t.includes("old") || t.includes("restore") || t.includes("refurbish") || t.includes("vintage") || t.includes("classic")) return "Restoration is our favourite! Old gates, vintage furniture, classic car parts - we bring them back. Send photos.";
+  if (t.includes("new") || t.includes("fresh") || t.includes("raw") || t.includes("virgin")) return "New steel needs degreasing and light blasting before coating. We handle all prep. Just bring it.";
+  if (t.includes("second hand") || t.includes("used") || t.includes("scrap") || t.includes("pre-owned")) return "Second-hand stuff is fine - we blast off old paint and rust, then coat. As long as it's metal.";
+  if (t.includes("sheet") || t.includes("plate") || t.includes("panel") || t.includes("flat")) return "Sheet metal, plates, panels - R175-R350/sqm depending on size and colour. Send specs.";
+  if (t.includes("tube") || t.includes("pipe") || t.includes("round") || t.includes("circular")) return "Tubes, pipes, round bars - no problem. We have jigs to hold them while coating.";
+  if (t.includes("wire") || t.includes("mesh") || t.includes("grid") || t.includes("screen")) return "Wire mesh, grids, screens - we coat them! Extra care needed for full coverage. Tell Ridhor.";
+  if (t.includes("spring") || t.includes("coil") || t.includes("flexible")) return "Springs and flexible parts tricky - powder can crack when flexing. Tell Ridhor the application.";
+  if (t.includes("sharp") || t.includes("edge") || t.includes("point") || t.includes("corner")) return "Sharp edges need extra powder for full coverage. Standard practice - we build up edges.";
+  if (t.includes("logo") || t.includes("brand") || t.includes("name") || t.includes("text")) return "We can mask logos and text, or coat over them. Custom branding - speak to Ridhor. 076 760 4350";
+  if (t.includes("sign") || t.includes("display") || t.includes("stand") || t.includes("banner")) return "Signs, displays, stands - we coat metal frames and backing. For printed signs, frame only.";
+  if (t.includes("gym") || t.includes("fitness") || t.includes("sport")) return "Gym equipment, sports gear - tough finish for tough use. Send photos. 076 760 4350";
+  if (t.includes("playground") || t.includes("park") || t.includes("school")) return "Playground equipment, school furniture - safe, durable, colourful. Tell us your spec.";
+  if (t.includes("farm") || t.includes("tractor") || t.includes("agricultural") || t.includes("implement")) return "Farm equipment, tractor parts - tough enough for the veld. Send photos. 076 760 4350";
+  if (t.includes("mining") || t.includes("heavy") || t.includes("plant")) return "Mining equipment, heavy plant - corrosion-resistant finishes. Tell Ridhor. 076 760 4350";
+  if (t.includes("art") || t.includes("sculpture") || t.includes("decorative") || t.includes("design")) return "Art pieces, sculptures, decorative metal - we love these! Bring your vision. Send photos.";
+  if (t.includes("gift") || t.includes("present") || t.includes("custom") || t.includes("personalised")) return "Custom gifts, personalised items - nameplates, keyrings. Tell us your idea. 076 760 4350";
+  if (t.includes("prototype") || t.includes("one-off") || t.includes("single") || t.includes("unique")) return "Prototypes and one-offs welcome! Bring your idea. 076 760 4350";
+  if (t.includes("emergency") || t.includes("urgent") || t.includes("rush") || t.includes("asap")) return "Rush jobs possible depending on queue. Extra charge might apply. WhatsApp Ridhor. 076 760 4350";
+  if (t.includes("thank") || t.includes("thanks") || t.includes("dankie")) return "Only a pleasure! Thanks for choosing Solomon Coatings since 1988.";
+  if (t.includes("bye") || t.includes("cheers") || t.includes("later")) return "Cheers! Sien jou later. Bring that item through when you're ready.";
+  if (t.includes("referral") || t.includes("friend") || t.includes("family") || t.includes("mate")) return "We love referrals! Tell your mates about Solomon Coatings. Word of mouth since 1988!";
+  if (t.includes("bad") && t.includes("experience")) return "Sorry to hear that! WhatsApp Ridhor directly on 076 760 4350 - he'll make it right.";
+  if (t.includes("compare") || t.includes("vs") || t.includes("versus") || t.includes("difference")) return "Powder coating vs wet paint: Powder is tougher, lasts 15-20 years, no solvents, eco-friendly. Wet paint chips and fades.";
+  if (t.includes("load shedding") || t.includes("loadshedding") || t.includes("eskom") || t.includes("power")) return "Loadshedding can delay us. Stage 4+ adds about a day. We run backup where possible. We'll keep you posted!";
+
   return randomFallback() + "\n\nType *menu* to go back to LIST.";
 }
 
@@ -303,6 +389,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
