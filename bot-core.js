@@ -1,4 +1,5 @@
-﻿// ============================================
+﻿var { estimatePrice } = require("./calculator");
+// ============================================
 // BOT-CORE: Calculator, Quotes, SmartMatch, Flows
 // ============================================
 var delivery = null;
@@ -421,6 +422,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
+
 
 
 
