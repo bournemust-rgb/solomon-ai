@@ -349,6 +349,42 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return "Got it, " + kg + "kg. Colour? Black/White=R16/kg, Charcoal/metallic/custom=R17-R20/kg.";
   }
 
+  if (flow.state === "sheet_asking_colour") {
+    var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|premium|colour|color/.test(t);
+    var isBW = /black|white|bw|standard/.test(t);
+    if (!isPrem && !isBW) return "Please reply: BLACK/WHITE or PREMIUM (charcoal, metallic, etc.)";
+    flow.sheetColour = isPrem ? "premium" : "standard";
+    flow.state = "sheet_asking_width";
+    session.flow = flow;
+    await saveSession(from, session);
+    return "Got it - " + (isPrem ? "Premium" : "Black/White") + ". What is the WIDTH in meters? (e.g. 2)";
+  }
+
+  if (flow.state === "sheet_asking_width") {
+    var w = t.match(/(\d+)/);
+    if (!w) return "Please give me the width in meters. e.g. 2";
+    flow.sheetWidth = parseInt(w[1]);
+    flow.state = "sheet_asking_height";
+    session.flow = flow;
+    await saveSession(from, session);
+    return "Got it - " + flow.sheetWidth + "m wide. What is the HEIGHT in meters? (e.g. 1.5)";
+  }
+
+  if (flow.state === "sheet_asking_height") {
+    var h = t.match(/(\d+)/);
+    if (!h) return "Please give me the height in meters. e.g. 1.5";
+    flow.sheetHeight = parseInt(h[1]);
+    var sqm = flow.sheetWidth * flow.sheetHeight;
+    var isPrem = flow.sheetColour === "premium";
+    var rateLow = isPrem ? 251 : 175, rateHigh = isPrem ? 350 : 250;
+    var totalLow = sqm * rateLow, totalHigh = sqm * rateHigh;
+    var vatLow = Math.round(totalLow * 0.15), vatHigh = Math.round(totalHigh * 0.15);
+    flow = { state: "idle" };
+    session.flow = flow;
+    await saveSession(from, session);
+    return "SHEET METAL ESTIMATE - Ref: " + getOrderRef() + "\n\nSize: " + flow.sheetWidth + "m x " + flow.sheetHeight + "m = " + sqm + " sqm\nColour: " + (isPrem ? "Premium (R251-R350/sqm)" : "Standard B/W (R175-R250/sqm)") + "\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT: R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\nAll prices are estimates. Final price from Ridhor: 076 760 4350";
+  }
+
   if (flow.state === "asked_colour") {
     var isPremium = /charcoal|metallic|bronze|gold|red|blue|green|custom|ral/.test(t);
     var rate = isPremium ? 18 : 16;
@@ -469,6 +505,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
+
 
 
 
