@@ -285,7 +285,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("car part") || t.includes("automotive") || t.includes("engine")) return "We coat car parts, rims, bumpers, bike frames. High-heat parts need special powder. 076 760 4350";
   if (t.includes("exhaust") || t.includes("manifold") || t.includes("header")) return "Exhausts and manifolds need high-temp powder. We've done plenty. Bring it in. 076 760 4350";
   if (t.includes("motorcycle") || t.includes("bike frame") || t.includes("bicycle")) return "Bike frames, motorcycle parts, rims - we coat them all! Send a photo. 076 760 4350";
-  if (t.includes("fence") || t.includes("palisade") || t.includes("balustrade") || t.includes("railing")) return "Fences, palisades, balustrades, railings - we coat them all! Price depends on size. Send photos for quote.";
+  if ((t.includes("fence") || t.includes("palisade") || t.includes("balustrade") || t.includes("railing")) && !t.match(/\d/)) return "Fences, palisades, balustrades, railings - we coat them all! Tell me the weight and colour for a quote.\n\nExample: palisade 30kg black";
   if (t.includes("furniture") || t.includes("table") || t.includes("chair") || t.includes("patio")) return "Outdoor furniture, tables, chairs, patio sets - we coat them! Must be metal. Send photos for quote.";
   if (t.includes("tool") || t.includes("machinery") || t.includes("equipment") || t.includes("industrial")) return "Tools, machinery, industrial equipment - we coat them all. Bring it through. 076 760 4350";
   if (t.includes("food safe") || t.includes("kitchen") || t.includes("food grade")) return "We have food-safe powder coatings for kitchen equipment. Tell Ridhor what you need. 076 760 4350";
@@ -477,6 +477,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
