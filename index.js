@@ -89,7 +89,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
 
           if (afterHours) {
             var showClosed = Math.floor(Math.random() * 4) === 0;
-            if (showClosed) reply = "Our workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!\n\n" + reply;
+            if (showClosed) reply = reply + "\n\nOur workshop is closed (Mon-Thurs 8AM-4:45PM, Fri 8AM-2:45PM). But I can still help!";
             
           }
 
