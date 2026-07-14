@@ -135,6 +135,7 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
     
     var finalWidth = flow.sheetWidth;
     var finalHeight = flow.sheetHeight;
+    var area = finalWidth * finalHeight * sideCount;
     var rateLow = flow.sheetRateLow, rateHigh = flow.sheetRateHigh;
     var totalLow = Math.round(area * rateLow);
     var totalHigh = Math.round(area * rateHigh);
