@@ -119,6 +119,7 @@ body{background:#0f0f0f;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 <div class="reply-bar">
 <button class="attach-btn">+</button>
 <input type="text" class="reply-input" id="replyText" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendReply()">
+<button class="send-btn" onclick="getAiSuggest()" id="aiBtn" title="AI Suggestion" style="background:#444;color:#f90;font-size:14px;margin-right:8px;">AI</button>
 <button class="send-btn" onclick="sendReply()" id="sendBtn">&#x27a4;</button>
 </div>
 </div>
@@ -279,6 +280,34 @@ try{var date=new Date(d);return date.toLocaleDateString("en-ZA",{weekday:"short"
 }
 
 loadChats();
+
+function getAiSuggest() {
+  var input = document.getElementById("replyText");
+  var msg = input.value.trim();
+  if (!msg || !curPhone) return;
+  var btn = document.getElementById("aiBtn");
+  btn.disabled = true;
+  btn.textContent = "...";
+  fetch("/api/ai-suggest", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({phone: curPhone, message: msg})
+  }).then(function(r){return r.json()}).then(function(res){
+    btn.disabled = false;
+    btn.textContent = "AI";
+    if (res.suggestion) {
+      input.value = res.suggestion;
+      input.focus();
+    } else {
+      alert("AI: " + (res.error || "No suggestion"));
+    }
+  }).catch(function(){
+    btn.disabled = false;
+    btn.textContent = "AI";
+    alert("AI request failed");
+  });
+}
 </script>
 </body>
 </html>
+
