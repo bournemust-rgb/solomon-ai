@@ -94,9 +94,6 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           }
 
           // Append menu prompt to every reply (once)
-if (reply.indexOf("Type *menu* to go back") === -1) {
-  reply = reply + "\n\nType *menu* to go back to the main list.";
-}
 await sendMessage(from, reply);
 
           // --- Important event notifications to Ridhor ---
