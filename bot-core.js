@@ -420,7 +420,8 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   return normal;
 }
 
-module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
+
 
 
 
