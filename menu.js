@@ -1,6 +1,6 @@
 ﻿function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW) {
   return {
-    "menu":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. Colour Gallery (30+ photos)\n10. Socials (FB/TikTok/Web)\n11. Leave a review\n12. Book a callback\n13. Talk to Ridhor\n14. Account queries\n15. TPS Daily Wisdom\n\nOr just tell me what you need priced.",
+    "menu":"WHAT I CAN DO - pick a number:\n\n1. Pricing\n2. Colours\n3. Quote estimate\n4. Turnaround times\n5. Business hours\n6. Delivery & collection\n7. Blasting services\n8. T&Cs & warranties\n9. Colour Gallery (30+ photos)\n10. Socials (FB/TikTok/Web)\n11. Talk to Ridhor\n12. Account queries\n13. TPS Daily Wisdom\n\nOr just tell me what you need priced.",
     "pricing":"PRICING (excl VAT)\nRims: R1000-R1500/set\nSheet: R175-R350/sqm\nCoating: R16/kg B/W, R17-R20/kg premium\nBlasting: R8-R12/kg\nTruck: R5000-R7500\nMin: R173.99\n\nType *menu* to go back.",
     "colours":"COLOURS\nStandard: Black, White, Brown, Bronze, Charcoal: R175-R250/sqm\nHammered: R225+\nMetallic/Custom/RAL: R300+\n\nType *gallery* for 30+ colour photos!\n\nType *menu* to go back.",
     "hours":"Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.\n\nType *menu* to go back.",
@@ -28,3 +28,4 @@
   };
 }
 module.exports = { buildMenu };
+
