@@ -113,7 +113,7 @@ function estimatePrice(text) {
   return null;
 }
 
-async function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting) {
+function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting) {
   var t = text.toLowerCase().trim();
 
   if (/^(hi|hello|hey|howzit|good morning|good afternoon|good evening|morning|hola)$/.test(t)) {
@@ -180,8 +180,6 @@ async function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColor
   if (t.includes("weekend")||t.includes("saturday")||t.includes("sunday")) return "Closed weekends. Mon-Thurs 8-4:45, Fri 8-2:45.";
   if (t.includes("loadshedding")||t.includes("delay")) return "Timelines affected by loadshedding/weather.";
 
-  var aiResponse = await aiFallback(text, phone);
-  if (aiResponse) return aiResponse;
   return randomFallback() + "\n\nType *menu* to go back to LIST.";
 }
 
@@ -304,7 +302,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   return normal;
 }
 
-module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage, aiFallback };
+module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
 
 
 

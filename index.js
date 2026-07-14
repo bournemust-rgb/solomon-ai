@@ -7,8 +7,6 @@ var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
 var { randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage } = require("./bot-core");
-var { aiFallback } = require("./ai-fallback");
-var { aiFallback } = require("./ai-fallback");
 
 var app = express();
 app.use(express.static("public"));
@@ -29,9 +27,7 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var QR = buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL);
 
-var smartMatchFn = async function(text) {
-  var aiResp = await aiFallback(text, "unknown");
-  if (aiResp) return aiResp;
+var smartMatchFn = function(text) {
   return smartMatch(text, QR, function() { return getSocialsResponse(FACEBOOK, TIKTOK); }, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting);
 };
 
@@ -89,7 +85,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           if (!text) continue;
 
           var session = await getSession(from);
-          var reply = await handleMessage(text, from, session, smartMatchFn, aiFallback, QR, getOrderRef, saveSession);
+          var reply = await handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession);
 
           if (afterHours) {
             var showClosed = Math.floor(Math.random() * 4) === 0;
