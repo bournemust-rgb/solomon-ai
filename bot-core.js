@@ -1,6 +1,4 @@
-﻿var { estimatePrice } = require("./calculator");
-var { estimatePrice } = require("./calculator");
-// ============================================
+﻿// ============================================
 // BOT-CORE: Calculator, Quotes, SmartMatch, Flows
 // ============================================
 var delivery = null;
@@ -41,90 +39,6 @@ var TPS_QUOTES = [
   "TPS: RAL codes are suggestions. Real colour is in the oven.",
   "TPS: Since '88, one rule: treat every gate like it's your own driveway."
 ];
-const quoteState = new Map();
-
-function handleQuoteFlow(phone, text) {
-  if (!phone) return null;
-  const t = text.toLowerCase().trim();
-  const state = quoteState.get(phone);
-  
-  if (t === 'menu' || t === '0') { quoteState.delete(phone); return null; }
-  
-  if (!state && (t === '3' || t === 'quote')) {
-    quoteState.set(phone, { step: 'category' });
-    return "💰 NEED A QUOTE?\n\nWhat item do you need coated?\n\n1️⃣ Security / Fencing\n(gates, fences, balustrades, palisades, mesh, spikes, security gates, clear view, sliding gates)\n\n2️⃣ Sheet Metal\n\n3️⃣ Auto Parts\n(rims, tappet covers, intercoolers, bumpers, mouse bars, styling bars, nudge bars, bull bars)\n\nReply with the number or item name.\n\nType *menu* to cancel.";
-  }
-  
-  if (!state) return null;
-  
-  if (state.step === 'category') {
-    if (t.includes('1') || t.includes('security') || t.includes('fence') || t.includes('gate') || t.includes('balustrade') || t.includes('palisade') || t.includes('mesh') || t.includes('spike') || t.includes('clear view') || t.includes('sliding')) {
-      quoteState.set(phone, { step: 'sec_colour' });
-      return "🛡️ SECURITY / FENCING selected.\n\nWhat colour?\n• Black/White: R16/kg\n• Other colours: R17-20/kg\n\nReply with colour name.\n\nType *menu* to cancel.";
-    }
-    if (t.includes('2') || t.includes('sheet')) {
-      quoteState.set(phone, { step: 'sheet_colour' });
-      return "📋 SHEET METAL selected.\n\nWhat colour?\n• Standard: R175-250/sqm\n• Premium: R251-350/sqm\n\nReply with colour name.\n\nType *menu* to cancel.";
-    }
-    if (t.includes('3') || t.includes('auto') || t.includes('car') || t.includes('rim') || t.includes('tappet') || t.includes('intercooler') || t.includes('bumper') || t.includes('mouse') || t.includes('styling') || t.includes('nudge') || t.includes('bull')) {
-      quoteState.set(phone, { step: 'auto_part' });
-      return "🚗 AUTO PARTS selected.\n\nWhich part?\n• Rims (see pricing for sizes)\n• Tappet cover: R350 excl VAT\n• Intercooler: R550 excl VAT\n• Bumper / Mouse bar / Styling bar / Nudge bar / Bull bar: R650 excl VAT each\n\nReply with the part name.\n\nType *menu* to cancel.";
-    }
-    return "Please reply with 1, 2, or 3 (or the item name).\n\nType *menu* to cancel.";
-  }
-  
-  if (state.step === 'sec_colour') {
-    const isCheap = t.includes('black') || t.includes('white');
-    quoteState.set(phone, { step: 'sec_weight', colour: text, isCheap: isCheap });
-    return "Colour: " + text + "\nWhat weight in kg?\nReply: e.g. \"50kg\" or just \"50\"\n\nType *menu* to cancel.";
-  }
-  
-  if (state.step === 'sec_weight') {
-    const w = parseFloat(text.replace(/[^0-9.]/g, '')) || 0;
-    const rate = state.isCheap ? 16 : 18.5;
-    const total = w * rate;
-    quoteState.delete(phone);
-    return "📊 ESTIMATE\n\nItem: Security/Fencing\nColour: " + state.colour + "\nWeight: " + w + "kg\nRate: R" + rate + "/kg\n\nEstimated: R" + total.toFixed(2) + " excl VAT\n\n⚠️ This is an estimate. Final price will be confirmed by Ridhor.\n📞 076 760 4350\n\nType *menu* to go back to LIST.";
-  }
-  
-  if (state.step === 'sheet_colour') {
-    const isStandard = !['silver','gold','premium','metallic','pearl','candy'].some(p => t.includes(p));
-    quoteState.set(phone, { step: 'sheet_width', colour: text, isStandard: isStandard });
-    return "Colour: " + text + "\nWidth in metres?\nReply: e.g. \"1.5\" or \"2m\"\n\nType *menu* to cancel.";
-  }
-  
-  if (state.step === 'sheet_width') {
-    const width = parseFloat(text.replace(/[^0-9.]/g, '')) || 0;
-    quoteState.set(phone, { step: 'sheet_height', colour: state.colour, isStandard: state.isStandard, width: width });
-    return "Width: " + width + "m\nHeight in metres?\nReply: e.g. \"2\" or \"1.8m\"\n\nType *menu* to cancel.";
-  }
-  
-  if (state.step === 'sheet_height') {
-    const h = parseFloat(text.replace(/[^0-9.]/g, '')) || 0;
-    const area = (state.width || 0) * h;
-    const rate = state.isStandard ? 212.5 : 300;
-    const total = area * rate;
-    quoteState.delete(phone);
-    return "📊 ESTIMATE\n\nItem: Sheet Metal\nColour: " + state.colour + "\nSize: " + state.width + "m × " + h + "m = " + area.toFixed(2) + "sqm\nRate: R" + rate + "/sqm\n\nEstimated: R" + total.toFixed(2) + " excl VAT\n\n⚠️ This is an estimate. Final price will be confirmed by Ridhor.\n📞 076 760 4350\n\nType *menu* to go back to LIST.";
-  }
-  
-  if (state.step === 'auto_part') {
-    if (t.includes('rim')) {
-      quoteState.delete(phone);
-      return "🛞 RIMS PRICING\n\n• 10-15 inch (Black/White): R1,000-1,500/set\n• 10-15 inch (Other): R1,300-1,700/set\n• 16-18 inch (Black/White): R1,500-1,800/set\n• 16-18 inch (Other): R1,700-2,200/set\n\n⚠️ This is an estimate. Final price will be confirmed by Ridhor.\n📞 076 760 4350\n\nType *menu* to go back to LIST.";
-    }
-    let price = 0, part = '';
-    if (t.includes('tappet')) { price = 350; part = 'Tappet cover'; }
-    else if (t.includes('intercooler')) { price = 550; part = 'Intercooler'; }
-    else if (t.includes('bumper') || t.includes('mouse') || t.includes('styling') || t.includes('nudge') || t.includes('bull')) { price = 650; part = text; }
-    else { return "Please reply with the part name.\n\nType *menu* to cancel."; }
-    quoteState.delete(phone);
-    return "📊 ESTIMATE\n\nItem: " + part + "\nPrice: R" + price + " excl VAT\n\n⚠️ This is an estimate. Final price will be confirmed by Ridhor.\n📞 076 760 4350\n\nType *menu* to go back to LIST.";
-  }
-  
-  return null;
-}
-
 function randomFallback() { return funFallbacks[Math.floor(Math.random() * funFallbacks.length)]; }
 function randomAffirmation() { return affirmations[Math.floor(Math.random() * affirmations.length)]; }
 function randomTPS() { return "TPS DAILY WISDOM\n\n" + TPS_QUOTES[Math.floor(Math.random() * TPS_QUOTES.length)] + "\n\nType *menu* for more."; }
@@ -141,6 +55,62 @@ function isAfterHours() {
   if (day === 5 && t >= 885) return true;
   if (day >= 1 && day <= 4 && (t < 480 || t >= 1005)) return true;
   return false;
+}
+
+function estimatePrice(text) {
+  var t = text.toLowerCase();
+  var ref = getOrderRef();
+  var vatRate = 0.15;
+
+  if (t.includes("rim")) {
+    var qty = t.match(/(\d+)/);
+    qty = qty ? parseInt(qty[1]) : 4;
+    var sets = Math.ceil(qty / 4);
+    var rimColour = (t.includes("metallic")||t.includes("gold")||t.includes("bronze")||t.includes("charcoal")||t.includes("silver")) ? "premium" : "standard";
+    var rimLow = rimColour === "standard" ? 1000 : 1200;
+    var rimHigh = rimColour === "standard" ? 1200 : 1500;
+    var rimTotalLow = rimLow * sets, rimTotalHigh = rimHigh * sets;
+    var rimVatLow = Math.round(rimTotalLow * vatRate), rimVatHigh = Math.round(rimTotalHigh * vatRate);
+    return "RIMS ESTIMATE - Ref: " + ref + "\n\n" + qty + " rims = " + sets + " set(s)\nColour: " + (rimColour === "standard" ? "Standard" : "Premium") + "\n\nExcl VAT: R" + rimTotalLow.toLocaleString() + " - R" + rimTotalHigh.toLocaleString() + "\nVAT (15%): R" + rimVatLow.toLocaleString() + " - R" + rimVatHigh.toLocaleString() + "\nIncl VAT: R" + (rimTotalLow + rimVatLow).toLocaleString() + " - R" + (rimTotalHigh + rimVatHigh).toLocaleString() + "\n\nCustomer MUST remove tyres. Estimate only. WhatsApp Ridhor: 076 760 4350.\n\n" + randomAffirmation();
+  }
+
+  if (t.includes("kg")||t.includes("gate")||t.includes("burglar")||t.includes("fence")||t.includes("railing")||t.includes("balustrade")) {
+    var kg = t.match(/(\d+)\s*kg/);
+    kg = kg ? parseInt(kg[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 10);
+    var isPremium = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold")||t.includes("silver")||t.includes("blue")||t.includes("red")||t.includes("green"));
+    var rateLow = isPremium ? 17 : 16, rateHigh = isPremium ? 20 : 16;
+    var coatingLow = kg * rateLow, coatingHigh = kg * rateHigh;
+    var blastOnly = ((t.includes("blast only")||t.includes("sandblast only")||t.includes("blasting only"))&&!t.includes("coat"));
+
+    if (blastOnly) {
+      var bl = kg * 8, bh = kg * 12;
+      var bvl = Math.round(bl * vatRate), bvh = Math.round(bh * vatRate);
+      return "BLASTING ONLY ESTIMATE - Ref: " + ref + "\n\n" + kg + "kg\nR8-R12/kg\n\nExcl VAT: R" + bl.toLocaleString() + " - R" + bh.toLocaleString() + "\nVAT: R" + bvl.toLocaleString() + " - R" + bvh.toLocaleString() + "\nIncl VAT: R" + (bl + bvl).toLocaleString() + " - R" + (bh + bvh).toLocaleString() + "\n\nEstimate only.\n\n" + randomAffirmation();
+    }
+
+    var vl = Math.round(coatingLow * vatRate), vh = Math.round(coatingHigh * vatRate);
+    var msg = "GATE/PER KG ESTIMATE - Ref: " + ref + "\n\nWeight: " + kg + " kg\nColour: " + (isPremium ? "Premium (R" + rateLow + "-R" + rateHigh + "/kg)" : "Standard Black/White (R16/kg)") + "\n\nCoating (blasting included): R" + coatingLow.toLocaleString() + " - R" + coatingHigh.toLocaleString() + "\nVAT (15%): R" + vl.toLocaleString() + " - R" + vh.toLocaleString() + "\nTOTAL (incl VAT): R" + (coatingLow + vl).toLocaleString() + " - R" + (coatingHigh + vh).toLocaleString();
+    if (kg > 100) msg += "\n\nBulk discount up to 10% may apply.";
+    msg += "\n\nEstimate only. WhatsApp Ridhor: 076 760 4350.\n\n" + randomAffirmation();
+    return msg;
+  }
+
+  if (t.includes("sheet")||t.includes("mesh")) {
+    var sqm = t.match(/(\d+)\s*sqm/);
+    sqm = sqm ? parseInt(sqm[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : 5);
+    var sp = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold"));
+    var sl = sp ? 251 : 175, sh = sp ? 350 : 250;
+    var stl = sqm * sl, sth = sqm * sh;
+    var svl = Math.round(stl * vatRate), svh = Math.round(sth * vatRate);
+    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\n" + sqm + " sqm\nColour: " + (sp ? "Premium" : "Standard") + "\n\nExcl VAT: R" + stl.toLocaleString() + " - R" + sth.toLocaleString() + "\nVAT: R" + svl.toLocaleString() + " - R" + svh.toLocaleString() + "\nIncl VAT: R" + (stl + svl).toLocaleString() + " - R" + (sth + svh).toLocaleString() + "\n\n" + randomAffirmation();
+  }
+
+  if (t.includes("truck")||t.includes("bakkie")||t.includes("flatbed")) {
+    var tl = 5000, th = 7500;
+    return "TRUCK BLASTING ESTIMATE - Ref: " + ref + "\n\n5m flatbed\n\nExcl VAT: R" + tl.toLocaleString() + " - R" + th.toLocaleString() + "\nVAT: R" + Math.round(tl * vatRate).toLocaleString() + " - R" + Math.round(th * vatRate).toLocaleString() + "\nIncl VAT: R" + Math.round(tl * 1.15).toLocaleString() + " - R" + Math.round(th * 1.15).toLocaleString() + "\n\n" + randomAffirmation();
+  }
+
+  return null;
 }
 
 function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting) {
@@ -203,7 +173,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("contact")||t.includes("email")||t.includes("phone")) return "060 507 4461 | Office: " + OFFICE_NUMBER + " | Email: " + OFFICE_EMAIL;
   if (t.includes("rim")||t.includes("wheel")) return "Rims: R1,000-R1,500/set of 4. For estimate: quote 4 rims black";
   if (t.includes("gate")||t.includes("fence")) return "Gates: R16/kg B/W, R17-R20/kg premium. For estimate: quote 20kg gate charcoal";
-  // sheet/mesh now handled by handleMessage flow
+  if (t.includes("sheet")||t.includes("mesh")) return "Sheet: R175-R250/sqm B/W, R251-R350/sqm premium.";
   if (t.includes("minimum")||t.includes("small job")) return "Min: R173.99 B/W, R225 hammered, R300+ metallic. Excl VAT.";
   if (t.includes("tyre")||t.includes("tire")) return "Customer MUST remove tyres.";
   if (t.includes("vat")) return "All prices exclude 15% VAT unless stated.";
@@ -231,7 +201,7 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
   if (t.includes("car part") || t.includes("automotive") || t.includes("engine")) return "We coat car parts, rims, bumpers, bike frames. High-heat parts need special powder. 076 760 4350";
   if (t.includes("exhaust") || t.includes("manifold") || t.includes("header")) return "Exhausts and manifolds need high-temp powder. We've done plenty. Bring it in. 076 760 4350";
   if (t.includes("motorcycle") || t.includes("bike frame") || t.includes("bicycle")) return "Bike frames, motorcycle parts, rims - we coat them all! Send a photo. 076 760 4350";
-  if ((t.includes("fence") || t.includes("palisade") || t.includes("balustrade") || t.includes("railing")) && !t.match(/\d/)) return "Fences, palisades, balustrades, railings - we coat them all! Tell me the weight and colour for a quote.\n\nExample: palisade 30kg black";
+  if (t.includes("fence") || t.includes("palisade") || t.includes("balustrade") || t.includes("railing")) return "Fences, palisades, balustrades, railings - we coat them all! Price depends on size. Send photos for quote.";
   if (t.includes("furniture") || t.includes("table") || t.includes("chair") || t.includes("patio")) return "Outdoor furniture, tables, chairs, patio sets - we coat them! Must be metal. Send photos for quote.";
   if (t.includes("tool") || t.includes("machinery") || t.includes("equipment") || t.includes("industrial")) return "Tools, machinery, industrial equipment - we coat them all. Bring it through. 076 760 4350";
   if (t.includes("food safe") || t.includes("kitchen") || t.includes("food grade")) return "We have food-safe powder coatings for kitchen equipment. Tell Ridhor what you need. 076 760 4350";
@@ -349,6 +319,25 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return "Got it, " + kg + "kg. Colour? Black/White=R16/kg, Charcoal/metallic/custom=R17-R20/kg.";
   }
 
+  if (flow.state === "asked_colour") {
+    var isPremium = /charcoal|metallic|bronze|gold|red|blue|green|custom|ral/.test(t);
+    var rate = isPremium ? 18 : 16;
+    var weight = flow.weight || 20;
+    var coatingTotal = weight * rate;
+    var rustExtra = 0;
+    if (flow.rustSurcharge) { rustExtra = weight * 6; coatingTotal += rustExtra; }
+    var vat = Math.round(coatingTotal * 0.15);
+    var total = coatingTotal + vat;
+    flow = { state: "idle", awaitingBooking: true, lastEstimate: { weight: weight, rate: rate, total: total, rustExtra: rustExtra } };
+    session.flow = flow;
+    await saveSession(from, session);
+    var msg = "YOUR ESTIMATE - Ref: " + getOrderRef() + "\n\n" + weight + "kg gate\nBase: R" + rate + "/kg";
+    if (rustExtra > 0) msg += "\nRust surcharge: R" + rustExtra + " (R4-R8/kg)";
+    msg += "\n\nExcl VAT: R" + coatingTotal.toLocaleString() + "\nVAT: R" + vat.toLocaleString() + "\nTOTAL: R" + total.toLocaleString() + "\n\nWant to book? Reply YES. Or Ridhor: 076 760 4350.";
+    return msg;
+  }
+
+
   if (flow.state === "sheet_asking_colour") {
     var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|orange|purple|silver|premium|colour|color|custom|ral/.test(t);
     var isBW = /black|white|bw|standard|matt|matte|satin/.test(t);
@@ -388,7 +377,6 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     if (t.includes("one") || t.includes("single") || sideCount === 1) { sideCount = 1; }
     else if (t.includes("both") || t.includes("two") || t.includes("double") || sideCount === 2) { sideCount = 2; }
     if (!sideCount || (sideCount !== 1 && sideCount !== 2)) return "Please reply: 1 (one side only) or 2 (both sides)";
-    
     var area = flow.sheetWidth * flow.sheetHeight * sideCount;
     var rateLow = flow.sheetRateLow, rateHigh = flow.sheetRateHigh;
     var totalLow = Math.round(area * rateLow);
@@ -396,35 +384,13 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     var vatLow = Math.round(totalLow * 0.15);
     var vatHigh = Math.round(totalHigh * 0.15);
     var ref = getOrderRef();
-    
     var colourLabel = flow.sheetColour === "premium" ? "Premium" : "Standard Black/White";
     var sideLabel = sideCount === 1 ? "one side" : "both sides";
-    
     flow = { state: "idle" };
     session.flow = flow;
     await saveSession(from, session);
-    
     return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\nSize: " + flow.sheetWidth + "m x " + flow.sheetHeight + "m = " + (flow.sheetWidth * flow.sheetHeight) + " sqm per side\nSides: " + sideLabel + " (" + sideCount + ")\nTotal area: " + area + " sqm\nColour: " + colourLabel + " (R" + rateLow + "-R" + rateHigh + "/sqm)\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\nAll prices are estimates. Final price from Ridhor: 076 760 4350";
   }
-
-  if (flow.state === "asked_colour") {
-    var isPremium = /charcoal|metallic|bronze|gold|red|blue|green|custom|ral/.test(t);
-    var rate = isPremium ? 18 : 16;
-    var weight = flow.weight || 20;
-    var coatingTotal = weight * rate;
-    var rustExtra = 0;
-    if (flow.rustSurcharge) { rustExtra = weight * 6; coatingTotal += rustExtra; }
-    var vat = Math.round(coatingTotal * 0.15);
-    var total = coatingTotal + vat;
-    flow = { state: "idle", awaitingBooking: true, lastEstimate: { weight: weight, rate: rate, total: total, rustExtra: rustExtra } };
-    session.flow = flow;
-    await saveSession(from, session);
-    var msg = "YOUR ESTIMATE - Ref: " + getOrderRef() + "\n\n" + weight + "kg gate\nBase: R" + rate + "/kg";
-    if (rustExtra > 0) msg += "\nRust surcharge: R" + rustExtra + " (R4-R8/kg)";
-    msg += "\n\nExcl VAT: R" + coatingTotal.toLocaleString() + "\nVAT: R" + vat.toLocaleString() + "\nTOTAL: R" + total.toLocaleString() + "\n\nWant to book? Reply YES. Or Ridhor: 076 760 4350.";
-    return msg;
-  }
-
   if (flow.state === "idle" && flow.awaitingBooking && /^(yes|book|ok|sure)$/.test(t)) {
     flow.awaitingBooking = false;
     session.flow = flow;
@@ -465,9 +431,6 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return resp;
   }
 
-
-
-
   var normal = smartMatchFn(text);
   if (normal === "__DELIVERY__") {
     flow.state = "delivery_asking_where";
@@ -475,33 +438,18 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     await saveSession(from, session);
     return "Sure! Which area/town? e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD";
   }
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with") && !normal.includes("SOLOMON COATINGS - Since") && !normal.includes("Or just tell me what you need priced") && !normal.includes("Type *menu*")) {
+
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("SOLOMON COATINGS - Since 1988")) {
     normal = normal + "\n\nType *menu* to go back to LIST.";
   }
-
-
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("11.Review") && !normal.includes("12.Callback") && !normal.includes("Or just tell me what you need priced") && !normal.includes("1.Pricing")) {
+    normal = normal + "\n\nType *menu* to go back to LIST.";
+  }
   return normal;
 }
 
-module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
 
 
 
