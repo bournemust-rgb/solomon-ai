@@ -133,7 +133,8 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
     if (/both|two|double/i.test(t)) sideCount = 2;
     if (!sideCount || (sideCount !== 1 && sideCount !== 2)) return "Please reply: 1 (one side) or 2 (both sides)";
     
-    var area = flow.sheetWidth * flow.sheetHeight * sideCount;
+    var finalWidth = flow.sheetWidth;
+    var finalHeight = flow.sheetHeight;
     var rateLow = flow.sheetRateLow, rateHigh = flow.sheetRateHigh;
     var totalLow = Math.round(area * rateLow);
     var totalHigh = Math.round(area * rateHigh);
