@@ -59,7 +59,7 @@ function getColorResponse(colorId) {
 
 function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL) {
   var QR = {
-    "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Review\n12.Callback\n13.Technical Support\n14.Accounts\n15.TPS Wisdom\n\nOr just tell me what you need priced.",
+    "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Technical Support\n12.Accounts\n13.TPS Wisdom\n\nOr just tell me what you need priced.",
     "pricing": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
     "colours": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Gloss\n- White: Matt / Gloss\n- Brown: Matt\n- Bronze: Matt\n- Dark Grey: Matte\n- Light Grey: Matt\n- Charcoal: Matt / Gloss\n- Red: Standard\n- Yellow: Standard\n- Orange: Standard\n- Green: Standard\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
     "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
@@ -318,6 +318,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 
