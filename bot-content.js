@@ -66,7 +66,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
     "1": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
     "2": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Satin \n- White: Matt / Satin \n- Brown: Satin\n- Bronze: Matt\n- Dark Grey: Gloss\n- Light Grey: Satin\n- Charcoal: Matt / Gloss\n- Red: Gloss\n- Yellow: Gloss\n- Orange: Satin\n- Green: Gloss\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
-    "3": "Send: quote 20kg gate charcoal | quote 4 rims metallic | quote 10sqm sheet black | quote 20kg blasting only",
+    "3": "📋 GET A QUOTE - Give me the details!\n\nITEM 1: Security & Fencing\nGates, fence, clear view, sliding gates, balustrades, mesh panel, palisades, spikes, security gates\n→ Charged per kg: R16/kg B/W, R17-R20/kg premium\n\nITEM 2: Sheet Metal\n→ Charged per sqm: R175-R250/sqm B/W, R251-R350/sqm premium\n→ I will ask: colour, width, height\n\nITEM 3: Auto Parts\nRims: R1,000-R1,500/set (4)\nTappet cover: R350 excl VAT\nIntercooler: R550 excl VAT\nBumper/mouse bar/styling bar/nudge bar/bull bar: R650 excl VAT\n\nJust tell me what you have and I will guide you through it!\n\n⚠ All prices are estimates. Final price from Ridhor: 076 760 4350",
     "4": "TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
     "5": "BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
     "7": "BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
@@ -319,6 +319,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 
