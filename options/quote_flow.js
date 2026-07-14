@@ -185,3 +185,4 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
 
 module.exports = { detectCategory, startQuoteFlow, handleQuoteFlowState, handleAutoPart };
 
+
