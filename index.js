@@ -242,7 +242,7 @@ app.post("/api/ai-suggest", async function(req, res) {
     var { getAiSuggestion } = require("./ai-helper");
     var { message, phone } = req.body;
     if (!message) return res.json({ error: "Missing message" });
-    var suggestion = await getAiSuggestion(message, phone, redisClient);
+    var suggestion = await getAiSuggestion(message, phone, redis);
     if (suggestion) res.json({ suggestion: suggestion });
     else res.json({ error: "AI unavailable" });
   } catch(e) {
@@ -256,6 +256,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
