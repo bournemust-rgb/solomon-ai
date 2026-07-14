@@ -1,0 +1,1 @@
+﻿module.exports = "📊 ACCOUNTS & INVOICES\n\nFor invoices, statements, or payment queries:\n📧 Email: populier@mweb.co.za\n📞 Phone: 021 905 2912\n📧 Quotes: infosc@mweb.co.za\n\nPlease include your reference number if you have one.";

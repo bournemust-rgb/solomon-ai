@@ -1,0 +1,1 @@
+﻿module.exports = "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items remain our property until paid in full. Full T&Cs: https://solomon-ai-izyb.onrender.com/terms.html";

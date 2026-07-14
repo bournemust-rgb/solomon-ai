@@ -1,0 +1,1 @@
+﻿module.exports = "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Technical Support\n12.Accounts\n13.TPS Wisdom\n\nOr just tell me what you need priced.";
