@@ -147,7 +147,7 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
     session.flow = flow;
     await saveSession(from, session);
     
-    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\nSize: " + flow.sheetWidth + "m x " + flow.sheetHeight + "m = " + (flow.sheetWidth * flow.sheetHeight) + " sqm per side\nSides: " + sideLabel + "\nTotal area: " + area + " sqm\nColour: " + colourLabel + " (R" + rateLow + "-R" + rateHigh + "/sqm)\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\n⚠ Estimate only. Final price from Ridhor: 076 760 4350";
+    return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\nSize: " + finalWidth + "m x " + finalHeight + "m = " + (finalWidth * finalHeight) + " sqm per side\nSides: " + sideLabel + "\nTotal area: " + area + " sqm\nColour: " + colourLabel + " (R" + rateLow + "-R" + rateHigh + "/sqm)\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\n⚠ Estimate only. Final price from Ridhor: 076 760 4350";
   }
   
   // ===== SECURITY/FENCING FLOW =====
