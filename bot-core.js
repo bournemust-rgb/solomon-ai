@@ -444,50 +444,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   }
 
 
-  // ===== SHEET METAL QUOTE FLOW =====
-  if (t.includes("sheet metal") || t.includes("sheet") || t.includes("mesh") || flow.state === "sheet_colour" || flow.state === "sheet_width" || flow.state === "sheet_height") {
-    if (flow.state === "idle" || flow.state === "sheet_colour" && !flow.sheetColour) {
-      flow.state = "sheet_colour";
-      flow.product = "sheet_metal";
-      session.flow = flow;
-      await saveSession(from, session);
-      return "Got it - sheet metal. What colour?\n\nBlack/White = R175-R250/sqm\nPremium (charcoal, metallic, bronze, etc) = R251-R350/sqm";
-    }
-    if (flow.state === "sheet_colour") {
-      var isPremium = /charcoal|metallic|bronze|gold|silver|red|blue|green|yellow|colour|color|premium/.test(t);
-      flow.sheetColour = isPremium ? "premium" : "standard";
-      flow.state = "sheet_width";
-      session.flow = flow;
-      await saveSession(from, session);
-      return "Colour: " + (isPremium ? "Premium (R251-R350/sqm)" : "Standard Black/White (R175-R250/sqm)") + "\n\nWhat is the width in meters?";
-    }
-    if (flow.state === "sheet_width") {
-      var wMatch = t.match(/(\d+\.?\d*)/);
-      if (!wMatch) return "Please give me the width in meters. e.g. 2.5";
-      flow.sheetWidth = parseFloat(wMatch[1]);
-      flow.state = "sheet_height";
-      session.flow = flow;
-      await saveSession(from, session);
-      return "Width: " + flow.sheetWidth + "m\n\nWhat is the height in meters?";
-    }
-    if (flow.state === "sheet_height") {
-      var hMatch = t.match(/(\d+\.?\d*)/);
-      if (!hMatch) return "Please give me the height in meters. e.g. 1.5";
-      flow.sheetHeight = parseFloat(hMatch[1]);
-      var sqm = Math.ceil(flow.sheetWidth * flow.sheetHeight * 100) / 100;
-      var rateLow = flow.sheetColour === "premium" ? 251 : 175;
-      var rateHigh = flow.sheetColour === "premium" ? 350 : 250;
-      var totalLow = Math.round(sqm * rateLow);
-      var totalHigh = Math.round(sqm * rateHigh);
-      var vatLow = Math.round(totalLow * 0.15);
-      var vatHigh = Math.round(totalHigh * 0.15);
-      var ref = getOrderRef();
-      flow = { state: "idle" };
-      session.flow = flow;
-      await saveSession(from, session);
-      return "SHEET METAL ESTIMATE - Ref: " + ref + "\n\nSize: " + flow.sheetWidth + "m x " + flow.sheetHeight + "m = " + sqm + " sqm\nColour: " + (flow.sheetColour === "premium" ? "Premium" : "Standard B/W") + "\n\nExcl VAT: R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nIncl VAT: R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\nAll prices are estimates. Final price from Ridhor: 076 760 4350";
-    }
-  }
+
 
   var normal = smartMatchFn(text);
   if (normal === "__DELIVERY__") {
@@ -505,6 +462,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage };
+
 
 
 
