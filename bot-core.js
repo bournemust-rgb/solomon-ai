@@ -202,7 +202,7 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
     flow = { state: "idle" };
     session.flow = flow;
     await saveSession(from, session);
-    return "No problem, cancelled.\n\n" + smartMatchFn("menu");
+    return "No problem, cancelled.\n\n" + smartMatchFn("menu", from);
   }
 
   // Gate flow trigger: catches any mention of gate/fence/security if no weight given
@@ -295,7 +295,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return resp;
   }
 
-  var normal = smartMatchFn(text);
+  var normal = smartMatchFn(text, from);
   if (normal === "__DELIVERY__") {
     flow.state = "delivery_asking_where";
     session.flow = flow;
