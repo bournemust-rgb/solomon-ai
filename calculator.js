@@ -90,3 +90,4 @@ function estimatePrice(text, randomAffirmation) {
 module.exports = { getOrderRef, estimatePrice };
 
 
+
