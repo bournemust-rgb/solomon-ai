@@ -8,6 +8,9 @@ var { randomGreeting } = require("./greetings");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
 var { aiFallback } = require("./ai-fallback");
 var { randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage } = require("./bot-core");
+var { aiFallback } = require("./ai-fallback");
+var { aiFallback } = require("./ai-fallback");
+var { aiFallback } = require("./ai-fallback");
 
 var app = express();
 app.use(express.static("public"));
@@ -86,7 +89,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           if (!text) continue;
 
           var session = await getSession(from);
-          var reply = await handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession);
+          var reply = await handleMessage(text, from, session, smartMatchFn, aiFallback, QR, getOrderRef, saveSession);
 
           if (afterHours) {
             var showClosed = Math.floor(Math.random() * 4) === 0;

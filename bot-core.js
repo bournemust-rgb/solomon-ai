@@ -182,7 +182,9 @@ async function smartMatch(text, from, redis, QR, getSocialsResponse, getGalleryM
 
   var aiResponse = await aiFallback(text, from, redis);
   if (aiResponse) return aiResponse;
-  return randomFallback() + "\\n\\nType *menu* to go back to LIST.";
+  var aiResponse = await aiFallback(text, from, redis);
+  if (aiResponse) return aiResponse;
+  return randomFallback();
 }
 
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
