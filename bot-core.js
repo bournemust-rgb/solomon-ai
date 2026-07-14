@@ -183,6 +183,7 @@ function estimatePrice(text) {
     var sqm = t.match(/(\d+)\s*sqm/);
     sqm = sqm ? parseInt(sqm[1]) : (t.match(/(\d+)/) ? parseInt(t.match(/(\d+)/)[1]) : null);
     if (!sqm) return "Got it - sheet metal. I need a few details:\n\n1. What colour? (Black/White = standard rate, or premium?)\n2. What size? Width x height in meters, or total sqm.\n\nExample: sheet metal 10sqm black";
+    if (!sqm) return "Got it - sheet metal. I need a few details:\n\n1. What colour? (Black/White = standard rate, or premium?)\n2. What size? Width x height in meters, or total sqm.\n\nExample: sheet metal 10sqm black";
     var sp = (t.includes("charcoal")||t.includes("metallic")||t.includes("bronze")||t.includes("gold"));
     var sl = sp ? 251 : 175, sh = sp ? 350 : 250;
     var stl = sqm * sl, sth = sqm * sh;
