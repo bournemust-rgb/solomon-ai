@@ -142,7 +142,7 @@ async function smartMatch(text, from, redis, QR, getSocialsResponse, getGalleryM
 
   var calc = estimatePrice(text);
   if (calc) return calc;
-  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return QR["delivery"];
+  if (t === "6" || t.includes("deliver") || t.includes("collection") || t.includes("where") || t.includes("address")) return "FLOW_DELIVERY";
   if (QR[t]) return QR[t];
 
   if (t.includes("affirmation")||t.includes("fact")||t.includes("tip")) return randomAffirmation();
@@ -296,7 +296,7 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
   }
 
   var normal = await smartMatchFn(text, from);
-  if (normal === QR["delivery"]) {
+  if (normal === "FLOW_DELIVERY") {
     flow.state = "delivery_asking_where";
     session.flow = flow;
     await saveSession(from, session);
