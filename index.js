@@ -6,6 +6,7 @@ var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
+var { aiFallback } = require("./ai-fallback");
 var { randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage } = require("./bot-core");
 
 var app = express();
@@ -27,8 +28,8 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 var QR = buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL);
 
-var smartMatchFn = function(text) {
-  return smartMatch(text, QR, function() { return getSocialsResponse(FACEBOOK, TIKTOK); }, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting);
+var smartMatchFn = function(text, from) { var { redis } = require("./db");
+  return smartMatch(text, from, redis, QR, function() { return getSocialsResponse(FACEBOOK, TIKTOK); }, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting);
 };
 
 async function forwardImageToOwner(imageId, fromNumber) {
@@ -245,6 +246,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
