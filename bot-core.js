@@ -121,15 +121,15 @@ function smartMatch(text, QR, getSocialsResponse, getGalleryMenu, getColorRespon
     return QR["menu"] || "Hi there! Type *menu* to see our Secret List.";
   }
 
-  if (t === "15" || t === "tps" || t === "wisdom") return randomTPS() + "\n\nType *menu* to go back to LIST.";
-  if (t.includes("socials") || t.includes("social") || t.includes("follow") || t === "10") return getSocialsResponse() + "\n\nType *menu* to go back to LIST.";
+  if (t === "15" || t === "tps" || t === "wisdom") return randomTPS();
+  if (t.includes("socials") || t.includes("social") || t.includes("follow") || t === "10") return getSocialsResponse();
   if (t.includes("gallery") || t === "9") {
     var pageMatch = t.match(/gallery\s*(\d+)/);
     var page = pageMatch ? parseInt(pageMatch[1]) : 1;
-    return getGalleryMenu(page) + "\n\nType *menu* to go back to LIST.";
+    return getGalleryMenu(page);
   }
-  if (t === "s2") return getGalleryMenu(2) + "\n\nType *menu* to go back to LIST.";
-  if (t === "s3") return getGalleryMenu(3) + "\n\nType *menu* to go back to LIST.";
+  if (t === "s2") return getGalleryMenu(2);
+  if (t === "s3") return getGalleryMenu(3);
   var colorMatch = t.match(/^c(\d+)$/);
   if (colorMatch) {
     var colorResponse = getColorResponse(colorMatch[1]);
@@ -439,17 +439,19 @@ if ((t.includes("gate") || t.includes("fence") || t.includes("burglar") || t.inc
     return "Sure! Which area/town? e.g. Bellville, Durbanville, Stellenbosch, Cape Town CBD";
   }
 
-  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
+  if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*")) { normal = normal; }
   if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("SOLOMON COATINGS - Since 1988")) {
-    normal = normal + "\n\nType *menu* to go back to LIST.";
+    normal = normal;
   }
   if (normal && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("11.Review") && !normal.includes("12.Callback") && !normal.includes("Or just tell me what you need priced") && !normal.includes("1.Pricing")) {
-    normal = normal + "\n\nType *menu* to go back to LIST.";
+    normal = normal;
   }
+  if (normal && !normal.includes("Type *menu*") && !normal.includes("Secret List") && !normal.includes("Type *S2*") && !normal.includes("Reply with *C*") && !normal.includes("1.Pricing") && !normal.includes("11.") && !normal.includes("12.") && !normal.includes("13.") && !normal.includes("14.") && !normal.includes("15.") && !normal.includes("Or just tell me")) { normal = normal + "\n\nType *menu* to go back to LIST."; }
   return normal;
 }
 
 module.exports = { randomFallback, randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage };
+
 
 
 
