@@ -6,7 +6,8 @@ var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
-var { randomAffirmation, randomTPS, getOrderRef, isAfterHours, estimatePrice, smartMatch, handleMessage } = require("./bot-core");
+var { randomAffirmation, randomTPS, getOrderRef, isAfterHours, smartMatch, handleMessage } = require("./bot-core");
+var { estimatePrice } = require("./calculator");
 
 var app = express();
 app.use(express.static("public"));
@@ -256,6 +257,7 @@ app.listen(PORT, function() {
   console.log("   ✓ bot-content.js (menu + gallery + socials)");
   console.log("   ✓ Listening on port " + PORT + "\n");
 });
+
 
 
 
