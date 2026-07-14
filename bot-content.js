@@ -74,8 +74,9 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "9": "Type *gallery* to see 20+ colour examples with photos!",
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
 
-    "11": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL,
-    "13": "TPS Wisdom - Type *menu* to go back.",
+    "11": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: " + QUOTE_EMAIL + QUOTE_EMAIL,
+    "12": "ACCOUNTS\nFor invoices & statements, email accounts.",
+    "13": "TPS Wisdom",
     "braai": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
     "bbq": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
     "grill": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
