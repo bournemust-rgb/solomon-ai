@@ -69,7 +69,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
     "3": "📋 GET A QUOTE - Give me the details!\n\nCategory 1: Security & Fencing\nGates, fence, clear view, sliding gates, balustrades, mesh panel, palisades, spikes, security gates\n→ Charged per kg\n\nCategory 2: Sheet Metal\n→ Charged per sqm\n\nCategory 3: Auto Parts\nRims, Tappet cover, Intercooler\nBumper, mouse bar, styling bar, nudge bar, bull bar\n→ Charged per item\n\nJust tell me what you have and I will guide you through it!\n\n⚠ All prices are estimates. Final price from Ridhor: 076 760 4350",
     "4": "TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
     "5": "BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
-    "7": "BLASTING SERVICES\nR8-R12/kg. Truck R5,000-R7,500. Grit 0.12-0.4mm, 6 bar. Client risk. Remove plastic/glass.",
+    "7": "🛠️ BLASTING SERVICES\n\nPlease note that all pricing is subject to assessment. For an accurate quote, please send an image of your items to Ridhor or have our foreman, George, inspect them on-site.\n\n📸 PRICING ESTIMATES:\n- Items for coating: R8 - R12 per kg\n- Trucks (3m-5m flatbed): R5,000 - R7,500\n- Sheet metal: R250 per sqm\n\n⚠️ IMPORTANT NOTICE:\n- All blasting is performed at the client\u2019s risk\n- Please remove all plastic, glass, or brittle components before arrival\n- We use high-impact B90-B125 grit. Hidden cracks or structural weaknesses may only become visible during the blasting process",
     "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "",
     "9": "Type *gallery* to see 20+ colour examples with photos!",
     "10": getSocialsResponse(FACEBOOK, TIKTOK),
@@ -319,6 +319,7 @@ function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, G
 }
 
 module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
+
 
 
 
