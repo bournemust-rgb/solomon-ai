@@ -159,7 +159,7 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
     flow.state = "security_colour";
     session.flow = flow;
     await saveSession(from, session);
-    return "Got it - about " + flow.secWeight + "kg.\n\nWhat colour?\nReply: BLACK/WHITE (R16/kg) or PREMIUM (charcoal, metallic, etc. R17-R20/kg)";
+    return "Got it - about " + flow.secWeight + "kg.\n\nWhat colour?\nReply: Black/White (R16/kg) or Type Premium (other colours R17-R20/kg excluding specials - see T&Cs)";
   }
   
   if (flow.state === "security_colour") {
@@ -190,5 +190,6 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
 }
 
 module.exports = { detectCategory, startQuoteFlow, handleQuoteFlowState, handleAutoPart };
+
 
 
