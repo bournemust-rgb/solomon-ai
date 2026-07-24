@@ -135,10 +135,3 @@ client.on('message', async (message) => {
     }
     
     if (!text) return;
-    
-    console.log(`📩 Message from ${from}: ${text}`);
-
-
-cat > .npmrc << 'EOF'
-puppeteer_download_host=https://storage.googleapis.com
-PUPPETEER_SKIP_DOWNLOAD=true
