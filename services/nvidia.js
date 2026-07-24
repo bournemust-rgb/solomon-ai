@@ -1,0 +1,69 @@
+// ============================================================
+// services/nvidia.js - NVIDIA NIM for Solomon BIT
+// Phase 1: Text parsing + Phase 2: Image analysis
+// ============================================================
+const OpenAI = require('openai');
+
+// Graceful fallback if NVIDIA_API_KEY is missing
+const nvidia = process.env.NVIDIA_API_KEY
+  ? new OpenAI({
+      apiKey: process.env.NVIDIA_API_KEY,
+      baseURL: 'https://integrate.api.nvidia.com/v1'
+    })
+  : null;
+
+// 1. PARSE MESSY TEXT -> JSON FOR YOUR CALCULATOR
+// Input: "my gate is like 20kgs charcoalish"
+// Output: {weight_kg: 20, colour: "charcoal", category: "security"}
+// Falls back to null so your regex still works
+async function parseQuoteIntent(text) {
+  if (!nvidia) return null;
+  try {
+    const response = await nvidia.chat.completions.create({
+      model: 'nvidia/llama-3.1-nemotron-70b-instruct',
+      temperature: 0,           // deterministic, NOT creative
+      max_tokens: 200,
+      messages: [
+        {
+          role: 'system',
+          content: 'Extract JSON only: {"weight_kg": number|null, "colour": string|null, "category": "security"|"sheet"|"auto"|null}. No explanation.'
+        },
+        { role: 'user', content: text }
+      ]
+    });
+    return JSON.parse(response.choices[0].message.content);
+  } catch {
+    return null;  // silent fallback to your regex
+  }
+}
+
+// 2. ANALYZE WHATSAPP PHOTO - base64, NOT public URL
+// YOU download buffer first, pass base64
+// Returns description. NEVER a price.
+async function analyzeCoatingImage(base64Jpeg) {
+  if (!nvidia) return null;
+  try {
+    const response = await nvidia.chat.completions.create({
+      model: 'meta/llama-3.2-11b-vision-instruct',
+      max_tokens: 150,
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: 'Gate, fence, sheet, rim? Colour? Rust? One sentence.'
+          },
+          {
+            type: 'image_url',
+            image_url: { url: `data:image/jpeg;base64,${base64Jpeg}` }
+          }
+        ]
+      }]
+    });
+    return response.choices[0].message.content;
+  } catch {
+    return null;  // silent fallback
+  }
+}
+
+module.exports = { parseQuoteIntent, analyzeCoatingImage };
