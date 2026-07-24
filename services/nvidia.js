@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // services/nvidia.js - NVIDIA NIM for Solomon BIT
 // ============================================================
 const OpenAI = require('openai');
@@ -20,7 +20,7 @@ async function parseQuoteIntent(text) {
       messages: [
         {
           role: 'system',
-          content: 'Extract JSON only: {"weight_kg": number|null, "colour": string|null, "category": "security"|"sheet"|"auto"|null}. Return ONLY valid JSON. No explanation.'
+          content: 'Extract JSON only: {\"weight_kg\": number|null, \"colour\": string|null, \"category\": \"security\"|\"sheet\"|\"auto\"|null}. Return ONLY valid JSON. No explanation.'
         },
         { role: 'user', content: text }
       ]
@@ -44,7 +44,7 @@ async function analyzeCoatingImage(base64Jpeg) {
         role: 'user',
         content: [
           { type: 'text', text: 'Gate, fence, sheet, rim? Colour? Rust? One sentence.' },
-          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Jpeg}` } }
+          { type: 'image_url', image_url: { url: data:image/jpeg;base64,\ } }
         ]
       }]
     });
