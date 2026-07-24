@@ -1,17 +1,26 @@
-const OpenAI = require('openai');
+﻿const OpenAI = require('openai');
 
-const nvidia = process.env.NVIDIA_API_KEY
-  ? new OpenAI({
-      apiKey: process.env.NVIDIA_API_KEY,
-      baseURL: 'https://integrate.api.nvidia.com/v1'
-    })
-  : null;
+// HARDCODED FOR TESTING - REMOVE AFTER
+const apiKey = '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';
+
+console.log('🔧 NVIDIA module loaded');
+console.log('📌 API Key exists:', !!apiKey);
+
+const nvidia = new OpenAI({
+  apiKey: apiKey,
+  baseURL: 'https://integrate.api.nvidia.com/v1'
+});
 
 async function parseQuoteIntent(text) {
-  if (!nvidia) return null;
+  console.log('🔍 parseQuoteIntent called with:', text);
+  if (!nvidia) {
+    console.log('❌ No NVIDIA client');
+    return null;
+  }
   try {
+    console.log('📤 Calling NVIDIA API...');
     const response = await nvidia.chat.completions.create({
-      model: 'nvidia/llama-3.1-nemotron-70b-instruct',
+      model: 'meta/llama-3.1-70b-instruct',
       temperature: 0,
       max_tokens: 200,
       messages: [
@@ -24,9 +33,15 @@ async function parseQuoteIntent(text) {
     });
     const content = response.choices[0].message.content;
     console.log('📦 NIM Raw:', content);
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    console.log('✅ Parsed:', parsed);
+    return parsed;
   } catch (error) {
     console.error('❌ NIM Error:', error.message);
+    if (error.response) {
+      console.error('  Status:', error.response.status);
+      console.error('  Data:', JSON.stringify(error.response.data));
+    }
     return null;
   }
 }
@@ -41,12 +56,13 @@ async function analyzeCoatingImage(base64Jpeg) {
         role: 'user',
         content: [
           { type: 'text', text: 'Gate, fence, sheet, rim? Colour? Rust? One sentence.' },
-          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Jpeg}` } }
+          { type: 'image_url', image_url: { url: data:image/jpeg;base64, } }
         ]
       }]
     });
     return response.choices[0].message.content;
-  } catch {
+  } catch (error) {
+    console.error('❌ Image analysis error:', error.message);
     return null;
   }
 }
