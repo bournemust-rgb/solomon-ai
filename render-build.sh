@@ -1,12 +1,5 @@
 #!/bin/bash
-# Render build script - installs Chromium for Puppeteer
-
-echo "🚀 Installing Chromium for Puppeteer..."
-apt-get update
-apt-get install -y chromium
-
-echo "✅ Chromium installed at: $(which chromium)"
+set -e
 echo "📦 Installing Node dependencies..."
 npm install
-
 echo "✅ Build complete!"
