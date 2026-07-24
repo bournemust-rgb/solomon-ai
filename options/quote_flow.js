@@ -1,3 +1,4 @@
+const { parseQuoteIntent } = require('../services/nvidia');
 ﻿// ============================================
 // QUOTE FLOW - Handles all 3 categories step-by-step
 // Called from bot-core.js handleMessage
@@ -153,29 +154,40 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
   
   // ===== SECURITY/FENCING FLOW =====
   if (flow.state === "security_weight") {
-    var kg = t.match(/(\d+)/);
+    var kgMatch = t.match(/(\d+)/);
+    var kg = kgMatch ? parseInt(kgMatch[1]) : null;
+    if (!kg) {
+      try {
+        const ai = await parseQuoteIntent(t);
+        if (ai?.weight_kg) {
+          kg = ai.weight_kg;
+          flow.secWeight = ai.weight_kg;
+        }
+      } catch {}
+    }
     if (!kg) return "Please give me the estimated weight in kg. e.g. 20 or 50";
-    flow.secWeight = parseInt(kg[1]);
+    flow.secWeight = kg;
     flow.state = "security_colour";
     session.flow = flow;
     await saveSession(from, session);
-    return "Got it - about " + flow.secWeight + "kg.\n\nWhat colour?\nReply: Black/White (R16/kg) or Type Premium (other colours R17-R20/kg excluding specials - see T&Cs)";
+    return "Got it - about " + flow.secWeight + "kg.\n\nWhat colour?\nReply: BLACK/WHITE (R16/kg) or PREMIUM (charcoal, metallic, etc. R17-R20/kg)";
   }
   
   if (flow.state === "security_colour") {
     var isPrem = /charcoal|metallic|bronze|gold|red|blue|green|yellow|orange|purple|silver|premium|colour|color|custom|ral/i.test(t);
     var isBW = /black|white|bw|standard/i.test(t);
     if (!isPrem && !isBW) return "Please reply: BLACK/WHITE (R16/kg) or PREMIUM colour (R17-R20/kg)";
-    
+
     var rateLow = isPrem ? 17 : 16;
     var rateHigh = isPrem ? 20 : 16;
     var weight = flow.secWeight;
-    var rawLow = weight * rateLow;
-    var rawHigh = weight * rateHigh;
+    var totalLow = weight * rateLow;
+    var totalHigh = weight * rateHigh;
+    // Minimum charge: R200 excl VAT for B/W, R250 excl VAT for premium
     var minCharge = isPrem ? 250 : 200;
-    var totalLow = rawLow < minCharge ? minCharge : rawLow;
-    var totalHigh = rawHigh < minCharge ? minCharge : rawHigh;
-    var minApplied = rawLow < minCharge;
+    var minApplied = totalLow < minCharge || totalHigh < minCharge;
+    if (totalLow < minCharge) totalLow = minCharge;
+    if (totalHigh < minCharge) totalHigh = minCharge;
     var vatLow = Math.round(totalLow * VAT);
     var vatHigh = Math.round(totalHigh * VAT);
 
@@ -183,7 +195,7 @@ async function handleQuoteFlowState(flow, text, from, session, saveSession) {
     session.flow = flow;
     await saveSession(from, session);
 
-    return "SECURITY/FENCING ESTIMATE - Ref: " + ref + "\n\nWeight: " + weight + " kg\nColour: " + (isPrem ? "Premium (R" + rateLow + "-R" + rateHigh + "/kg)" : "Standard Black/White (R16/kg)") + (minApplied ? "\n\n Minimum charge applied: R" + minCharge.toLocaleString() + " excl VAT" : "") + "\n\nCoating (blasting included): R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + "\n\n Estimate only. Final price from Ridhor: 076 760 4350";
+    return "SECURITY/FENCING ESTIMATE - Ref: " + ref + "\n\nWeight: " + weight + " kg\nColour: " + (isPrem ? "Premium (R" + rateLow + "-R" + rateHigh + "/kg)" : "Standard Black/White (R16/kg)") + "\n\nCoating (blasting included): R" + totalLow.toLocaleString() + " - R" + totalHigh.toLocaleString() + "\nVAT (15%): R" + vatLow.toLocaleString() + " - R" + vatHigh.toLocaleString() + "\nTOTAL (incl VAT): R" + (totalLow+vatLow).toLocaleString() + " - R" + (totalHigh+vatHigh).toLocaleString() + (minApplied ? "\n\n📌 Minimum charge of R" + minCharge.toLocaleString() + " (excl VAT) applied." : "") + "\n\n⚠ Estimate only. Final price from Ridhor: 076 760 4350";
   }
   
   return null;
