@@ -6,19 +6,18 @@ var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 async function sendMessage(to, message) {
   try {
     console.log("📤 Sending to:", to);
-    console.log("📤 Message preview:", message.substring(0, 50) + "...");
     console.log("📤 PHONE_ID:", PHONE_ID);
+    console.log("📤 WA_TOKEN exists:", !!WA_TOKEN);
     
     if (!WA_TOKEN || !PHONE_ID) {
-      console.error("❌ Missing WA_TOKEN or PHONE_ID");
+      console.error("❌ Missing credentials");
       return false;
     }
 
     const response = await axios.post(
-      "https://graph.facebook.com/v21.0/" + PHONE_ID + "/messages",
+      "https://graph.facebook.com/v25.0/" + PHONE_ID + "/messages",
       {
         messaging_product: "whatsapp",
-        recipient_type: "individual",
         to: to,
         type: "text",
         text: { body: message }
