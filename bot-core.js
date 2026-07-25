@@ -1,3 +1,4 @@
+const { askLLM } = require("./services/nvidia");
 ﻿// ============================================================
 // bot-core.js - SOLOMON COATINGS AI BOT CORE
 // Version: 17.0 - With NVIDIA Fallback
@@ -141,7 +142,10 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
     }
 
     // 6. Final fallback
-    return "I'm not sure how to help with that. Type *menu* to see what I can do, or ask me about quotes, colours, or powder coating!";
+    return 
+  let reply = await askLLM(text);
+  if (!reply) {
+    reply = "I'm not sure how to help with that. Type *menu* to see what I can do, or ask me about quotes, colours, or powder coating!";
   } catch (error) {
     console.error("[handleMessage] Error:", error.message);
     return "Sorry, I had a problem. Please try again or contact Ridhor directly.";
