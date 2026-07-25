@@ -5,12 +5,13 @@
 var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
-var { randomAffirmation, randomTPS, getOrderRef, isAfterHours } = require("./bot-core");
+var { getOrderRef, isAfterHours } = require("./bot-core");
 var { estimatePrice } = require("./calculator");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
+var { parseQuoteIntent } = require("./services/nvidia");
 
 // ============================================================
-// MISSING FUNCTION - ADDED
+// MISSING FUNCTIONS - ADDED
 // ============================================================
 function detectCategory(text) {
   const lower = text.toLowerCase();
@@ -24,14 +25,81 @@ function detectCategory(text) {
   return null;
 }
 
+function randomAffirmation() {
+  const affirmations = [
+    "Great choice!",
+    "Excellent!",
+    "Perfect!",
+    "Awesome!",
+    "Looking good!",
+    "Fantastic!"
+  ];
+  return affirmations[Math.floor(Math.random() * affirmations.length)];
+}
+
+function randomTPS() {
+  const tps = [
+    "💪 Strong as steel!",
+    "🔒 Built to last!",
+    "✨ Quality guaranteed!",
+    "🏆 Industry leader since 1988!",
+    "🇿🇦 Proudly South African!"
+  ];
+  return tps[Math.floor(Math.random() * tps.length)];
+}
+
+async function smartMatch(text, QR, socialsFn, galleryFn, colorFn, googleReview, officeEmail, officeNumber, quoteEmail, greetingFn) {
+  try {
+    const lower = text.toLowerCase();
+    
+    // Check menu options
+    if (QR) {
+      for (var key in QR) {
+        if (lower.includes(key)) {
+          return QR[key];
+        }
+      }
+    }
+    
+    // Check socials
+    if (lower.includes('facebook') || lower.includes('tiktok') || lower.includes('social')) {
+      return socialsFn();
+    }
+    
+    // Check gallery
+    if (lower.includes('gallery') || lower.includes('colour') || lower.includes('color')) {
+      return galleryFn();
+    }
+    
+    // Check colors
+    if (lower.includes('black') || lower.includes('white') || lower.includes('grey') || lower.includes('silver')) {
+      return colorFn(lower);
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("[smartMatch] Error:", error.message);
+    return null;
+  }
+}
+
 // ============================================================
 // CORE FUNCTIONS
 // ============================================================
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
   try {
-    // 1. Check if it's a quote request
+    console.log("📩 Handling message:", text);
+    
+    // 1. Check if it's a quote request with NVIDIA
     if (text.toLowerCase().includes('quote') || text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
-      return await handleQuote(text, from, session);
+      // Try NVIDIA first
+      const aiResult = await parseQuoteIntent(text);
+      if (aiResult && aiResult.weight_kg) {
+        console.log("📦 NVIDIA extracted:", aiResult);
+        return await handleQuote(text, from, session, aiResult);
+      }
+      // Fallback to manual quote
+      return await handleQuote(text, from, session, null);
     }
 
     // 2. Check if it's a gallery request
@@ -44,7 +112,7 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
       return buildMenu();
     }
 
-    // 4. Check FAQ
+    // 4. Check FAQ using smartMatch
     var faqMatch = await smartMatchFn(text);
     if (faqMatch) {
       return faqMatch;
@@ -61,18 +129,29 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
 // ============================================================
 // QUOTE HANDLING
 // ============================================================
-async function handleQuote(text, from, session) {
+async function handleQuote(text, from, session, aiResult) {
   try {
-    // Extract weight from text
-    var weightMatch = text.match(/(\d+)\s*(?:kg|kgs|kilogram)/i);
-    var weight = weightMatch ? parseInt(weightMatch[1]) : null;
+    // Use NVIDIA result if available
+    var weight = aiResult?.weight_kg || null;
+    var colour = aiResult?.colour || null;
+    var category = aiResult?.category || null;
 
-    // Extract colour from text
-    var colourMatch = text.match(/(black|white|charcoal|grey|silver|red|blue|green|yellow|orange|purple|pink|brown|beige|cream)/i);
-    var colour = colourMatch ? colourMatch[1] : null;
+    // If no weight from AI, try regex
+    if (!weight) {
+      var weightMatch = text.match(/(\d+)\s*(?:kg|kgs|kilogram)/i);
+      weight = weightMatch ? parseInt(weightMatch[1]) : null;
+    }
 
-    // Detect category
-    var category = detectCategory(text);
+    // If no colour from AI, try regex
+    if (!colour) {
+      var colourMatch = text.match(/(black|white|charcoal|grey|silver|red|blue|green|yellow|orange|purple|pink|brown|beige|cream)/i);
+      colour = colourMatch ? colourMatch[1] : null;
+    }
+
+    // If no category from AI, detect it
+    if (!category) {
+      category = detectCategory(text);
+    }
 
     // If no weight, ask for it
     if (!weight) {
@@ -84,7 +163,7 @@ async function handleQuote(text, from, session) {
       return "Is this a:\n1. Security gate/fence\n2. Sheet metal\n3. Rims/wheels\n\nReply with 1, 2, or 3.";
     }
 
-    // Calculate price
+    // Calculate price using calculator.js
     var price = estimatePrice(weight, colour, category);
 
     // Build response
@@ -111,10 +190,10 @@ module.exports = {
   handleMessage,
   handleQuote,
   detectCategory,
+  smartMatch,
   randomAffirmation,
   randomTPS,
   getOrderRef,
   isAfterHours,
-  smartMatch,
   estimatePrice
 };
