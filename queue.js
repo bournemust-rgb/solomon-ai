@@ -1,3 +1,4 @@
+@"
 const axios = require('axios');
 
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
@@ -7,9 +8,12 @@ async function sendMessage(to, message) {
   try {
     console.log("📤 Sending to:", to);
     console.log("📤 Message:", message.substring(0, 50) + "...");
-
+    console.log("📤 PHONE_ID being used:", PHONE_ID);
+    
     if (!WA_TOKEN || !PHONE_ID) {
       console.error("❌ Missing WA_TOKEN or PHONE_ID");
+      console.log("WA_TOKEN exists:", !!WA_TOKEN);
+      console.log("PHONE_ID exists:", !!PHONE_ID);
       return false;
     }
 
@@ -31,15 +35,17 @@ async function sendMessage(to, message) {
     );
 
     console.log("✅ Message sent!");
+    console.log("Response status:", response.status);
     return true;
   } catch (error) {
     console.error("❌ sendMessage Error:", error.message);
     if (error.response) {
       console.error("Status:", error.response.status);
-      console.error("Data:", JSON.stringify(error.response.data));
+      console.error("Data:", JSON.stringify(error.response.data, null, 2));
     }
     return false;
   }
 }
 
 module.exports = { sendMessage };
+"@ | Out-File -FilePath queue.js -Encoding utf8
