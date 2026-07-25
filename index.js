@@ -32,18 +32,8 @@ var smartMatchFn = function(text) {
   return smartMatch(text, QR, function() { return getSocialsResponse(FACEBOOK, TIKTOK); }, getGalleryMenu, getColorResponse, GOOGLE_REVIEW, OFFICE_EMAIL, OFFICE_NUMBER, QUOTE_EMAIL, randomGreeting);
 };
 
-app.get("/health", function(req, res) { 
-  res.json({ status: "healthy", version: "17.0", arch: "webhook-only" }); 
-});
-
-app.get("/", function(req, res) { 
-  res.json({ 
-    service: "Solomon Coatings", 
-    version: "17.0 - Webhook", 
-    modules: ["index.js", "bot-core.js", "bot-content.js"]
-  }); 
-});
-
+app.get("/health", function(req, res) { res.json({ status: "healthy", version: "17.0", arch: "modular-3file" }); });
+app.get("/", function(req, res) { res.json({ service: "Solomon Coatings", version: "17.0 - Modular 3-File", modules: ["index.js", "bot-core.js", "bot-content.js"] }); });
 app.get("/webhook", function(req, res) {
   console.log("📡 Webhook GET request received");
   if (req.query["hub.mode"] === "subscribe" && req.query["hub.verify_token"] === VT) {
@@ -57,7 +47,7 @@ app.get("/webhook", function(req, res) {
 app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
   console.log("📨 Webhook POST received!");
   res.sendStatus(200);
-
+  
   try {
     var entries = req.body?.entry || [];
     for (var i = 0; i < entries.length; i++) {
@@ -70,7 +60,7 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var type = msg.type;
           var text = msg.text?.body?.trim() || null;
           var imageId = msg.image?.id || null;
-
+          
           console.log("📩 Message from:", from);
           console.log("📩 Text:", text);
 
@@ -93,7 +83,13 @@ app.post("/webhook", validateWhatsAppSignature, async function(req, res) {
           var session = await getSession(from);
           var reply = await handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession);
 
-          console.log("💬 Sending reply:", reply);
+          // FORCE reply to be a string
+          if (typeof reply !== 'string') {
+            console.log("⚠️ Reply is not a string! Converting...");
+            reply = String(reply || "I'm not sure how to help with that.");
+          }
+
+          console.log("💬 Sending reply:", reply.substring(0, 100));
           await sendMessage(from, reply);
 
           session.history = session.history || [];
@@ -170,7 +166,7 @@ app.post("/api/ai-suggest", async function(req, res) {
 });
 
 app.listen(PORT, function() {
-  console.log("\n✅ SOLOMON v17.0 WEBHOOK MODE");
+  console.log("\n✅ SOLOMON v17.0 MODULAR — 3 FILES");
   console.log("   ✓ Listening on port " + PORT);
   console.log("\n📡 Webhook ready at /webhook\n");
 });
