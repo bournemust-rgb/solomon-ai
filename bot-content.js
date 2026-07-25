@@ -1,335 +1,99 @@
-﻿// ============================================
-// BOT-CONTENT: QR Menu, Socials, Gallery, Terms
-// ============================================
+// ============================================================
+// bot-content.js - SOLOMON COATINGS BOT CONTENT
+// ============================================================
 
-function getSocialsResponse(FACEBOOK, TIKTOK) {
-  return "🌐 FOLLOW SOLOMON COATINGS!\n\n📱 Facebook\n" + FACEBOOK + "\n\n🎵 TikTok\n" + TIKTOK + "\n\n🌐 Website\nhttps://solomoncoatings.co.za\n\nSee our latest projects, before/after photos, and coating tips!";
+function buildMenu(officeNumber, officeEmail, quoteEmail, facebook, tiktok, googleReview, termsUrl) {
+  return `
+🤖 *SOLOMON COATINGS - MAIN MENU*
+
+1️⃣ *QUOTE* - Get a price estimate
+2️⃣ *COLOURS* - View our colour gallery
+3️⃣ *GALLERY* - See our work
+4️⃣ *ABOUT* - Learn about us
+5️⃣ *CONTACT* - Get in touch
+6️⃣ *DELIVERY* - Delivery info
+7️⃣ *HOURS* - Business hours
+8️⃣ *TERMS* - Terms & conditions
+9️⃣ *FAQ* - Frequently asked questions
+🔟 *SOCIAL* - Follow us
+1️⃣1️⃣ *REVIEW* - Leave a review
+1️⃣2️⃣ *TPS* - Truth Bombs
+
+📞 Call Ridhor: 076 760 4350
+📧 Email: infosc@mweb.co.za
+🏠 5 Jakaranda Street, Blackheath
+
+Type the number or keyword.`;
 }
 
-var GALLERY_COLORS = [
-  { id: "1", name: "🔴 Red", images: ["https://solomon-ai-izyb.onrender.com/photos/red-gloss-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/red-gloss-002.jpg"] },
-  { id: "2", name: "🟡 Yellow", images: ["https://solomon-ai-izyb.onrender.com/photos/yellow-001.jpg"] },
-  { id: "3", name: "🟢 Green", images: ["https://solomon-ai-izyb.onrender.com/photos/green-001.jpg"] },
-  { id: "4", name: "🔵 Blue", images: ["https://solomon-ai-izyb.onrender.com/photos/blue-001.jpg"] },
-  { id: "5", name: "🟠 Orange", images: ["https://solomon-ai-izyb.onrender.com/photos/orange-001.jpg"] },
-  { id: "6", name: "🟣 Purple", images: ["https://solomon-ai-izyb.onrender.com/photos/purple-001.jpg"] },
-  { id: "7", name: "⬛ Black Gloss", images: ["https://solomon-ai-izyb.onrender.com/photos/black-gloss-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/black-gloss-002.jpg"] },
-  { id: "8", name: "⚫ Black Matt", images: ["https://solomon-ai-izyb.onrender.com/photos/black-matte-001.jpg"] },
-  { id: "9", name: "🔨 Hammered Black", images: ["https://solomon-ai-izyb.onrender.com/photos/hammered-black-001.jpg"] },
-  { id: "10", name: "⚪ White", images: ["https://solomon-ai-izyb.onrender.com/photos/white-001.jpg"] },
-  { id: "11", name: "🩶 Grey", images: ["https://solomon-ai-izyb.onrender.com/photos/grey-001.jpg"] },
-  { id: "12", name: "🌫️ Dark Grey", images: ["https://solomon-ai-izyb.onrender.com/photos/grey-dark-001.jpg"] },
-  { id: "13", name: "☁️ Light Grey", images: ["https://solomon-ai-izyb.onrender.com/photos/grey-light-001.jpg"] },
-  { id: "14", name: "🟤 Brown", images: ["https://solomon-ai-izyb.onrender.com/photos/brown-001.jpg"] },
-  { id: "15", name: "🥉 Bronze", images: ["https://solomon-ai-izyb.onrender.com/photos/bronze-001.jpg"] },
-  { id: "16", name: "✨ Charcoal", images: ["https://solomon-ai-izyb.onrender.com/photos/charcoal-001.jpg", "https://solomon-ai-izyb.onrender.com/photos/charcoal-002.jpg"] },
-  { id: "17", name: "🎨 Silver", images: ["https://solomon-ai-izyb.onrender.com/photos/silver-001.jpg"] },
-  { id: "18", name: "🥇 Gold", images: ["https://solomon-ai-izyb.onrender.com/photos/gold-001.jpg"] }
-];
+function getGalleryMenu() {
+  return `🎨 *COLOUR GALLERY*
 
-function getGalleryMenu(pageNumber) {
-  pageNumber = pageNumber || 1;
-  var itemsPerPage = 10;
-  var totalPages = Math.ceil(GALLERY_COLORS.length / itemsPerPage);
-  var startIdx = (pageNumber - 1) * itemsPerPage;
-  var endIdx = Math.min(startIdx + itemsPerPage, GALLERY_COLORS.length);
-  var pageItems = GALLERY_COLORS.slice(startIdx, endIdx);
-  var menu = "🎨 COLOUR GALLERY - Page " + pageNumber + "/" + totalPages + "\n\n";
-  for (var i = 0; i < pageItems.length; i++) {
-    var cat = pageItems[i];
-    var number = startIdx + i + 1;
-    menu += number + ". " + cat.name + "\n";
-  }
-  if (pageNumber === 1 && totalPages > 1) menu += "\n➡️ Type *S2* for page 2.";
-  else if (pageNumber === 2 && totalPages > 2) menu += "\n➡️ Type *S3* for page 3.";
-  menu += "\n\n📌 Reply with *C* + number (e.g., *C1* for Red)\n\n🔗 View full gallery:\nhttps://solomon-ai-izyb.onrender.com/gallery.html";
-  return menu;
+We have 20+ colours available:
+
+⚫ Black
+⚪ White
+🔘 Grey
+🔘 Charcoal
+🔘 Silver
+🔴 Red
+🔵 Blue
+🟢 Green
+🟡 Yellow
+🟠 Orange
+🟣 Purple
+🩷 Pink
+🟤 Brown
+🟤 Beige
+🟤 Cream
+
+💡 *TEXTURED FINISHES:*
+- Wrinkle
+- Hammer tone
+- Vein patterns
+
+✨ *SPECIALTY:*
+- Metallic
+- Pearl
+- Candy colours
+- RAL matches
+
+Send *quote* for pricing or ask Ridhor!`;
 }
 
-function getColorResponse(colorId) {
-  var category = GALLERY_COLORS.find(function(cat) { return cat.id === String(colorId); });
-  if (!category) return "Sorry, that colour not found. Type *gallery* to see all colours.";
-  var msg = category.name + "\n\n";
-  for (var i = 0; i < category.images.length; i++) {
-    msg += "📸 Example " + (i + 1) + ":\n" + category.images[i] + "\n\n";
-  }
-  msg += "Want this colour? Type: quote 20kg gate";
-  return msg;
+function getColorResponse(color) {
+  return `🎨 *${color.charAt(0).toUpperCase() + color.slice(1)}* is available!
+
+We have ${color} in:
+- Gloss finish
+- Satin finish  
+- Matte finish
+- Textured finish
+
+Price: R20/kg (premium colour)
+Minimum charge: R250
+
+📞 WhatsApp Ridhor: 076 760 4350`;
 }
 
-function buildMenu(OFFICE_NUMBER, OFFICE_EMAIL, QUOTE_EMAIL, FACEBOOK, TIKTOK, GOOGLE_REVIEW, TERMS_URL) {
-  var QR = {
-    "menu": "SOLOMON COATINGS - Since 1988\n\n1.Pricing\n2.Colours\n3.Quote\n4.Turnaround\n5.Hours\n6.Delivery\n7.Blasting\n8.T&Cs\n9.GALLERY (20+ colours)\n10.Follow Us\n11.Technical Support\n12.Accounts\n13.TPS Wisdom\n\nOr just tell me what you need priced.",
-    "pricing": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
-    "colours": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Gloss\n- White: Matt / Gloss\n- Brown: Matt\n- Bronze: Matt\n- Dark Grey: Matte\n- Light Grey: Matt\n- Charcoal: Matt / Gloss\n- Red: Standard\n- Yellow: Standard\n- Orange: Standard\n- Green: Standard\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
-    "hours": "Mon-Thurs 8AM-4:45PM. Fri 8AM-2:45PM. Closed weekends.",
-    "turnaround": "Under 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
-    "1": "💰 SOLOMON COATINGS - PRICING (Excl VAT)\n\n🛞 WHEEL RIM COATING\n- 10 inch - 15 inch (Black/White): R1,000 - R1,500/set\n- 10 inch - 15 inch (Other colours): R1,300 - R1,700/set\n- 16 inch - 18 inch (Black/White): R1,500 - R1,800/set\n- 16 inch - 18 inch (Other colours): R1,700 - R2,200/set\n\n📋 SHEET METAL & MESH\n- Standard colours: R175 - R250/sqm\n- Premium colours: R251 - R350/sqm\n\n⚙️ POWDER COATING (Gates, Burglar Bars, Fencing)\n- Black & White: R16/kg\n- Other colours: R17 - R20/kg\n- Minimum: R200 excl VAT\n\n💥 BLASTING SERVICES\n- Per weight: R8 - R12/kg\n- Per area: R250/sqm\n- Truck (3-5m): R5,000 - R7,500\n  (Specialized trucks quoted individually)\n\n📌 All prices are estimates based on material condition and stock.\n\n🎯 For exact quotes, WhatsApp Ridhor:\n📞 076 760 4350",
-    "2": "🎨 COLOURS & FINISHES\n\n📦 STOCK COLOURS (Available)\n- Black: Matt / Satin \n- White: Matt / Satin \n- Brown: Satin\n- Bronze: Matt\n- Dark Grey: Gloss\n- Light Grey: Satin\n- Charcoal: Matt / Gloss\n- Red: Gloss\n- Yellow: Gloss\n- Orange: Satin\n- Green: Gloss\n\n✨ PREMIUM / METALLIC\n- Silver Grey: Premium finish\n- Matt Gold: Premium finish\n\n🔨 HAMMERED TEXTURE FINISHES\n- Black Hammered\n- Orange Hammered\n- Bronze Hammered\n- Avocado Hammered\n- Grey Hammered\n\n📄 SANDPAPER / TEXTURED FINISHES\n- Black Sandpaper\n- White Sandpaper\n- Grey Sandpaper\n- Brown Sandpaper\n- Charcoal Sandpaper\n\n💡 NOT SURE? \nType *gallery* to see colour examples with photos.\n\n🎯 CUSTOM COLOURS:\nRAL codes & custom colours available. \nAsk Ridhor: 076 760 4350",
-    "3": "📋 GET A QUOTE - Give me the details!\n\nCategory 1: Security & Fencing\nGates, fence, clear view, sliding gates, balustrades, mesh panel, palisades, spikes, security gates\n→ Charged per kg\n\nCategory 2: Sheet Metal\n→ Charged per sqm\n\nCategory 3: Auto Parts\nRims, Tappet cover, Intercooler\nBumper, mouse bar, styling bar, nudge bar, bull bar\n→ Charged per item\n\nJust tell me what you have and I will guide you through it!\n\n⚠ All prices are estimates. Final price from Ridhor: 076 760 4350",
-    "4": "TURNAROUND\nUnder 1 ton: 3 working days. Over 1 ton: 5-8 working days.",
-    "5": "BUSINESS HOURS\nMon-Thurs: 8AM-4:45PM\nFri: 8AM-2:45PM\nClosed weekends.",
-    "7": "🛠️ BLASTING SERVICES\n\nPlease note that all pricing is subject to assessment. For an accurate quote, please send an image of your items to Ridhor 076 760 4350 or have our foreman, George, inspect them once they arrive.\n\n📸 PRICING ESTIMATES:\n- Items for coating: +- R8 - R12 per kg\n- Trucks (3m-5m flatbed): R5,000 - R7,500\n- Sheet metal: +- R250 per sqm\n\n⚠️ IMPORTANT NOTICE:\n- All blasting is performed at the client\u2019s risk\n- Please remove all plastic, glass, or brittle components before arrival\n- We use high-impact 0.2mm - 0.3mm grit. Hidden cracks or structural weaknesses may only become visible during the blasting process",
-    "8": "TERMS & CONDITIONS\n\nCOD only. No coastal warranties (15km). 7% daily storage after 7 days. Items our property until paid.\n\nFull terms: " + TERMS_URL + "",
-    "9": "Type *gallery* to see 20+ colour examples with photos!",
-    "10": getSocialsResponse(FACEBOOK, TIKTOK),
+function getSocialsResponse(facebook, tiktok) {
+  return `📱 *FOLLOW US*
 
-    "11": "TECHNICAL SUPPORT\nWhatsApp: 076 760 4350 | Email: infosc@mweb.co.za",
-    "12": "📊 ACCOUNTS & INVOICES\n\nFor invoices, statements, or payment queries:\n📧 Email: populier@mweb.co.za\n📞 Phone: 021 905 2912\n📧 Quotes: infosc@mweb.co.za\n\nPlease include your reference number if you have one.",
-    "13": "💡 TPS DAILY WISDOM\n\n\"Quality isnt expensive, its priceless.\"\n\nAt Solomon Coatings, we believe in doing things right the first time. Since 1988, weve built our reputation on quality workmanship.\n\nNeed advice? Call Ridhor: 076 760 4350",
-    "braai": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
-    "bbq": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
-    "grill": "Ja my bru, we can coat braai stands and grills! As long as it's metal. Send a photo on WhatsApp. 076 760 4350",
-    "weekend": "Closed weekends, my bru. Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM.",
-    "saturday": "Closed weekends, my bru. Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM.",
-    "sunday": "Closed weekends, my bru. Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM.",
-    "public holiday": "Closed on public holidays. Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM.",
-    "aluminium": "Ja, we coat aluminium! Needs proper etching first. Bring it through. 076 760 4350",
-    "aluminum": "Ja, we coat aluminium! Needs proper etching first. Bring it through. 076 760 4350",
-    "alloy": "Ja, we coat aluminium alloys! Needs proper etching first. Bring it through. 076 760 4350",
-    "rust": "If you can see rust, blast it first! R8-R12/kg shotblasting then coat. Send a photo?",
-    "rusted": "If you can see rust, blast it first! R8-R12/kg shotblasting then coat. Send a photo?",
-    "corrosion": "If you can see rust, blast it first! R8-R12/kg shotblasting then coat. Send a photo?",
-    "anodizing": "We don't do wet paint, anodizing, or galvanizing. Powder coating only - tougher, lasts 15-20 years.",
-    "galvanizing": "We don't do wet paint, anodizing, or galvanizing. Powder coating only.",
-    "wet paint": "We don't do wet paint, anodizing, or galvanizing. Powder coating only.",
-    "spray paint": "We don't do wet paint, anodizing, or galvanizing. Powder coating only.",
-    "durability": "Powder coating lasts 15-20 years. Chip-resistant, UV-stable, doesn't fade like wet paint.",
-    "how long": "Powder coating lasts 15-20 years. Chip-resistant, UV-stable, doesn't fade like wet paint.",
-    "lifespan": "Powder coating lasts 15-20 years. Chip-resistant, UV-stable, doesn't fade like wet paint.",
-    "chip": "Powder coat is chip-resistant but not chip-proof. Small scratches can be touched up.",
-    "scratch": "Powder coat is chip-resistant but not chip-proof. Small scratches can be touched up.",
-    "repair": "Big damage needs re-blast and re-coat. Send a photo?",
-    "colour": "20+ colours including RAL matches! Type *9* for GALLERY or WhatsApp Ridhor. 076 760 4350",
-    "color": "20+ colours including RAL matches! Type *9* for GALLERY or WhatsApp Ridhor. 076 760 4350",
-    "ral": "20+ colours including RAL matches! Type *9* for GALLERY or WhatsApp Ridhor. 076 760 4350",
-    "temperature": "Standard powder coat handles up to 180C. High-heat powder available for hotter applications.",
-    "heat": "Standard powder coat handles up to 180C. High-heat powder available for hotter applications.",
-    "fire": "Standard powder coat handles up to 180C. High-heat powder available for braais and fire pits.",
-    "thickness": "Standard coat is 60-80 microns. We can go thicker if needed.",
-    "micron": "Standard coat is 60-80 microns. We can go thicker if needed.",
-    "prep": "Prep is 90% of the job! We shotblast first (R8-R12/kg) then coat. No shortcuts.",
-    "preparation": "Prep is 90% of the job! We shotblast first (R8-R12/kg) then coat. No shortcuts.",
-    "warranty": "We guarantee proper adhesion. If it peels due to our prep, we redo it.",
-    "guarantee": "We guarantee proper adhesion. If it peels due to our prep, we redo it.",
-    "lead time": "Standard turnaround 3-5 working days. Big jobs or custom colours might take longer.",
-    "turnaround": "Standard turnaround 3-5 working days. Big jobs or custom colours might take longer.",
-    "minimum": "Minimum charge R350 for small jobs. But bring it through - we can batch small stuff.",
-    "small job": "Minimum charge R350 for small jobs. But bring it through - we can batch small stuff.",
-    "bulk": "Bulk discounts available for big runs! Send Ridhor your specs. 076 760 4350",
-    "discount": "Bulk discounts available for big runs! Send Ridhor your specs. 076 760 4350",
-    "volume": "Bulk discounts available for big runs! Send Ridhor your specs. 076 760 4350",
-    "inspection": "Every job inspected before collection. Not happy? Tell us before you leave.",
-    "quality": "Every job inspected before collection. Not happy? Tell us before you leave.",
-    "transport": "We can arrange courier for out-of-town jobs. Or collect from 5 Jakaranda St, Blackheath.",
-    "courier": "We can arrange courier for out-of-town jobs. Or collect from 5 Jakaranda St, Blackheath.",
-    "outdoor": "Powder coating is perfect for outdoor use! UV-stable, rain-resistant, won't peel.",
-    "outside": "Powder coating is perfect for outdoor use! UV-stable, rain-resistant, won't peel.",
-    "weather": "Powder coating is perfect for outdoor use! UV-stable, rain-resistant, won't peel.",
-    "indoor": "Ja, we coat indoor stuff too - furniture, fixtures, bike frames. Any metal.",
-    "car part": "We coat car parts, rims, bumpers, bike frames. High-heat parts need special powder.",
-    "automotive": "We coat car parts, rims, bumpers, bike frames. High-heat parts need special powder.",
-    "exhaust": "High-heat powder needed for exhausts. We coat manifolds and headers.",
-    "motorcycle": "Bike frames, motorcycle parts, rims - we coat them all! Send a photo.",
-    "bike frame": "Bike frames, motorcycle parts, rims - we coat them all! Send a photo.",
-    "bicycle": "Bike frames, motorcycle parts, rims - we coat them all! Send a photo.",
-    "fence": "Fences, palisades, balustrades, railings - we coat them all! Send photos for quote.",
-    "palisade": "Fences, palisades, balustrades, railings - we coat them all! Send photos for quote.",
-    "balustrade": "Fences, palisades, balustrades, railings - we coat them all! Send photos for quote.",
-    "railing": "Fences, palisades, balustrades, railings - we coat them all! Send photos for quote.",
-    "furniture": "Outdoor furniture, tables, chairs, patio sets - we coat them! Send photos.",
-    "table": "Outdoor furniture, tables, chairs, patio sets - we coat them! Send photos.",
-    "chair": "Outdoor furniture, tables, chairs, patio sets - we coat them! Send photos.",
-    "patio": "Outdoor furniture, tables, chairs, patio sets - we coat them! Send photos.",
-    "tool": "Tools, machinery, industrial equipment - we coat them all. Bring it through.",
-    "machinery": "Tools, machinery, industrial equipment - we coat them all. Bring it through.",
-    "equipment": "Tools, machinery, industrial equipment - we coat them all. Bring it through.",
-    "industrial": "Tools, machinery, industrial equipment - we coat them all. Bring it through.",
-    "food safe": "We have food-safe powder coatings for kitchen equipment. Tell Ridhor. 076 760 4350",
-    "kitchen": "We have food-safe powder coatings for kitchen equipment. Tell Ridhor. 076 760 4350",
-    "food grade": "We have food-safe powder coatings for kitchen equipment. Tell Ridhor. 076 760 4350",
-    "diy": "DIY powder coating is tricky - need blast cabinet, spray booth, oven. Bring it to us.",
-    "do it myself": "DIY powder coating is tricky - need blast cabinet, spray booth, oven. Bring it to us.",
-    "eco": "Powder coating is eco-friendly! No solvents, no VOCs, minimal waste.",
-    "environment": "Powder coating is eco-friendly! No solvents, no VOCs, minimal waste.",
-    "green": "Powder coating is eco-friendly! No solvents, no VOCs, minimal waste.",
-    "voc": "Powder coating is eco-friendly! No solvents, no VOCs, minimal waste.",
-    "electrostatic": "We blast, spray charged powder, bake at 180-200C. Tough skin, 15-20 years!",
-    "how it works": "We blast, spray charged powder, bake at 180-200C. Tough skin, 15-20 years!",
-    "process": "We blast, spray charged powder, bake at 180-200C. Tough skin, 15-20 years!",
-    "sandblasting": "We do shotblasting - cleaner, controlled. R8-R12/kg. Perfect prep.",
-    "sand blast": "We do shotblasting - cleaner, controlled. R8-R12/kg. Perfect prep.",
-    "grit blasting": "We do shotblasting - cleaner, controlled. R8-R12/kg. Perfect prep.",
-    "masking": "We mask threads, holes, mating surfaces. Tell us what to keep clean.",
-    "thread": "We mask threads, bolts, fasteners. Or coat them fully - your choice.",
-    "bolt": "We mask threads, bolts, fasteners. Or coat them fully - your choice.",
-    "hole": "We mask holes and recesses. Tell us what needs to stay clean.",
-    "sample": "Test pieces and colour swatches available. Small fee. WhatsApp Ridhor. 076 760 4350",
-    "test piece": "Test pieces and colour swatches available. Small fee. WhatsApp Ridhor. 076 760 4350",
-    "swatch": "Test pieces and colour swatches available. Small fee. WhatsApp Ridhor. 076 760 4350",
-    "bee": "Let me get Ridhor on this - WhatsApp him on 076 760 4350.",
-    "b-bbee": "Let me get Ridhor on this - WhatsApp him on 076 760 4350.",
-    "payment method": "COD only, my bru. Cash on collection. No EFT, no cards.",
-    "eft": "COD only, my bru. Cash on collection. No EFT, no cards.",
-    "card": "COD only, my bru. Cash on collection. No EFT, no cards.",
-    "credit card": "COD only, my bru. Cash on collection. No EFT, no cards.",
-    "quote": "Type *3* for a formal quote, or tell me what you need priced.",
-    "estimate": "Type *3* for a formal quote, or tell me what you need priced.",
-    "price": "Type *3* for a formal quote, or tell me what you need priced.",
-    "how much": "Type *3* for a formal quote, or tell me what you need priced.",
-    "contact": "Ridhor: 076 760 4350. Office: 021 905 2912. Email: populier@mweb.co.za",
-    "phone": "Ridhor: 076 760 4350. Office: 021 905 2912. Email: populier@mweb.co.za",
-    "email": "Ridhor: 076 760 4350. Office: 021 905 2912. Email: populier@mweb.co.za",
-    "whatsap": "Ridhor: 076 760 4350. Office: 021 905 2912. Email: populier@mweb.co.za",
-    "location": "5 Jakaranda Street, Blackheath, Cape Town. Mon-Thu 8-4:45, Fri 8-2:45.",
-    "address": "5 Jakaranda Street, Blackheath, Cape Town. Mon-Thu 8-4:45, Fri 8-2:45.",
-    "where": "5 Jakaranda Street, Blackheath, Cape Town. Mon-Thu 8-4:45, Fri 8-2:45.",
-    "direction": "5 Jakaranda Street, Blackheath, Cape Town. Mon-Thu 8-4:45, Fri 8-2:45.",
-    "hours": "Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM. Closed weekends and public holidays.",
-    "open": "Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM. Closed weekends and public holidays.",
-    "close": "Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM. Closed weekends and public holidays.",
-    "time": "Mon-Thu 8AM-4:45PM, Fri 8AM-2:45PM. Closed weekends and public holidays.",
-    "delivery": "Type *6* for delivery. R150 Cape Town metro. Free collection.",
-    "collect": "Type *6* for delivery. R150 Cape Town metro. Free collection.",
-    "storage": "Free storage 7 days. After that 7% daily. Collect on time, my bru!",
-    "complaint": "Let me get Ridhor - WhatsApp him on 076 760 4350. He'll sort it.",
-    "problem": "Let me get Ridhor - WhatsApp him on 076 760 4350. He'll sort it.",
-    "unhappy": "Let me get Ridhor - WhatsApp him on 076 760 4350. He'll sort it.",
-    "refund": "Let me get Ridhor - WhatsApp him on 076 760 4350. He'll sort it.",
-    "review": "Type *11* to leave a Google review! Helps other customers find us.",
-    "google": "Type *11* to leave a Google review! Helps other customers find us.",
-    "rating": "Type *11* to leave a Google review! Helps other customers find us.",
-    "social": "Type *10* to follow us on Facebook and TikTok. Before/after shots posted!",
-    "facebook": "Type *10* to follow us on Facebook and TikTok. Before/after shots posted!",
-    "instagram": "Type *10* to follow us on Facebook and TikTok. Before/after shots posted!",
-    "tiktok": "Type *10* to follow us on Facebook and TikTok. Before/after shots posted!",
-    "tip": "TPS Wisdom: Prep is 90% of the job. Type *15* for more Solomon Truth Bombs.",
-    "advice": "TPS Wisdom: Prep is 90% of the job. Type *15* for more Solomon Truth Bombs.",
-    "recommend": "TPS Wisdom: Prep is 90% of the job. Type *15* for more Solomon Truth Bombs.",
-    "history": "Solomon Coatings since 1988. One compressor and a dream. Cape Town legends.",
-    "since when": "Solomon Coatings since 1988. One compressor and a dream. Cape Town legends.",
-    "experience": "Solomon Coatings since 1988. One compressor and a dream. Cape Town legends.",
-    "owner": "Ridhor runs the show. WhatsApp him: 076 760 4350.",
-    "ridhor": "Ridhor runs the show. WhatsApp him: 076 760 4350.",
-    "solomon": "Ridhor runs the show. WhatsApp him: 076 760 4350.",
-    "job": "We're always looking for good people! Send CV to populier@mweb.co.za",
-    "hiring": "We're always looking for good people! Send CV to populier@mweb.co.za",
-    "vacancy": "We're always looking for good people! Send CV to populier@mweb.co.za",
-    "apprentice": "We take apprentices for practical training. WhatsApp Ridhor. 076 760 4350",
-    "training": "We take apprentices for practical training. WhatsApp Ridhor. 076 760 4350",
-    "maintenance": "Just wash with soap and water. No wax. No abrasive cleaners.",
-    "clean": "Just wash with soap and water. No wax. No abrasive cleaners.",
-    "wash": "Just wash with soap and water. No wax. No abrasive cleaners.",
-    "uv": "Our powders are UV-stable. Won't fade or chalk in the sun.",
-    "sun": "Our powders are UV-stable. Won't fade or chalk in the sun.",
-    "fade": "Our powders are UV-stable. Won't fade or chalk in the sun.",
-    "salt": "Coastal areas need extra prep - corrosion-resistant primers used.",
-    "coastal": "Coastal areas need extra prep - corrosion-resistant primers used.",
-    "sea": "Coastal areas need extra prep - corrosion-resistant primers used.",
-    "oil": "Petrol, diesel, oil don't affect powder coating. Clean spills quickly.",
-    "grease": "Petrol, diesel, oil don't affect powder coating. Clean spills quickly.",
-    "petrol": "Petrol, diesel, oil don't affect powder coating. Clean spills quickly.",
-    "diesel": "Petrol, diesel, oil don't affect powder coating. Clean spills quickly.",
-    "acid": "Acids and strong solvents can damage powder coat. Wipe spills immediately.",
-    "chemical": "Acids and strong solvents can damage powder coat. Wipe spills immediately.",
-    "dent": "We don't do panel beating or welding. Fix dents first, then bring to us.",
-    "bend": "We don't do panel beating or welding. Fix dents first, then bring to us.",
-    "weld": "We don't do welding - we coat what you bring. We know good fabricators.",
-    "fabrication": "We don't do welding - we coat what you bring. We know good fabricators.",
-    "glass": "Powder coating is for metal only. No glass, wood, plastic, or rubber.",
-    "wood": "Powder coating is for metal only. No glass, wood, plastic, or rubber.",
-    "plastic": "Powder coating is for metal only. No glass, wood, plastic, or rubber.",
-    "rubber": "Powder coating is for metal only. No glass, wood, plastic, or rubber.",
-    "chrome": "We don't do chrome or mirror finishes. Powder gives smooth colour.",
-    "textured": "Ja, we do textured finishes! Wrinkle, hammer tone, vein patterns.",
-    "wrinkle": "Ja, we do textured finishes! Wrinkle, hammer tone, vein patterns.",
-    "hammer": "Ja, we do textured finishes! Wrinkle, hammer tone, vein patterns.",
-    "metallic": "Metallic, pearl, candy colours available! Tell Ridhor your dream colour.",
-    "pearl": "Metallic, pearl, candy colours available! Tell Ridhor your dream colour.",
-    "candy": "Metallic, pearl, candy colours available! Tell Ridhor your dream colour.",
-    "gloss": "Gloss, satin, matte, textured - your choice!",
-    "matte": "Gloss, satin, matte, textured - your choice!",
-    "satin": "Gloss, satin, matte, textured - your choice!",
-    "finish": "Gloss, satin, matte, textured - your choice!",
-    "primer": "We use zinc-rich primer for steel, etch primer for aluminium. Included.",
-    "galvanized": "We can coat over galvanizing - needs special prep. Tell Ridhor.",
-    "stainless": "Stainless steel can be coated - needs special etching. We know how.",
-    "inox": "Stainless steel can be coated - needs special etching. We know how.",
-    "cast": "Cast iron and cast aluminium - we coat them! Need extra cleaning.",
-    "iron": "Cast iron and cast aluminium - we coat them! Need extra cleaning.",
-    "old": "Restoration is our favourite! Old gates, vintage furniture - send photos.",
-    "restore": "Restoration is our favourite! Old gates, vintage furniture - send photos.",
-    "refurbish": "Restoration is our favourite! Old gates, vintage furniture - send photos.",
-    "vintage": "Restoration is our favourite! Old gates, vintage furniture - send photos.",
-    "new": "New steel needs degreasing and light blasting. We handle all prep.",
-    "second hand": "Second-hand stuff is fine - we blast off old paint and rust.",
-    "used": "Second-hand stuff is fine - we blast off old paint and rust.",
-    "sheet": "Sheet metal, plates, panels - R175-R350/sqm. Send specs for quote.",
-    "plate": "Sheet metal, plates, panels - R175-R350/sqm. Send specs for quote.",
-    "panel": "Sheet metal, plates, panels - R175-R350/sqm. Send specs for quote.",
-    "tube": "Tubes, pipes, round bars - no problem. We have jigs to hold them.",
-    "pipe": "Tubes, pipes, round bars - no problem. We have jigs to hold them.",
-    "wire": "Wire mesh, grids, screens - we coat them! Extra care needed.",
-    "mesh": "Wire mesh, grids, screens - we coat them! Extra care needed.",
-    "grid": "Wire mesh, grids, screens - we coat them! Extra care needed.",
-    "spring": "Springs and flexible parts tricky - powder can crack when flexing.",
-    "flexible": "Springs and flexible parts tricky - powder can crack when flexing.",
-    "sharp": "Sharp edges need extra powder for full coverage. Standard practice.",
-    "edge": "Sharp edges need extra powder for full coverage. Standard practice.",
-    "logo": "We can mask logos and text, or coat over them. Speak to Ridhor.",
-    "brand": "We can mask logos and text, or coat over them. Speak to Ridhor.",
-    "sign": "Signs, displays, stands - we coat metal frames and backing.",
-    "display": "Signs, displays, stands - we coat metal frames and backing.",
-    "gym": "Gym equipment, sports gear - tough finish. Send photos.",
-    "fitness": "Gym equipment, sports gear - tough finish. Send photos.",
-    "playground": "Playground equipment, school furniture - safe, durable, colourful.",
-    "school": "Playground equipment, school furniture - safe, durable, colourful.",
-    "farm": "Farm equipment, tractor parts - tough enough for the veld.",
-    "tractor": "Farm equipment, tractor parts - tough enough for the veld.",
-    "agricultural": "Farm equipment, tractor parts - tough enough for the veld.",
-    "mining": "Mining equipment, heavy plant - corrosion-resistant finishes.",
-    "heavy": "Mining equipment, heavy plant - corrosion-resistant finishes.",
-    "marine": "Marine equipment, boat parts - salt-resistant finishes.",
-    "boat": "Marine equipment, boat parts - salt-resistant finishes.",
-    "art": "Art pieces, sculptures - we love these! Bring your vision.",
-    "sculpture": "Art pieces, sculptures - we love these! Bring your vision.",
-    "decorative": "Art pieces, sculptures - we love these! Bring your vision.",
-    "gift": "Custom gifts, personalised items - nameplates, keyrings. Tell us your idea.",
-    "custom": "Custom gifts, personalised items - nameplates, keyrings. Tell us your idea.",
-    "prototype": "Prototypes and one-offs welcome! Bring your idea.",
-    "one-off": "Prototypes and one-offs welcome! Bring your idea.",
-    "unique": "Prototypes and one-offs welcome! Bring your idea.",
-    "emergency": "Rush jobs possible depending on queue. Extra charge might apply.",
-    "urgent": "Rush jobs possible depending on queue. Extra charge might apply.",
-    "rush": "Rush jobs possible depending on queue. Extra charge might apply.",
-    "asap": "Rush jobs possible depending on queue. Extra charge might apply.",
-    "cancel": "No problem, cancelled. Type *menu* to go back to the main list.",
-    "stop": "No problem, cancelled. Type *menu* to go back to the main list.",
-    "thank": "Only a pleasure! Thanks for choosing Solomon Coatings since 1988.",
-    "thanks": "Only a pleasure! Thanks for choosing Solomon Coatings since 1988.",
-    "dankie": "Only a pleasure! Thanks for choosing Solomon Coatings since 1988.",
-    "bye": "Cheers! Sien jou later. Bring that item through when you're ready.",
-    "referral": "We love referrals! Tell your mates. Word of mouth since 1988!",
-    "friend": "We love referrals! Tell your mates. Word of mouth since 1988!",
-    "thanks": "Pleasure! Anything else? Type *menu*",
-    "thank you": "Only a pleasure! Type *menu* for more.",
-    "bye": "Cheers! Sien jou later."
-  };
-  return QR;
+📘 Facebook: ${facebook || 'https://www.facebook.com/SolomonCoatings/'}
+🎵 TikTok: ${tiktok || 'https://www.tiktok.com/@solomon.coatings'}
+
+We post:
+✅ Before/after shots
+✅ New colours
+✅ Special offers
+✅ Customer projects
+
+Follow us and tag us in your projects!`;
 }
 
-module.exports = { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+module.exports = {
+  buildMenu,
+  getGalleryMenu,
+  getColorResponse,
+  getSocialsResponse
+};

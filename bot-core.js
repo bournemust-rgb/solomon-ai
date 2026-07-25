@@ -1,6 +1,5 @@
 // ============================================================
 // bot-core.js - SOLOMON COATINGS AI BOT CORE
-// Version: 17.0 - With NVIDIA Fallback
 // ============================================================
 var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
@@ -9,9 +8,6 @@ var { estimatePrice } = require("./calculator");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
 var { parseQuoteIntent, askLLM } = require("./services/nvidia");
 
-// ============================================================
-// FUNCTIONS
-// ============================================================
 function detectCategory(text) {
   const lower = text.toLowerCase();
   if (lower.includes('gate') || lower.includes('fence') || lower.includes('palisade') || lower.includes('security')) {
@@ -64,9 +60,6 @@ async function smartMatch(text, QR, socialsFn, galleryFn, colorFn, googleReview,
   }
 }
 
-// ============================================================
-// CORE FUNCTIONS
-// ============================================================
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
   try {
     console.log("📩 Handling message:", text);
@@ -83,38 +76,34 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
 
     // 2. Check gallery
     if (text.toLowerCase().includes('gallery') || text.toLowerCase().includes('colour') || text.toLowerCase().includes('color')) {
-      return getGalleryMenu();
+      return String(getGalleryMenu() || "Gallery not available");
     }
 
     // 3. Check menu
     if (text.toLowerCase().includes('menu') || text.toLowerCase().includes('help')) {
-      return buildMenu();
+      return String(buildMenu() || "Menu not available");
     }
 
     // 4. Check FAQ using smartMatch
     var faqMatch = await smartMatchFn(text);
     if (faqMatch) {
-      return faqMatch;
+      return String(faqMatch);
     }
 
-    // 5. NVIDIA FALLBACK - When FAQ doesn't have answer
+    // 5. NVIDIA FALLBACK
     console.log("🤖 FAQ didn't have answer, trying NVIDIA...");
     const nvidiaReply = await askLLM(text);
     if (nvidiaReply) {
-      return nvidiaReply + "\n\n💡 *Powered by NVIDIA NIM*";
+      return String(nvidiaReply) + "\n\n💡 *Powered by NVIDIA NIM*";
     }
 
-    // 6. Final fallback
-    return "I'm not sure how to help with that. Type *menu* to see what I can do, or ask me about quotes, colours, or powder coating!";
+    return "I'm not sure how to help with that. Type *menu* to see what I can do.";
   } catch (error) {
     console.error("[handleMessage] Error:", error.message);
     return "Sorry, I had a problem. Please try again or contact Ridhor directly.";
   }
 }
 
-// ============================================================
-// QUOTE HANDLING
-// ============================================================
 async function handleQuote(text, from, session, aiResult) {
   try {
     var weight = aiResult?.weight_kg || null;
@@ -156,9 +145,6 @@ async function handleQuote(text, from, session, aiResult) {
   }
 }
 
-// ============================================================
-// EXPORT
-// ============================================================
 module.exports = {
   handleMessage,
   handleQuote,
