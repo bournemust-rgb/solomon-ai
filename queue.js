@@ -1,5 +1,4 @@
-@"
-const axios = require('axios');
+﻿const axios = require('axios');
 
 var WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 var PHONE_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -48,4 +47,3 @@ async function sendMessage(to, message) {
 }
 
 module.exports = { sendMessage };
-"@ | Out-File -FilePath queue.js -Encoding utf8
