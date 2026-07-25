@@ -5,13 +5,12 @@
 var { getSession, saveSession } = require("./db");
 var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
-var { getOrderRef, isAfterHours } = require("./bot-core");
 var { estimatePrice } = require("./calculator");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
 var { parseQuoteIntent } = require("./services/nvidia");
 
 // ============================================================
-// MISSING FUNCTIONS - ADDED
+// FUNCTIONS
 // ============================================================
 function detectCategory(text) {
   const lower = text.toLowerCase();
@@ -46,6 +45,16 @@ function randomTPS() {
     "🇿🇦 Proudly South African!"
   ];
   return tps[Math.floor(Math.random() * tps.length)];
+}
+
+function getOrderRef() {
+  return 'SC-' + Date.now().toString(36).toUpperCase();
+}
+
+function isAfterHours() {
+  const now = new Date();
+  const hour = now.getHours();
+  return hour < 8 || hour >= 17;
 }
 
 async function smartMatch(text, QR, socialsFn, galleryFn, colorFn, googleReview, officeEmail, officeNumber, quoteEmail, greetingFn) {

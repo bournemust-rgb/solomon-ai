@@ -1,6 +1,9 @@
-﻿const OpenAI = require('openai');
+// ============================================================
+// services/nvidia.js - NVIDIA NIM for Solomon BIT
+// ============================================================
+const OpenAI = require('openai');
 
-// HARDCODED FOR TESTING - REMOVE AFTER
+// Hardcoded for testing - will use env in production
 const apiKey = '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';
 
 console.log('🔧 NVIDIA module loaded');
@@ -46,6 +49,7 @@ async function parseQuoteIntent(text) {
   }
 }
 
+// Image analysis - placeholder for future use
 async function analyzeCoatingImage(base64Jpeg) {
   if (!nvidia) return null;
   try {
@@ -56,7 +60,7 @@ async function analyzeCoatingImage(base64Jpeg) {
         role: 'user',
         content: [
           { type: 'text', text: 'Gate, fence, sheet, rim? Colour? Rust? One sentence.' },
-          { type: 'image_url', image_url: { url: data:image/jpeg;base64, } }
+          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Jpeg}` } }
         ]
       }]
     });
