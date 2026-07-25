@@ -10,12 +10,12 @@ async function sendMessage(to, message) {
     console.log("📤 WA_TOKEN exists:", !!WA_TOKEN);
     
     if (!WA_TOKEN || !PHONE_ID) {
-      console.error("❌ Missing credentials");
+      console.error("❌ Missing WA_TOKEN or PHONE_ID");
       return false;
     }
 
     const response = await axios.post(
-      "https://graph.facebook.com/v25.0/" + PHONE_ID + "/messages",
+      "https://graph.facebook.com/v21.0/" + PHONE_ID + "/messages",
       {
         messaging_product: "whatsapp",
         to: to,
