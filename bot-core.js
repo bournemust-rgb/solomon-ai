@@ -1,5 +1,4 @@
-const { askLLM } = require("./services/nvidia");
-﻿// ============================================================
+// ============================================================
 // bot-core.js - SOLOMON COATINGS AI BOT CORE
 // Version: 17.0 - With NVIDIA Fallback
 // ============================================================
@@ -8,7 +7,7 @@ var { sendMessage } = require("./queue");
 var { randomGreeting } = require("./greetings");
 var { estimatePrice } = require("./calculator");
 var { getSocialsResponse, getGalleryMenu, getColorResponse, buildMenu } = require("./bot-content");
-var { parseQuoteIntent } = require("./services/nvidia");
+var { parseQuoteIntent, askLLM } = require("./services/nvidia");
 
 // ============================================================
 // FUNCTIONS
@@ -66,48 +65,12 @@ async function smartMatch(text, QR, socialsFn, galleryFn, colorFn, googleReview,
 }
 
 // ============================================================
-// NVIDIA FALLBACK - This is what you wanted!
-// ============================================================
-async function askNVIDIA(question) {
-  try {
-    console.log("🤖 Asking NVIDIA NIM:", question);
-    const result = await parseQuoteIntent(question);
-    if (result && result.weight_kg) {
-      // If it's a quote-related question
-      return handleQuote(question, null, null, result);
-    }
-    // For general questions, use a different prompt
-    const OpenAI = require('openai');
-    const nvidia = new OpenAI({
-      apiKey: process.env.NVIDIA_API_KEY,
-      baseURL: 'https://integrate.api.nvidia.com/v1'
-    });
-    const response = await nvidia.chat.completions.create({
-      model: 'meta/llama-3.1-70b-instruct',
-      temperature: 0.7,
-      max_tokens: 300,
-      messages: [
-        {
-          role: 'system',
-          content: 'You are Solomon Coatings AI, a helpful assistant for a powder coating business in Cape Town. Answer questions about powder coating, services, pricing, colours, and general inquiries. Be friendly, use South African slang, and mention Ridhor if needed. Keep answers short and helpful.'
-        },
-        { role: 'user', content: question }
-      ]
-    });
-    return response.choices[0].message.content;
-  } catch (error) {
-    console.error("❌ NVIDIA Fallback Error:", error.message);
-    return null;
-  }
-}
-
-// ============================================================
 // CORE FUNCTIONS
 // ============================================================
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
   try {
     console.log("📩 Handling message:", text);
-    
+
     // 1. Check if it's a quote request
     if (text.toLowerCase().includes('quote') || text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
       const aiResult = await parseQuoteIntent(text);
@@ -134,18 +97,15 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
       return faqMatch;
     }
 
-    // 5. 🎯 NVIDIA FALLBACK - When FAQ doesn't have answer
+    // 5. NVIDIA FALLBACK - When FAQ doesn't have answer
     console.log("🤖 FAQ didn't have answer, trying NVIDIA...");
-    const nvidiaReply = await askNVIDIA(text);
+    const nvidiaReply = await askLLM(text);
     if (nvidiaReply) {
       return nvidiaReply + "\n\n💡 *Powered by NVIDIA NIM*";
     }
 
     // 6. Final fallback
-    return 
-  let reply = await askLLM(text);
-  if (!reply) {
-    reply = "I'm not sure how to help with that. Type *menu* to see what I can do, or ask me about quotes, colours, or powder coating!";
+    return "I'm not sure how to help with that. Type *menu* to see what I can do, or ask me about quotes, colours, or powder coating!";
   } catch (error) {
     console.error("[handleMessage] Error:", error.message);
     return "Sorry, I had a problem. Please try again or contact Ridhor directly.";
@@ -208,6 +168,5 @@ module.exports = {
   randomTPS,
   getOrderRef,
   isAfterHours,
-  estimatePrice,
-  askNVIDIA
+  estimatePrice
 };
