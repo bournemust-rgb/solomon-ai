@@ -63,9 +63,127 @@ async function smartMatch(text, QR, socialsFn, galleryFn, colorFn, googleReview,
 async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef, saveSession) {
   try {
     console.log("📩 Handling message:", text);
+    const lower = text.toLowerCase().trim();
 
-    // 1. Check if it's a quote request
-    if (text.toLowerCase().includes('quote') || text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
+    // 1. Handle menu number selections
+    if (lower === '1' || lower === 'pricing' || lower === 'price') {
+      return "💰 *SOLOMON COATINGS - PRICING* (Excl VAT)\n\n" +
+             "🛞 *WHEEL RIM COATING*\n" +
+             "- 10-15 inch (Black/White): R1,000 - R1,500/set\n" +
+             "- 10-15 inch (Other): R1,300 - R1,700/set\n" +
+             "- 16-18 inch (Black/White): R1,500 - R1,800/set\n" +
+             "- 16-18 inch (Other): R1,700 - R2,200/set\n\n" +
+             "📋 *SHEET METAL & MESH*\n" +
+             "- Standard: R175 - R250/sqm\n" +
+             "- Premium: R251 - R350/sqm\n\n" +
+             "⚙️ *GATES & FENCING*\n" +
+             "- Black/White: R16/kg\n" +
+             "- Other colours: R17 - R20/kg\n" +
+             "- Minimum: R200 excl VAT\n\n" +
+             "💥 *BLASTING*\n" +
+             "- Per kg: R8 - R12/kg\n" +
+             "- Per area: R250/sqm\n" +
+             "- Truck: R5,000 - R7,500\n\n" +
+             "📞 Call Ridhor: 076 760 4350";
+    }
+
+    if (lower === '2' || lower === 'colours' || lower === 'color' || lower === 'gallery') {
+      return getGalleryMenu();
+    }
+
+    if (lower === '3' || lower === 'quote') {
+      return "📋 *QUOTE REQUEST*\n\n" +
+             "Send me:\n" +
+             "1. What you want coated (gate, rims, sheet metal, etc.)\n" +
+             "2. Weight in kg (e.g. 20kg)\n" +
+             "3. Colour preference\n" +
+             "4. Photos if possible\n\n" +
+             "Example: *gate 20kg charcoal*\n\n" +
+             "I'll calculate a price for you!";
+    }
+
+    if (lower === '4' || lower === 'turnaround' || lower === 'time') {
+      return "⏱️ *TURNAROUND TIME*\n\n" +
+             "Standard: 3-5 working days\n" +
+             "Big jobs: 5-7 working days\n" +
+             "Custom colours: +2-3 days\n\n" +
+             "Rush jobs available (extra charge)\n" +
+             "📞 Ask Ridhor: 076 760 4350";
+    }
+
+    if (lower === '5' || lower === 'hours' || lower === 'open') {
+      return "🕐 *BUSINESS HOURS*\n\n" +
+             "Monday - Thursday: 8AM - 4:45PM\n" +
+             "Friday: 8AM - 2:45PM\n" +
+             "Saturday: Closed\n" +
+             "Sunday: Closed\n\n" +
+             "📍 5 Jakaranda Street, Blackheath, Cape Town";
+    }
+
+    if (lower === '6' || lower === 'delivery') {
+      return "🚚 *DELIVERY*\n\n" +
+             "Cape Town Metro: R150\n" +
+             "Outside Cape Town: Quote based on location\n" +
+             "Free collection from our workshop\n\n" +
+             "📍 5 Jakaranda Street, Blackheath";
+    }
+
+    if (lower === '7' || lower === 'blasting' || lower === 'shotblasting') {
+      return "💥 *SHOTBLASTING*\n\n" +
+             "Prices:\n" +
+             "- R8 - R12/kg\n" +
+             "- R250/sqm\n" +
+             "- Trucks: R5,000 - R7,500\n\n" +
+             "Prep is 90% of the job!\n" +
+             "We blast everything before coating.\n\n" +
+             "📞 Call Ridhor: 076 760 4350";
+    }
+
+    if (lower === '8' || lower === 'terms' || lower === 't&cs') {
+      return "📄 *TERMS & CONDITIONS*\n\n" +
+             "1. Payment: COD only (cash on collection)\n" +
+             "2. Warranty: We guarantee proper adhesion\n" +
+             "3. Turnaround: 3-5 working days\n" +
+             "4. Storage: Free for 7 days, then 7% daily\n" +
+             "5. Inspection: Check before collection\n\n" +
+             "📞 Ridhor: 076 760 4350\n" +
+             "📧 infosc@mweb.co.za";
+    }
+
+    if (lower === '9') {
+      return getGalleryMenu();
+    }
+
+    if (lower === '10' || lower === 'social' || lower === 'follow') {
+      return getSocialsResponse();
+    }
+
+    if (lower === '11' || lower === 'technical' || lower === 'support') {
+      return "🔧 *TECHNICAL SUPPORT*\n\n" +
+             "Ridhor handles all technical queries.\n" +
+             "📞 076 760 4350\n" +
+             "📧 infosc@mweb.co.za\n\n" +
+             "He can help with:\n" +
+             "- Colour matching\n" +
+             "- Surface prep\n" +
+             "- Custom finishes\n" +
+             "- High-heat applications";
+    }
+
+    if (lower === '12' || lower === 'accounts' || lower === 'payment') {
+      return "💰 *ACCOUNTS & PAYMENT*\n\n" +
+             "💳 Payment: Cash on collection only\n" +
+             "No EFT, no cards\n" +
+             "📍 5 Jakaranda Street, Blackheath\n\n" +
+             "📞 Ridhor: 076 760 4350";
+    }
+
+    if (lower === '13' || lower === 'tps' || lower === 'wisdom') {
+      return randomTPS();
+    }
+
+    // 2. Check if it's a quote request
+    if (lower.includes('quote') || lower.includes('price') || lower.includes('cost')) {
       const aiResult = await parseQuoteIntent(text);
       if (aiResult && aiResult.weight_kg) {
         console.log("📦 NVIDIA extracted:", aiResult);
@@ -74,23 +192,13 @@ async function handleMessage(text, from, session, smartMatchFn, QR, getOrderRef,
       return await handleQuote(text, from, session, null);
     }
 
-    // 2. Check gallery
-    if (text.toLowerCase().includes('gallery') || text.toLowerCase().includes('colour') || text.toLowerCase().includes('color')) {
-      return String(getGalleryMenu() || "Gallery not available");
-    }
-
-    // 3. Check menu
-    if (text.toLowerCase().includes('menu') || text.toLowerCase().includes('help')) {
-      return String(buildMenu() || "Menu not available");
-    }
-
-    // 4. Check FAQ using smartMatch
+    // 3. Check FAQ using smartMatch
     var faqMatch = await smartMatchFn(text);
     if (faqMatch) {
       return String(faqMatch);
     }
 
-    // 5. NVIDIA FALLBACK
+    // 4. NVIDIA FALLBACK
     console.log("🤖 FAQ didn't have answer, trying NVIDIA...");
     const nvidiaReply = await askLLM(text);
     if (nvidiaReply) {
