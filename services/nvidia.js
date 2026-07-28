@@ -7,7 +7,6 @@ const nvidia = process.env.NVIDIA_API_KEY
     })
   : null;
 
-// Extract weight/colour/category from messy text
 async function parseQuoteIntent(text) {
   if (!nvidia) return null;
   try {
@@ -29,7 +28,6 @@ async function parseQuoteIntent(text) {
   }
 }
 
-// Answer unknown questions using your business context
 async function askLLM(question) {
   if (!nvidia) return null;
   try {
