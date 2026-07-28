@@ -7,11 +7,12 @@ const nvidia = process.env.NVIDIA_API_KEY
     })
   : null;
 
+// Extract weight/colour/category from messy text
 async function parseQuoteIntent(text) {
   if (!nvidia) return null;
   try {
     const r = await nvidia.chat.completions.create({
-      model: 'nvidia/llama-3.1-nemotron-70b-instruct',
+      model: 'meta/llama-3.1-70b-instruct',
       temperature: 0,
       max_tokens: 200,
       messages: [
@@ -28,11 +29,12 @@ async function parseQuoteIntent(text) {
   }
 }
 
+// Answer unknown questions using your business context
 async function askLLM(question) {
   if (!nvidia) return null;
   try {
     const r = await nvidia.chat.completions.create({
-      model: 'nvidia/llama-3.1-nemotron-70b-instruct',
+      model: 'meta/llama-3.1-70b-instruct',
       temperature: 0.3,
       max_tokens: 300,
       messages: [
